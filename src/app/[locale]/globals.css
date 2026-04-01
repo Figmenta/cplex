@@ -1,0 +1,211 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-inter);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --animate-marquee: marquee var(--duration) infinite linear;
+  --animate-marquee-vertical: marquee-vertical var(--duration) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
+  }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
+
+:root {
+  --radius: 0.5rem;
+  --background: #0a1225;
+  --foreground: #ffffff;
+  --card: oklch(0.31 0.0519 236.4);
+  --card-foreground: oklch(100% 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(100% 0 0);
+  --primary: oklch(0.41 0.261 268.69);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.13 0.0158 230.17);
+  --secondary-foreground: oklch(100% 0 0);
+  --muted: oklch(0.13 0.0158 230.17);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --accent: oklch(0.13 0.0158 230.17);
+  --accent-foreground: oklch(100% 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.552 0.016 285.938);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(100% 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(100% 0 0);
+  --sidebar-accent: oklch(0.13 0.0158 230.17);
+  --sidebar-accent-foreground: oklch(100% 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.552 0.016 285.938);
+}
+
+.dark {
+  --background: oklch(13.3% 0.015 223.07);
+  --foreground: oklch(100% 0 0);
+  --card: oklch(0.31 0.0519 236.4);
+  --card-foreground: oklch(100% 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(100% 0 0);
+  --primary: oklch(0.41 0.261 268.69);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.13 0.0158 230.17);
+  --secondary-foreground: oklch(100% 0 0);
+  --muted: oklch(0.13 0.0158 230.17);
+  --muted-foreground: oklch(0.705 0.015 286.067);
+  --accent: oklch(0.13 0.0158 230.17);
+  --accent-foreground: oklch(100% 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.552 0.016 285.938);
+  --chart-1: oklch(0.488 0.243 264.376);
+  --chart-2: oklch(0.696 0.17 162.48);
+  --chart-3: oklch(0.769 0.188 70.08);
+  --chart-4: oklch(0.627 0.265 303.9);
+  --chart-5: oklch(0.645 0.246 16.439);
+  --sidebar: oklch(1 0 0);
+  --sidebar-foreground: oklch(100% 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(100% 0 0);
+  --sidebar-accent: oklch(0.13 0.0158 230.17);
+  --sidebar-accent-foreground: oklch(100% 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.552 0.016 285.938);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+  /* background-color: var(--background); */
+}
+
+
+/* Scrolbasr hidding for all devices */
+::-webkit-scrollbar {
+  display: none;
+}
+
+.text-shadow {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.411);
+}
+
+/* Add these custom styles for popup scrolling */
+.popup-scroll {
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+}
+
+.popup-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.popup-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.popup-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.popup-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* text shadow */
+.text-shadow {
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.411);
+}
+
+/* Margin/padding/width for text editor */
+.editor-content {
+  max-width: 85vw;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@media (min-width: 768px) {
+  .editor-content {
+    max-width: 83vw;
+  }
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+}
