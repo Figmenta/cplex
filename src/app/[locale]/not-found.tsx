@@ -11,39 +11,39 @@ export default function NotFound() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = "en"; // Default for metadata
+  const ogImage = `${WEBSITE_URL}/logo.svg`;
   return {
-    title: `404 - Page Not Found`,
-    description: "The page you are looking for does not exist.",
+    metadataBase: new URL(WEBSITE_URL),
+    title: "Page not found | CPLEX",
+    description:
+      "This page could not be found. Return to CPLEX to continue browsing our law firm site.",
+    robots: {
+      index: false,
+      follow: true,
+    },
     openGraph: {
-      title: `404 - Page Not Found`,
-      description: "The page you are looking for does not exist.",
-      url: `${WEBSITE_URL}/${locale}/not-found`,
-      siteName: "Figmenta",
-      locale: locale,
+      title: "Page not found | CPLEX",
+      description:
+        "The page you requested is not available. Use the site navigation to find what you need.",
+      url: WEBSITE_URL,
+      siteName: "CPLEX",
+      locale: "en_US",
       type: "website",
       images: [
         {
-          url: `${WEBSITE_URL}/logo.webp`,
+          url: ogImage,
           width: 1200,
           height: 630,
-          alt: "404 - Page Not Found",
+          alt: "CPLEX",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: `404 - Page Not Found`,
-      description: "The page you are looking for does not exist.",
-      creator: "@figmenta",
-      images: [
-        {
-          url: `${WEBSITE_URL}/logo.webp`,
-          width: 1200,
-          height: 630,
-          alt: "404 - Page Not Found",
-        },
-      ],
+      title: "Page not found | CPLEX",
+      description:
+        "This page could not be found. Visit CPLEX for legal counsel and firm information.",
+      images: [ogImage],
     },
   };
 }

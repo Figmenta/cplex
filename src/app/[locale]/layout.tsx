@@ -1,7 +1,6 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import LocaleWrapper from "@/components/i18n/LocaleWrapper";
-import { ThemeProvider } from "@/components/theme-provider";
 import { LOCALES } from "@/lib/i18n/constants";
 // import { GoogleTagManager } from "@next/third-parties/google";
 // import { Metadata } from "next";
@@ -19,6 +18,13 @@ const inter = Inter({
   display: "swap",
 });
 
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  variable: "--font-montserrat",
+  display: "swap",
+});
+
 export default async function RootLayout({
   children,
   params,
@@ -28,7 +34,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       suppressHydrationWarning
-      className={`${inter.variable}`}
+      className={`${inter.variable} ${montserrat.variable}`}
     >
       {/* <GoogleTagManager gtmId="GTM-PC8MX4P" /> */}
       <head>
@@ -36,19 +42,17 @@ export default async function RootLayout({
         <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>
       <body>
-        <ThemeProvider attribute="class" defaultTheme="light">
-          <LocaleWrapper locale={locale}>
-            <SmoothScrolling>
-              {process.env.NODE_ENV === "development" ? (
-                <main>{children}</main>
-              ) : (
-                <>
-                  <main className="select-none">{children}</main>
-                </>
-              )}
-            </SmoothScrolling>
-          </LocaleWrapper>
-        </ThemeProvider>
+        <LocaleWrapper locale={locale}>
+          <SmoothScrolling>
+            {process.env.NODE_ENV === "development" ? (
+              <main>{children}</main>
+            ) : (
+              <>
+                <main className="select-none">{children}</main>
+              </>
+            )}
+          </SmoothScrolling>
+        </LocaleWrapper>
       </body>
     </html>
   );

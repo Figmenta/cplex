@@ -1,8 +1,6 @@
 import { Metadata } from "next";
 import { LOCALES } from "@/lib/i18n/constants";
-import { HomePageData } from "../../types/interface";
-import { getHomePageData } from "@/lib/i18n/getSanityContent";
-import PageReveal from "@/components/ui/page-reveal";
+import HomePage from "@/components/home/home-page";
 import { WEBSITE_URL } from "@/constant/variabls";
 
 export default async function Home({
@@ -10,12 +8,11 @@ export default async function Home({
 }: {
   params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
-  const HomePageData: HomePageData = await getHomePageData(locale);
+  await params; // locale reserved for future Sanity / i18n content
 
   return (
     <>
-      <PageReveal />
+      <HomePage />
     </>
   );
 }
@@ -27,9 +24,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string; locale: string }>;
+  params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
+  const ogImage = `${WEBSITE_URL}/logo.svg`;
 
   const commonMetadata = {
     formatDetection: {
@@ -59,72 +57,75 @@ export async function generateMetadata({
 
   const enMetadata = {
     ...commonMetadata,
-    title: "Figmenta Studio: Where we design brands and digital properties",
+    title: {
+      default: "CPLEX | Law Firm",
+      template: "%s | CPLEX",
+    },
     description:
-      "Figmenta Studio helps you craft powerful brands and digital solutions that drive business success. Let's create something amazing together.",
-    authors: [{ name: "Figmenta Studio" }],
-    creator: "Figmenta Studio",
-    publisher: "Figmenta Studio",
+      "CPLEX is a law firm delivering strategic legal counsel and representation across civil, corporate, and regulatory matters—with clarity, rigor, and discretion.",
+    authors: [{ name: "CPLEX" }],
+    creator: "CPLEX",
+    publisher: "CPLEX",
     openGraph: {
-      title: "Figmenta Studio | Creative & Digital Design Solutions",
+      title: "CPLEX | Law Firm",
       description:
-        "Discover Figmenta Studio – your partner for creative branding, digital solutions, and innovative storytelling.",
+        "Strategic legal counsel for businesses and individuals. Explore CPLEX for experienced representation and clear guidance.",
       url: WEBSITE_URL,
-      siteName: "Figmenta Studio",
-      locale: "en",
+      siteName: "CPLEX",
+      locale: "en_US",
       type: "website",
       images: [
         {
-          url: "https://studio.figmenta.com/logo.webp",
+          url: ogImage,
           width: 1200,
           height: 630,
-          alt: "Figmenta Studio Branding Services",
+          alt: "CPLEX law firm",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Figmenta Studio | Creative & Digital Experts",
+      title: "CPLEX | Law Firm",
       description:
-        "Transform your brand with Figmenta Studio's innovative design and digital services.",
-      creator: "@figmenta",
-      images: ["https://studio.figmenta.com/logo.webp"],
+        "Strategic legal counsel and representation from CPLEX—clarity and rigor when it matters most.",
+      images: [ogImage],
     },
   };
 
   const itMetadata = {
     ...commonMetadata,
-    title:
-      "Figmenta Studio: Dove progettiamo e realizziamo brand, siti web e digital properties",
+    title: {
+      default: "CPLEX | Studio Legale",
+      template: "%s | CPLEX",
+    },
     description:
-      "Figmenta Studio ti aiuta a creare brand potenti e soluzioni digitali che favoriscono il successo aziendale. Creiamo qualcosa di straordinario insieme.",
-    authors: [{ name: "Figmenta Studio" }],
-    creator: "Figmenta Studio",
-    publisher: "Figmenta Studio",
+      "CPLEX è uno studio legale che offre consulenza strategica e assistenza in materia civile, societaria e regolamentare—con chiarezza, rigore e riservatezza.",
+    authors: [{ name: "CPLEX" }],
+    creator: "CPLEX",
+    publisher: "CPLEX",
     openGraph: {
-      title: "Figmenta Studio | Soluzioni di Design Creativo e Digitale",
+      title: "CPLEX | Studio Legale",
       description:
-        "Scopri Figmenta Studio – il tuo partner per il branding creativo, soluzioni digitali e storytelling innovativo.",
+        "Consulenza legale strategica per imprese e privati. Scopri CPLEX per assistenza qualificata e orientamento chiaro.",
       url: WEBSITE_URL,
-      siteName: "Figmenta Studio",
-      locale: "it",
+      siteName: "CPLEX",
+      locale: "it_IT",
       type: "website",
       images: [
         {
-          url: "https://studio.figmenta.com/logo.webp",
+          url: ogImage,
           width: 1200,
           height: 630,
-          alt: "Servizi di Branding Figmenta Studio",
+          alt: "Studio legale CPLEX",
         },
       ],
     },
     twitter: {
       card: "summary_large_image",
-      title: "Figmenta Studio | Esperti in Creatività e Soluzioni Digitali",
+      title: "CPLEX | Studio Legale",
       description:
-        "Trasforma il tuo brand con i servizi innovativi di design e digitali di Figmenta Studio.",
-      creator: "@figmenta",
-      images: ["https://studio.figmenta.com/logo.webp"],
+        "Consulenza e assistenza legale da CPLEX—chiarezza e rigore quando conta davvero.",
+      images: [ogImage],
     },
   };
 

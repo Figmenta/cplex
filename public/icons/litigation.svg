@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="SVG">
+<path id="Vector" d="M32 9.6001V54.4001" stroke="#0646D0" stroke-width="0.64" stroke-linejoin="round" stroke-dasharray="1.92 1.92"/>
+<path id="Vector_2" d="M22.4 22.3999L12.8 31.9999L22.4 41.5999V22.3999" stroke="#D54561" stroke-width="0.96" stroke-linejoin="round"/>
+<path id="Vector_3" d="M12.7999 32H6.3999" stroke="#D54561" stroke-width="0.96" stroke-linejoin="round"/>
+<path id="Vector_4" d="M22.3999 22.3999H28.7999" stroke="#D54561" stroke-width="0.96" stroke-linejoin="round"/>
+<path id="Vector_5" d="M22.3999 41.6001H28.7999" stroke="#D54561" stroke-width="0.96" stroke-linejoin="round"/>
+<path id="Vector_6" d="M41.6001 22.3999L51.2001 31.9999L41.6001 41.5999V22.3999" stroke="#D54561" stroke-width="0.96" stroke-linejoin="round"/>
+<path id="Vector_7" d="M51.2 32H57.6" stroke="#D54561" stroke-width="0.96" stroke-linejoin="round"/>
+<path id="Vector_8" d="M41.6 22.3999H35.2" stroke="#D54561" stroke-width="0.96" stroke-linejoin="round"/>
+<path id="Vector_9" d="M41.6 41.6001H35.2" stroke="#D54561" stroke-width="0.96" stroke-linejoin="round"/>
+<g id="Vector_10">
+<path d="M30.3999 28.7998H33.5999V35.1998H30.3999V28.7998Z" fill="#0E5FA8" fill-opacity="0.15"/>
+<path d="M30.3999 28.7998H33.5999V28.7998V35.1998V35.1998H30.3999V35.1998V28.7998V28.7998V28.7998" stroke="#0646D0" stroke-width="0.96" stroke-linejoin="round"/>
+</g>
+</g>
+</svg>
