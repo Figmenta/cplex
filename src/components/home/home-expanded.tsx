@@ -19,7 +19,7 @@ import { HOME_VT } from "./home-view-transition";
 import { HomeNewsMarquee } from "./home-news-marquee";
 
 const sectionTitle =
-  "font-montserrat text-lg font-bold uppercase tracking-[0.35em] text-section-heading md:text-[24px]";
+  "font-montserrat text-lg font-bold uppercase tracking-[0.35em] text-section-heading md:text-[26px]";
 
 const FIRM_INTERNAL_STOPS = [0, 0.12, 0.24, 0.42, 0.67, 0.87, 1] as const;
 const FIRM_EXTERNAL_PROGRESS = [
@@ -360,7 +360,7 @@ export function ExpandedFirm({
     gsap.set(dualCardsStage, { autoAlpha: 0 });
     gsap.set(dualLeft, { x: -window.innerWidth, autoAlpha: 0 });
     gsap.set(dualRight, { x: window.innerWidth, autoAlpha: 0 });
-    gsap.set(complexStage, { autoAlpha: 0, xPercent: 0 });
+    gsap.set(complexStage, { autoAlpha: 0, xPercent: 0, yPercent: 0 });
     gsap.set(complexHeading, {
       y: Math.min(window.innerHeight * 0.42, 320),
       autoAlpha: 0,
@@ -433,13 +433,13 @@ export function ExpandedFirm({
     );
     tl.to(
       complexStage,
-      { xPercent: 140, autoAlpha: 0, duration: 0.08, ease: "power2.inOut" },
+      { yPercent: -100, autoAlpha: 0, duration: 0.08, ease: "power2.inOut" },
       0.89
     );
     tl.to(
       persistentTitle,
       {
-        x: window.innerWidth * 1.4,
+        y: -window.innerHeight * 1.2,
         autoAlpha: 0,
         duration: 0.08,
         ease: "power2.inOut",
@@ -551,7 +551,7 @@ export function ExpandedFirm({
             style={{ backgroundColor: "#581525" }}
           >
             <div className="flex h-full items-center px-6 md:px-10">
-              <p className="text-sm leading-[190%] text-foreground md:text-[27px] md:leading-[1.55]">
+              <p className="text-sm leading-[190%] text-foreground md:text-[20px] md:leading-[1.55]">
                 The Firm supports companies in designing and implementing
                 compliance systems, including risk mapping, protocols,
                 whistleblowing channels, and internal training programmes.
@@ -567,7 +567,7 @@ export function ExpandedFirm({
           data-anim="image-desc"
           className="pointer-events-none absolute bottom-[140px] left-6 z-[15] max-w-[560px] md:left-10"
         >
-          <p className="text-foreground text-3xl leading-[1.45]">
+          <p className="text-foreground text-[27px] leading-[1.45]">
             CP | LEX is a boutique law firm delivering sophisticated legal
             solutions.
           </p>
@@ -599,7 +599,7 @@ export function ExpandedFirm({
                 height={16}
                 className="mt-1.5"
               />
-              <p className="text-[15px] leading-[166%] md:text-[28px]">
+              <p className="text-[15px] leading-[166%] md:text-[18px]">
                 We believe that effective legal counsel goes beyond technical
                 knowledge — it requires a deep understanding of our clients’
                 objectives, industries, and risk landscape.
@@ -613,7 +613,7 @@ export function ExpandedFirm({
                 height={16}
                 className="mt-1.5"
               />
-              <p className="text-[15px] leading-[166%] md:text-[28px]">
+              <p className="text-[15px] leading-[166%] md:text-[18px]">
                 Every matter is approached with careful analysis, structured
                 thinking, and a commitment to delivering practical outcomes.
               </p>
@@ -644,7 +644,7 @@ export function ExpandedFirm({
             </div>
             <div
               data-anim="dual-right"
-              className="flex flex-col justify-between bg-[#152241] p-[32px]"
+              className="flex flex-col justify-between bg-[#172547] p-[32px]"
             >
               <p className="text-[18px] leading-[166%]">
                 Our work often involves cross-border transactions, international
@@ -659,10 +659,10 @@ export function ExpandedFirm({
           data-anim="stage-complex"
           className="absolute inset-0 z-40 flex items-center justify-center px-6 pt-[104px] md:px-10"
         >
-          <div className="relative min-h-[min(52vh,440px)] w-full">
+          <div className="relative min-h-[min(52vh,400px)] w-full">
             <h2
               data-anim="complex-heading"
-              className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center font-montserrat text-[52px] font-semibold uppercase leading-[1.1] tracking-[0.18em] md:px-10"
+              className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center font-montserrat text-[52px] font-bold uppercase leading-[1.1] tracking-[0.18em] md:px-10"
             >
               Built for Complex Legal Challenges
             </h2>
@@ -705,7 +705,7 @@ export function ExpandedFirm({
                     Integrated Expertise
                   </h3>
                 </div>
-                <p className="text-[15px]">
+                <p className="text-[18px]">
                   Complex legal challenges rarely exist in isolation. CP LEX
                   brings together expertise across corporate, commercial,
                   litigation, and regulatory matters to deliver coordinated
