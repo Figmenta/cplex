@@ -94,10 +94,8 @@ The transaction reflects continued consolidation in the European organic food se
   {
     id: "chimera-sphinx",
     date: "September 02, 2026",
-    title:
-      "CP | LEX advises Chimera Bio on takeover of Sphinx Life",
-    excerpt:
-      "CP | LEX advises Chimera Bio on takeover of Sphinx Life",
+    title: "CP | LEX advises Chimera Bio on takeover of Sphinx Life",
+    excerpt: "CP | LEX advises Chimera Bio on takeover of Sphinx Life",
     body: `CPLEX advised Chimera Bio on its recommended takeover offer for Sphinx Life, including regulatory filings and shareholder communications.
 
 Our multidisciplinary team supported transaction structuring, disclosure obligations, and coordination with financial advisors.`,

@@ -7,6 +7,7 @@ import {
   IMAGE_OUR_PROFESSIONALS,
   IMAGE_THE_FIRM_BUILDING,
 } from "./content";
+import { HomeNewsMarquee } from "./home-news-marquee";
 import { HOME_VT } from "./home-view-transition";
 
 /** Above default cell stacking so the expanding card paints on top (DOM order otherwise favors later cells). */
@@ -159,30 +160,30 @@ export function HomeGrid({
         </p>
       </button>
 
-      {/* Our News — top right */}
-      <button
-        type="button"
+      {/* Our News — top right (div: marquee is scrollable; nested buttons invalid inside <button>) */}
+      <div
         ref={setCellRef(1)}
+        role="button"
+        tabIndex={0}
         onClick={(e) => {
           liftForExpand(e.currentTarget);
           onOpenNews();
         }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            liftForExpand(e.currentTarget);
+            onOpenNews();
+          }
+        }}
         style={{ viewTransitionName: vtNews(stackOrigin) }}
-        className={`group ${cellStackClass(1, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
+        className={`group ${cellStackClass(1, stackOrigin)} flex min-h-0 cursor-pointer flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
-        <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
+        <span className="shrink-0 px-5 pb-1 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           Our News
         </span>
-        <p className="line-clamp-4 px-5 text-[10px] leading-snug text-foreground/90 md:text-xs">
-          Orion Capital completed a strategic minority investment in NovaGrid
-          Technologies, a European developer of smart energy infrastructure. CP
-          LEX advised the investor on the transaction and related corporate
-          matters.
-        </p>
-        <p className="mt-2 px-5 text-[9px] uppercase tracking-wide text-news-accent md:text-[10px]">
-          March 12, 2027
-        </p>
-      </button>
+        <HomeNewsMarquee compact interactive={false} />
+      </div>
 
       {/* Areas of expertise — bottom left (outer cell does not expand; inner tiles do) */}
       <div

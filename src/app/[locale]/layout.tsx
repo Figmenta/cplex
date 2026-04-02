@@ -4,7 +4,6 @@ import LocaleWrapper from "@/components/i18n/LocaleWrapper";
 import { LOCALES } from "@/lib/i18n/constants";
 // import { GoogleTagManager } from "@next/third-parties/google";
 // import { Metadata } from "next";
-import SmoothScrolling from "@/components/smooth-scroll";
 
 type RootLayoutProps = {
   children: React.ReactNode;
@@ -43,15 +42,7 @@ export default async function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <LocaleWrapper locale={locale}>
-          <SmoothScrolling>
-            {process.env.NODE_ENV === "development" ? (
-              <main>{children}</main>
-            ) : (
-              <>
-                <main className="select-none">{children}</main>
-              </>
-            )}
-          </SmoothScrolling>
+            <main className="select-none">{children}</main>
         </LocaleWrapper>
       </body>
     </html>
