@@ -1,24 +1,50 @@
+import Link from "next/link";
+
 export function HomeFooter() {
   return (
     <footer
-      className="grid w-full shrink-0 grid-cols-1 items-center gap-4 border-t border-border/20 bg-background px-4 py-3 md:grid-cols-3 md:gap-6 md:px-12"
-      style={{ minHeight: "var(--home-footer-height)" }}
+      className="w-full items-center gap-4 px-4 py-3 md:gap-6 md:px-12"
+      style={{
+        minHeight: "var(--home-footer-height)",
+        background:
+          "linear-gradient(118deg, rgba(0, 10, 33, 0.00) -32.49%, rgba(12, 26, 57, 0.00) 34.65%)",
+      }}
     >
-      <div className="flex min-w-0 flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[10px] leading-none text-muted-foreground md:justify-start md:text-xs">
-        <span>© 2025 CP | LEX</span>
-        <a href="#" className="hover:text-foreground/90">
-          Terms &amp; Conditions
-        </a>
-        <a href="#" className="hover:text-foreground/90">
-          Privacy Policy
-        </a>
-      </div>
-      <p className="text-footer-slogan text-center font-serif text-[10px] italic leading-tight md:text-xs">
-        Legal expertise, strategically delivered.
-      </p>
-      <div className="text-center text-[10px] leading-snug text-muted-foreground md:text-right md:text-xs">
-        <p>Phone: +39 06 1234 5678</p>
-        <p>Email: info@cplex.it</p>
+      <div className="flex items-center justify-between w-full h-full">
+        <div className="flex items-center gap-4">
+          <p className="text-[#94A3B8] text-[12px]">© 2026 CP | LEX</p>
+          <Link
+            href="/terms-and-conditions"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
+          >
+            Terms & Conditions
+          </Link>
+          <Link
+            href="/privacy-policy"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
+          >
+            Privacy Policy
+          </Link>
+        </div>
+        <div className="flex items-center gap-4">
+          <p className="text-[#94A3B8] text-[12px] italic">
+            Legal expertise, strategically delivered.
+          </p>
+        </div>
+        <div className="flex items-center gap-4">
+          <Link
+            href="tel:+390612345678"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
+          >
+            Phone: +39 06 1234 5678
+          </Link>
+          <Link
+            href="mailto:info@cplex.it"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
+          >
+            Email: info@cplex.it
+          </Link>
+        </div>
       </div>
     </footer>
   );

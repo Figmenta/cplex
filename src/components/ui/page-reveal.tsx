@@ -85,13 +85,13 @@ export default function PageReveal() {
       >
         {/* Equal side columns so the brand stays optically centered */}
         <div className="min-w-0 flex-1" aria-hidden />
-        <div className="flex w-full min-w-0 max-w-2xl shrink-0 flex-col items-center gap-1 px-2 text-center sm:px-4">
+        <div className="flex w-full min-w-0 max-w-2xl shrink-0 flex-col items-center gap-1 px-2 bg-red-500 text-center sm:px-4">
           <Image
             src="/logo.svg"
             alt="CP | LEX"
             width={800}
             height={800}
-            className="h-10 w-auto max-w-full select-none"
+            className="h-8 w-auto max-w-full select-none"
           />
           <p className="font-mono text-[8px] font-medium leading-snug tracking-wide text-foreground">
             Justice, Integrity, and Excellence in Practice

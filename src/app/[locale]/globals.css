@@ -79,7 +79,7 @@
 :root {
   --radius: 0.5rem;
   /* Home layout — Figmenta24 frame 12679:4613 (1440×1064 reference) */
-  --home-header-height: 107px;
+  --home-header-height: 96px;
   --home-footer-height: 61px;
   --home-subnav-height: 52px;
   /* Brand accents (Figma) */
@@ -188,11 +188,37 @@
   }
 }
 
-/* CP LEX home — View Transitions (grid ↔ expanded shared surfaces, Figmenta24) */
+/* CP LEX home — View Transitions: kill UA opacity crossfade (keep morph on ::view-transition-group) */
+@keyframes home-vt-opacity-flat {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @supports (view-transition-name: none) {
   ::view-transition-group(*) {
     animation-duration: 0.68s;
     animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    opacity: 1 !important;
+  }
+
+  /* Replace UA fade-out / fade-in on snapshots so expand/contract stay fully opaque */
+  ::view-transition-old(root),
+  ::view-transition-new(root),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation-name: home-vt-opacity-flat !important;
+    animation-duration: 0.68s !important;
+    animation-timing-function: linear !important;
+    animation-fill-mode: both !important;
+    opacity: 1 !important;
+  }
+
+  ::view-transition-image-pair(*) {
+    opacity: 1 !important;
   }
 }
 

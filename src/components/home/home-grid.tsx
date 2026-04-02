@@ -9,6 +9,15 @@ import {
 } from "./content";
 import { HOME_VT } from "./home-view-transition";
 
+/** Above default cell stacking so the expanding card paints on top (DOM order otherwise favors later cells). */
+const EXPAND_LIFT_Z = 30;
+
+function liftForExpand(el: HTMLElement | null) {
+  if (!el) return;
+  el.style.position = "relative";
+  el.style.zIndex = String(EXPAND_LIFT_Z);
+}
+
 /** 0 firm | 1 news | 2 expertise | 3 professionals */
 export type HomeGridCellIndex = 0 | 1 | 2 | 3;
 
@@ -39,14 +48,17 @@ export function HomeGrid({
     };
 
   return (
-    <div className="grid h-full min-h-0 w-full grid-cols-2 grid-rows-2 gap-0 border border-border/15">
+    <div className="relative grid h-full min-h-0 w-full grid-cols-2 grid-rows-2 gap-0 border border-border/15">
       {/* The Firm — top left */}
       <button
         type="button"
         ref={setCellRef(0)}
-        onClick={onOpenFirm}
+        onClick={(e) => {
+          liftForExpand(e.currentTarget);
+          onOpenFirm();
+        }}
         style={{ viewTransitionName: HOME_VT.firm }}
-        className="group relative flex min-h-0 flex-col overflow-hidden rounded-md border-r border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+        className="group relative z-[1] flex min-h-0 flex-col overflow-hidden rounded-none border-r border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
       >
         <div className="pointer-events-none absolute inset-0">
           <Image
@@ -71,9 +83,12 @@ export function HomeGrid({
       <button
         type="button"
         ref={setCellRef(1)}
-        onClick={onOpenNews}
+        onClick={(e) => {
+          liftForExpand(e.currentTarget);
+          onOpenNews();
+        }}
         style={{ viewTransitionName: HOME_VT.news }}
-        className="group relative flex min-h-0 flex-col overflow-hidden rounded-md border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+        className="group relative z-[1] flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
       >
         <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           Our News
@@ -92,7 +107,7 @@ export function HomeGrid({
       {/* Areas of expertise — bottom left (outer cell does not expand; inner tiles do) */}
       <div
         ref={setCellRef(2)}
-        className="relative flex min-h-0 flex-col overflow-hidden rounded-md border-r border-border/15 bg-background"
+        className="relative z-[1] flex min-h-0 flex-col overflow-hidden rounded-none border-r border-border/15 bg-background"
       >
         <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           Areas of expertise
@@ -105,10 +120,12 @@ export function HomeGrid({
               ref={setTileRef(tileIndex)}
               onClick={(e) => {
                 e.stopPropagation();
+                liftForExpand(e.currentTarget);
+                liftForExpand(cellRefs.current[2]);
                 onOpenExpertise(area.slug, tileIndex);
               }}
               style={{ viewTransitionName: HOME_VT.expertise(area.slug) }}
-              className="flex min-h-0 flex-col items-center justify-center gap-2 rounded-sm bg-background px-1 py-2 text-center outline-none transition-colors hover:bg-muted/20 focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-2 text-center outline-none transition-colors hover:bg-muted/20 focus-visible:ring-2 focus-visible:ring-ring"
             >
               <Image
                 src={area.icon}
@@ -129,9 +146,12 @@ export function HomeGrid({
       <button
         type="button"
         ref={setCellRef(3)}
-        onClick={onOpenProfessionals}
+        onClick={(e) => {
+          liftForExpand(e.currentTarget);
+          onOpenProfessionals();
+        }}
         style={{ viewTransitionName: HOME_VT.professionals }}
-        className="group relative flex min-h-0 flex-col overflow-hidden rounded-md text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+        className="group relative z-[1] flex min-h-0 flex-col overflow-hidden rounded-none text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
       >
         <div className="pointer-events-none absolute inset-0">
           <Image

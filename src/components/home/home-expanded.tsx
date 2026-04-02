@@ -40,7 +40,7 @@ export function ExpandedFirm({
   return (
     <div
       className="relative flex h-full min-h-0 flex-col"
-      style={{ viewTransitionName: HOME_VT.firm }}
+      style={{ viewTransitionName: HOME_VT.firm, borderRadius: 0 }}
     >
       {/* Full-bleed hero: image fills main area; copy overlaid on the left */}
       <div className="relative min-h-0 flex-1 overflow-y-auto">
@@ -142,7 +142,7 @@ export function ExpandedNewsIndex({
   return (
     <div
       className="flex h-full min-h-0 flex-col bg-background"
-      style={{ viewTransitionName: HOME_VT.news }}
+      style={{ viewTransitionName: HOME_VT.news, borderRadius: 0 }}
     >
       <div className="shrink-0 px-5 pt-5 md:px-10">
         <h2 className={sectionTitle}>Our News</h2>
@@ -177,7 +177,7 @@ export function ExpandedNewsArticle({
   return (
     <div
       className="flex h-full min-h-0 flex-col bg-background"
-      style={{ viewTransitionName: HOME_VT.news }}
+      style={{ viewTransitionName: HOME_VT.news, borderRadius: 0 }}
     >
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
         <article className="popup-scroll flex min-h-0 min-w-0 flex-[1.7] flex-col overflow-y-auto border-border/15 md:border-r">
@@ -264,7 +264,10 @@ export function ExpandedExpertise({
   return (
     <div
       className="relative flex h-full min-h-0 flex-col"
-      style={{ viewTransitionName: HOME_VT.expertise(slug) }}
+      style={{
+        viewTransitionName: HOME_VT.expertise(slug),
+        borderRadius: 0,
+      }}
     >
       {/* Full-bleed background + left overlay column */}
       <div className="relative min-h-0 flex-1 overflow-y-auto">
@@ -352,7 +355,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
   return (
     <div
       className="relative flex h-full min-h-0 flex-col"
-      style={{ viewTransitionName: HOME_VT.professionals }}
+      style={{ viewTransitionName: HOME_VT.professionals, borderRadius: 0 }}
     >
       <div className="relative min-h-0 flex-1 overflow-hidden">
         <Image

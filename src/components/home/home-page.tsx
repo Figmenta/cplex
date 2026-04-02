@@ -161,28 +161,28 @@ export default function HomePage() {
     >
       <header
         ref={headerRef}
-        className="fixed left-0 right-0 top-1/2 z-50 flex -translate-y-1/2 scale-[0.5] transform items-center justify-between gap-3 px-4 pt-[max(1.25rem,env(safe-area-inset-top))] pb-4 md:gap-6 md:px-10"
+        className="fixed left-0 right-0 top-1/2 z-50 flex -translate-y-1/2 scale-[0.5] transform items-center justify-between gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 md:gap-5 md:px-10"
         style={{ minHeight: "var(--home-header-height)" }}
       >
         <div className="min-w-0 flex-1" aria-hidden />
-        <div className="flex w-full min-w-0 max-w-2xl shrink-0 flex-col items-center gap-1 px-2 text-center sm:px-4">
+        <div className="flex w-full min-w-0 max-w-2xl shrink-0 flex-col items-center gap-0.5 px-2 text-center sm:px-4">
           <Image
             src="/logo.svg"
             alt="CP | LEX"
             width={800}
             height={800}
-            className="h-10 w-auto max-w-full select-none md:h-11"
+            className="h-7 w-auto max-w-full select-none md:h-8"
           />
-          <p className="font-montserrat text-[8px] font-medium leading-snug tracking-wide text-foreground md:text-[10px]">
+          <p className="font-montserrat text-[8px] font-medium leading-tight tracking-wide text-foreground md:leading-snug">
             Justice, Integrity, and Excellence in Practice
           </p>
-          <p className="text-[7px] font-light tracking-[0.2em] uppercase md:text-[8px]">
+          <p className="text-[7px] font-light leading-tight tracking-[0.2em] uppercase">
             EST. 1985
           </p>
         </div>
         <div
           ref={langSwitcherRef}
-          className="pointer-events-none invisible flex min-h-[40px] min-w-[72px] flex-1 items-center justify-end md:min-w-[88px]"
+          className="pointer-events-none invisible flex min-h-[36px] min-w-[72px] flex-1 items-center justify-end md:min-w-[88px]"
         >
           <LanguageSwitcher />
         </div>
