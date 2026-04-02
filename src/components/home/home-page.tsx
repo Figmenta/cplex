@@ -4,6 +4,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { flushSync } from "react-dom";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { FIRM_TABS } from "./content";
 import type { ExpertiseSlug } from "./content";
@@ -17,7 +18,10 @@ import {
 } from "./home-expanded";
 import { HomeFooter } from "./home-footer";
 import { HomeGrid } from "./home-grid";
-import { startHomeViewTransition } from "./home-view-transition";
+import {
+  gridOriginToVtName,
+  startHomeViewTransition,
+} from "./home-view-transition";
 
 const pauseTween = (duration: number) =>
   gsap.to({ t: 0 }, { t: 1, duration, ease: "none" });
@@ -51,6 +55,10 @@ export default function HomePage() {
   const originRef = useRef<GridOrigin>({ kind: "cell", index: 0 });
   const [introDone, setIntroDone] = useState(false);
   const [view, setView] = useState<HomeView>({ mode: "grid" });
+  /** During collapse VT: lift the returning card in the same paint as grid (refs/DOM after commit are too late for VT snapshot). */
+  const [gridStackOrigin, setGridStackOrigin] = useState<GridOrigin | null>(
+    null
+  );
 
   useEffect(() => {
     if (view.mode !== "expertise") return;
@@ -61,10 +69,12 @@ export default function HomePage() {
   }, [view]);
 
   const runViewTransition = useCallback(
-    (update: () => void) => {
+    (update: () => void, liftVtName?: string) => {
       if (busyRef.current) return;
       busyRef.current = true;
-      void startHomeViewTransition(update).finally(() => {
+      void startHomeViewTransition(update, {
+        liftTransitionName: liftVtName,
+      }).finally(() => {
         busyRef.current = false;
       });
     },
@@ -74,18 +84,33 @@ export default function HomePage() {
   const openFromGrid = useCallback(
     (next: HomeView, origin: GridOrigin) => {
       runViewTransition(() => {
-        originRef.current = origin;
-        setView(next);
-      });
+        flushSync(() => {
+          setGridStackOrigin(null);
+          originRef.current = origin;
+          setView(next);
+        });
+      }, gridOriginToVtName(origin));
     },
     [runViewTransition]
   );
 
   const collapseToGrid = useCallback(() => {
-    runViewTransition(() => {
-      setView({ mode: "grid" });
+    if (busyRef.current) return;
+    busyRef.current = true;
+    const lift = gridOriginToVtName(originRef.current);
+    void startHomeViewTransition(
+      () => {
+        flushSync(() => {
+          setView({ mode: "grid" });
+          setGridStackOrigin(originRef.current);
+        });
+      },
+      { liftTransitionName: lift }
+    ).finally(() => {
+      busyRef.current = false;
+      setGridStackOrigin(null);
     });
-  }, [runViewTransition]);
+  }, []);
 
   const transitionToView = useCallback((next: HomeView) => {
     void startHomeViewTransition(() => {
@@ -199,6 +224,7 @@ export default function HomePage() {
               <HomeGrid
                 cellRefs={cellRefs}
                 expertiseTileRefs={expertiseTileRefs}
+                stackOrigin={gridStackOrigin}
                 onOpenFirm={() =>
                   openFromGrid(
                     { mode: "firm", tab: "overview" },

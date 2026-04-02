@@ -41,7 +41,7 @@ export default async function RootLayout({
         {/* Preconnect to critical domains */}
         <link rel="preconnect" href="https://cdn.sanity.io" />
       </head>
-      <body>
+      <body suppressHydrationWarning>
         <LocaleWrapper locale={locale}>
           <SmoothScrolling>
             {process.env.NODE_ENV === "development" ? (

@@ -18,12 +18,91 @@ function liftForExpand(el: HTMLElement | null) {
   el.style.zIndex = String(EXPAND_LIFT_Z);
 }
 
+/** Matches the card/tile we opened from — use on collapse so VT “new” snapshot stacks like expand. */
+export type HomeExpandOrigin =
+  | { kind: "cell"; index: number }
+  | { kind: "expertise-tile"; innerIndex: number };
+
+/** z-index from React state so collapse VT snapshot sees correct stacking (refs/inline after commit are too late). */
+function cellStackClass(
+  cellIndex: HomeGridCellIndex,
+  stackOrigin: HomeExpandOrigin | null
+) {
+  if (!stackOrigin) return "relative z-[1]";
+  if (stackOrigin.kind === "cell" && stackOrigin.index === cellIndex) {
+    return "relative z-[30]";
+  }
+  if (stackOrigin.kind === "expertise-tile" && cellIndex === 2) {
+    return "relative z-[30]";
+  }
+  return "relative z-[1]";
+}
+
+function tileStackClass(
+  tileIndex: number,
+  stackOrigin: HomeExpandOrigin | null
+) {
+  if (!stackOrigin) return "relative z-[1]";
+  if (
+    stackOrigin.kind === "expertise-tile" &&
+    stackOrigin.innerIndex === tileIndex
+  ) {
+    return "relative z-[30]";
+  }
+  return "relative z-[1]";
+}
+
+/**
+ * During collapse VT, `stackOrigin` is set on the same commit as the grid. If every
+ * cell keeps a view-transition-name, the "new" snapshot creates four entering groups
+ * that paint above the shared morph — DOM/CSS z-index does not apply to those layers.
+ * While `stackOrigin` is set, only the origin element keeps a name; others use `none`
+ * so they only participate in the root snapshot.
+ */
+function vtFirm(stackOrigin: HomeExpandOrigin | null): string {
+  if (!stackOrigin) return HOME_VT.firm;
+  return stackOrigin.kind === "cell" && stackOrigin.index === 0
+    ? HOME_VT.firm
+    : "none";
+}
+
+function vtNews(stackOrigin: HomeExpandOrigin | null): string {
+  if (!stackOrigin) return HOME_VT.news;
+  return stackOrigin.kind === "cell" && stackOrigin.index === 1
+    ? HOME_VT.news
+    : "none";
+}
+
+function vtProfessionals(stackOrigin: HomeExpandOrigin | null): string {
+  if (!stackOrigin) return HOME_VT.professionals;
+  return stackOrigin.kind === "cell" && stackOrigin.index === 3
+    ? HOME_VT.professionals
+    : "none";
+}
+
+function vtExpertiseTile(
+  tileIndex: number,
+  slug: ExpertiseSlug,
+  stackOrigin: HomeExpandOrigin | null
+): string {
+  if (!stackOrigin) return HOME_VT.expertise(slug);
+  if (
+    stackOrigin.kind === "expertise-tile" &&
+    stackOrigin.innerIndex === tileIndex
+  ) {
+    return HOME_VT.expertise(slug);
+  }
+  return "none";
+}
+
 /** 0 firm | 1 news | 2 expertise | 3 professionals */
 export type HomeGridCellIndex = 0 | 1 | 2 | 3;
 
 type HomeGridProps = {
   cellRefs: React.MutableRefObject<(HTMLElement | null)[]>;
   expertiseTileRefs: React.MutableRefObject<(HTMLElement | null)[]>;
+  /** Set during collapse VT so the incoming “new” snapshot stacks the returning card above siblings. */
+  stackOrigin: HomeExpandOrigin | null;
   onOpenFirm: () => void;
   onOpenNews: () => void;
   onOpenProfessionals: () => void;
@@ -33,6 +112,7 @@ type HomeGridProps = {
 export function HomeGrid({
   cellRefs,
   expertiseTileRefs,
+  stackOrigin,
   onOpenFirm,
   onOpenNews,
   onOpenProfessionals,
@@ -57,8 +137,8 @@ export function HomeGrid({
           liftForExpand(e.currentTarget);
           onOpenFirm();
         }}
-        style={{ viewTransitionName: HOME_VT.firm }}
-        className="group relative z-[1] flex min-h-0 flex-col overflow-hidden rounded-none border-r border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+        style={{ viewTransitionName: vtFirm(stackOrigin) }}
+        className={`group ${cellStackClass(0, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-r border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
         <div className="pointer-events-none absolute inset-0">
           <Image
@@ -87,8 +167,8 @@ export function HomeGrid({
           liftForExpand(e.currentTarget);
           onOpenNews();
         }}
-        style={{ viewTransitionName: HOME_VT.news }}
-        className="group relative z-[1] flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+        style={{ viewTransitionName: vtNews(stackOrigin) }}
+        className={`group ${cellStackClass(1, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
         <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           Our News
@@ -107,7 +187,7 @@ export function HomeGrid({
       {/* Areas of expertise — bottom left (outer cell does not expand; inner tiles do) */}
       <div
         ref={setCellRef(2)}
-        className="relative z-[1] flex min-h-0 flex-col overflow-hidden rounded-none border-r border-border/15 bg-background"
+        className={`${cellStackClass(2, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-r border-border/15 bg-background`}
       >
         <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           Areas of expertise
@@ -124,8 +204,14 @@ export function HomeGrid({
                 liftForExpand(cellRefs.current[2]);
                 onOpenExpertise(area.slug, tileIndex);
               }}
-              style={{ viewTransitionName: HOME_VT.expertise(area.slug) }}
-              className="flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-2 text-center outline-none transition-colors hover:bg-muted/20 focus-visible:ring-2 focus-visible:ring-ring"
+              style={{
+                viewTransitionName: vtExpertiseTile(
+                  tileIndex,
+                  area.slug,
+                  stackOrigin
+                ),
+              }}
+              className={`flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-2 text-center outline-none transition-colors hover:bg-muted/20 focus-visible:ring-2 focus-visible:ring-ring ${tileStackClass(tileIndex, stackOrigin)}`}
             >
               <Image
                 src={area.icon}
@@ -150,8 +236,8 @@ export function HomeGrid({
           liftForExpand(e.currentTarget);
           onOpenProfessionals();
         }}
-        style={{ viewTransitionName: HOME_VT.professionals }}
-        className="group relative z-[1] flex min-h-0 flex-col overflow-hidden rounded-none text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+        style={{ viewTransitionName: vtProfessionals(stackOrigin) }}
+        className={`group ${cellStackClass(3, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
         <div className="pointer-events-none absolute inset-0">
           <Image
