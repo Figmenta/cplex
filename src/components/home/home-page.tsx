@@ -59,13 +59,6 @@ export default function HomePage() {
   const [gridStackOrigin, setGridStackOrigin] = useState<GridOrigin | null>(
     null
   );
-  /**
-   * Unmount expertise tab/back chrome in the same commit before collapse VT starts.
-   * Keeps chrome inside the named VT group for expand (visible during morph) but
-   * removes it from the old snapshot on collapse (no stripe / less crop vs tile).
-   */
-  const [expertiseCollapseChromeHidden, setExpertiseCollapseChromeHidden] =
-    useState(false);
 
   useEffect(() => {
     if (view.mode !== "expertise") return;
@@ -93,7 +86,6 @@ export default function HomePage() {
       runViewTransition(() => {
         flushSync(() => {
           setGridStackOrigin(null);
-          setExpertiseCollapseChromeHidden(false);
           originRef.current = origin;
           setView(next);
         });
@@ -106,9 +98,6 @@ export default function HomePage() {
     if (busyRef.current) return;
     busyRef.current = true;
     const lift = gridOriginToVtName(originRef.current);
-    if (originRef.current.kind === "expertise-tile") {
-      flushSync(() => setExpertiseCollapseChromeHidden(true));
-    }
     void startHomeViewTransition(
       () => {
         flushSync(() => {
@@ -120,7 +109,6 @@ export default function HomePage() {
     ).finally(() => {
       busyRef.current = false;
       setGridStackOrigin(null);
-      setExpertiseCollapseChromeHidden(false);
     });
   }, []);
 
@@ -300,7 +288,6 @@ export default function HomePage() {
             <div className="absolute inset-0 z-10 flex min-h-0 flex-col">
               <ExpandedExpertise
                 slug={view.slug}
-                collapseChromeHidden={expertiseCollapseChromeHidden}
                 onBack={collapseToGrid}
                 onSelectSlug={(slug) =>
                   transitionToView({ mode: "expertise", slug })

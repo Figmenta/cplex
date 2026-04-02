@@ -906,13 +906,10 @@ export function ExpandedNewsArticle({
 
 export function ExpandedExpertise({
   slug,
-  collapseChromeHidden = false,
   onBack,
   onSelectSlug,
 }: {
   slug: ExpertiseSlug;
-  /** True only while starting collapse VT — tab bar + back row unmount so they are not in the old snapshot. */
-  collapseChromeHidden?: boolean;
   onBack: () => void;
   onSelectSlug: (s: ExpertiseSlug) => void;
 }) {
@@ -929,116 +926,107 @@ export function ExpandedExpertise({
 
   return (
     <div
-      className="relative flex h-full min-h-0 flex-col overflow-hidden"
+      className="relative flex h-full min-h-0 flex-col"
       style={{
         viewTransitionName: HOME_VT.expertise(slug),
         borderRadius: 0,
       }}
     >
-      {/*
-        Chrome must stay inside this named node so it paints with ::view-transition-group
-        (expand: visible during morph). On collapse, parent sets collapseChromeHidden and
-        unmounts chrome before startViewTransition so the old snapshot is hero+scroll only.
-      */}
-      <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden">
-        {/* Hero fills the panel only; copy scrolls independently on top (image does not move with scroll) */}
-        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-          <Image
-            src={IMAGE_EXPERTISE_HERO}
-            alt=""
-            fill
-            className="object-cover object-[center_30%] brightness-[0.45]"
-            sizes="100vw"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/65 to-transparent" />
-        </div>
-        <div className="relative z-10 flex min-h-0 max-w-[900px] flex-1 flex-col overflow-y-auto overscroll-contain [scrollbar-width:none]">
-          <div className="flex w-full flex-col items-start px-6 pb-10 pt-10 md:px-10 md:pb-12">
-            <div className="mb-6 flex flex-col items-start gap-4">
-              <div className="h-14 w-14 shrink-0 md:h-16 md:w-16">
-                <HeroIcon isHovered={false} />
-              </div>
-              <h2 className="font-montserrat text-2xl font-semibold leading-tight text-foreground md:text-[32px]">
-                {area.label}
-              </h2>
+      {/* Hero fills the panel only; copy scrolls independently on top (image does not move with scroll) */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+        <Image
+          src={IMAGE_EXPERTISE_HERO}
+          alt=""
+          fill
+          className="object-cover object-[center_30%] brightness-[0.45]"
+          sizes="100vw"
+          priority
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/65 to-transparent" />
+      </div>
+      <div className="relative z-10 flex min-h-0 max-w-[900px] flex-1 flex-col overflow-y-auto overscroll-contain [scrollbar-width:none]">
+        <div className="flex w-full flex-col items-start px-6 pb-44 pt-10 md:px-10 md:pb-40">
+          <div className="mb-6 flex flex-col items-start gap-4">
+            <div className="h-14 w-14 shrink-0 md:h-16 md:w-16">
+              <HeroIcon isHovered={false} />
             </div>
-            <div className="w-full space-y-6 text-base leading-relaxed text-foreground/95 md:text-base">
-              <section>
-                <h3 className="mb-2 font-semibold text-foreground">Overview</h3>
-                <p>{copy.overview}</p>
-              </section>
-              <section>
-                <h3 className="mb-2 font-semibold text-foreground">Services</h3>
-                <p>{copy.services}</p>
-              </section>
-              <section>
-                <h3 className="mb-2 font-semibold text-foreground">Approach</h3>
-                <p>{copy.approach}</p>
-              </section>
-            </div>
+            <h2 className="font-montserrat text-2xl font-semibold leading-tight text-foreground md:text-[32px]">
+              {area.label}
+            </h2>
+          </div>
+          <div className="w-full space-y-6 text-base leading-relaxed text-foreground/95 md:text-base">
+            <section>
+              <h3 className="mb-2 font-semibold text-foreground">Overview</h3>
+              <p>{copy.overview}</p>
+            </section>
+            <section>
+              <h3 className="mb-2 font-semibold text-foreground">Services</h3>
+              <p>{copy.services}</p>
+            </section>
+            <section>
+              <h3 className="mb-2 font-semibold text-foreground">Approach</h3>
+              <p>{copy.approach}</p>
+            </section>
           </div>
         </div>
       </div>
-      {!collapseChromeHidden && (
-        <nav
-          className="flex shrink-0 flex-col gap-2 bg-transparent"
-          aria-label="Practice areas"
+      <nav
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col gap-2 bg-transparent "
+        aria-label="Practice areas"
+      >
+        <div
+          className="pointer-events-auto flex w-full justify-end px-6 pb-3 pt-0 md:px-10"
+          onMouseLeave={() => setHoveredNavSlug(null)}
         >
           <div
-            className="flex w-full justify-end px-6 pb-3 pt-0 md:px-10"
-            onMouseLeave={() => setHoveredNavSlug(null)}
+            className="relative flex w-full max-w-[557px] overflow-hidden rounded-[8.4px] bg-[#0c1a39]"
+            style={{ height: "110px" }}
           >
-            <div
-              className="relative flex w-full max-w-[557px] overflow-hidden rounded-[8.4px] bg-[#0c1a39]"
-              style={{ height: "110px" }}
-            >
-              {EXPERTISE_AREAS.map((a) => {
-                const NavIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[a.slug];
-                const isActive = a.slug === slug;
-                const navActive = isActive || hoveredNavSlug === a.slug;
-                return (
-                  <button
-                    key={a.slug}
-                    type="button"
-                    onMouseEnter={() => setHoveredNavSlug(a.slug)}
-                    onClick={() => onSelectSlug(a.slug)}
-                    className={`group/tab relative flex flex-1 cursor-pointer flex-col items-center justify-center gap-2 px-4 transition-all duration-300 ${
-                      isActive ? "bg-[#001F55]" : "bg-transparent"
+            {EXPERTISE_AREAS.map((a) => {
+              const NavIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[a.slug];
+              const isActive = a.slug === slug;
+              const navActive = isActive || hoveredNavSlug === a.slug;
+              return (
+                <button
+                  key={a.slug}
+                  type="button"
+                  onMouseEnter={() => setHoveredNavSlug(a.slug)}
+                  onClick={() => onSelectSlug(a.slug)}
+                  className={`group/tab relative flex flex-1 cursor-pointer flex-col items-center justify-center gap-2 px-4 transition-all duration-300 ${
+                    isActive ? "bg-[#001F55]" : "bg-transparent"
+                  }`}
+                >
+                  <div
+                    className={`transition-transform duration-200 group-hover/tab:scale-110 ${
+                      isActive ? "h-12 w-12" : "h-8 w-8"
                     }`}
                   >
-                    <div
-                      className={`transition-transform duration-200 group-hover/tab:scale-110 ${
-                        isActive ? "h-12 w-12" : "h-8 w-8"
-                      }`}
-                    >
-                      <NavIcon isHovered={navActive} />
-                    </div>
-                    <span
-                      className="text-nowrap px-1 text-center text-white transition-all duration-300"
-                      style={{ fontSize: isActive ? "12px" : "6px" }}
-                    >
-                      {a.label}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+                    <NavIcon isHovered={navActive} />
+                  </div>
+                  <span
+                    className="text-nowrap px-1 text-center text-white transition-all duration-300"
+                    style={{ fontSize: isActive ? "12px" : "6px" }}
+                  >
+                    {a.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
-          <div className="flex w-full items-center bg-background px-6 py-2 md:px-10">
-            <button
-              type="button"
-              onClick={onBack}
-              className="group/back inline-flex cursor-pointer items-center gap-2"
-            >
-              <Image src="/icons/back-2.svg" alt="" width={14} height={14} />
-              <span className="font-body text-xs font-semibold uppercase text-white transition-colors">
-                Back to home
-              </span>
-            </button>
-          </div>
-        </nav>
-      )}
+        </div>
+        <div className="pointer-events-auto flex w-full items-center bg-background px-6 py-2 md:px-10">
+          <button
+            type="button"
+            onClick={onBack}
+            className="group/back inline-flex cursor-pointer items-center gap-2"
+          >
+            <Image src="/icons/back-2.svg" alt="" width={14} height={14} />
+            <span className="font-body text-xs font-semibold uppercase text-white transition-colors">
+              Back to home
+            </span>
+          </button>
+        </div>
+      </nav>
     </div>
   );
 }
