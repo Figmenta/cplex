@@ -3,11 +3,11 @@
 import Image from "next/image";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
-import { baseUrl } from "@/constant/variabls";
+import { WEBSITE_URL } from "@/constant/variabls";
 
 export default function FileBlock({ value }: any) {
   const pathname = usePathname();
-  const pageUrl = `${baseUrl}${pathname}`;
+  const pageUrl = `${WEBSITE_URL}${pathname}`;
   const videoProps = {
     loop: value.loop,
     muted: value.muted,
@@ -35,7 +35,7 @@ export default function FileBlock({ value }: any) {
           name: value.videoTitle || "Video content",
           description: value.videoDescription || "Video content",
           thumbnailUrl: [
-            value.videoThumbnail?.asset?.url || `${baseUrl}/logo.webp`,
+            value.videoThumbnail?.asset?.url || `${WEBSITE_URL}/logo.webp`,
           ],
           contentUrl: videoUrl,
           embedUrl: pageUrl,
@@ -50,7 +50,7 @@ export default function FileBlock({ value }: any) {
             name: "Figmenta Studio",
             logo: {
               "@type": "ImageObject",
-              url: `${baseUrl}/logo.webp`,
+              url: `${WEBSITE_URL}/logo.webp`,
             },
           },
         }

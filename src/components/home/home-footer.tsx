@@ -7,7 +7,7 @@ export function HomeFooter() {
       style={{
         minHeight: "var(--home-footer-height)",
         background:
-          "linear-gradient(118deg, rgba(0, 10, 33, 0.00) -32.49%, rgba(12, 26, 57, 0.00) 34.65%)",
+          "background: linear-gradient(116deg, #000A21 3.93%, #0C1A39 34.71%)",
       }}
     >
       <div className="flex items-center justify-between w-full h-full">

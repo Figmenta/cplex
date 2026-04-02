@@ -182,7 +182,10 @@ export default function HomePage() {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-dvh max-h-dvh w-full flex-col overflow-hidden bg-background text-foreground"
+      className="relative flex h-dvh max-h-dvh w-full flex-col overflow-hidden text-foreground"
+      style={{
+        background: "linear-gradient(116deg, #000A21 3.93%, #0C1A39 34.71%)",
+      }}
     >
       <header
         ref={headerRef}
@@ -235,7 +238,10 @@ export default function HomePage() {
                   openFromGrid({ mode: "news" }, { kind: "cell", index: 1 })
                 }
                 onOpenProfessionals={() =>
-                  openFromGrid({ mode: "professionals" }, { kind: "cell", index: 3 })
+                  openFromGrid(
+                    { mode: "professionals" },
+                    { kind: "cell", index: 3 }
+                  )
                 }
                 onOpenExpertise={(slug, innerIndex) =>
                   openFromGrid(
@@ -269,9 +275,7 @@ export default function HomePage() {
           {view.mode === "news-article" && (
             <div className="absolute inset-0 z-10 flex min-h-0 flex-col">
               <ExpandedNewsArticle
-                item={
-                  NEWS_ITEMS.find((n) => n.id === view.id) ?? NEWS_ITEMS[0]
-                }
+                item={NEWS_ITEMS.find((n) => n.id === view.id) ?? NEWS_ITEMS[0]}
                 onBack={collapseToGrid}
                 onBackToIndex={() => transitionToView({ mode: "news" })}
                 onSelectArticle={(id) =>

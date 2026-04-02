@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
 
     const tag = body.tag.trim();
 
-    // Profile `sanity` matches next.config.ts `cacheLife.sanity` — long cache between webhooks
-    revalidateTag(tag, "sanity");
+    // For next 30 days 
+    revalidateTag(tag, { expire: 60 * 60 * 24 * 30 });
 
     return NextResponse.json({ revalidated: true, tag }, { status: 200 });
   } catch (error) {

@@ -1,6 +1,8 @@
 "use client";
 
 import Image from "next/image";
+import { useState } from "react";
+import { EXPERTISE_ANIMATED_ICON_BY_SLUG } from "@/components/icons/expertise-icon";
 import type { ExpertiseSlug } from "./content";
 import {
   EXPERTISE_AREAS,
@@ -128,6 +130,9 @@ export function HomeGrid({
       expertiseTileRefs.current[index] = el;
     };
 
+  const [hoveredExpertiseSlug, setHoveredExpertiseSlug] =
+    useState<ExpertiseSlug | null>(null);
+
   return (
     <div className="relative grid h-full min-h-0 w-full grid-cols-2 grid-rows-2 gap-0 border border-border/15">
       {/* The Firm — top left */}
@@ -139,7 +144,7 @@ export function HomeGrid({
           onOpenFirm();
         }}
         style={{ viewTransitionName: vtFirm(stackOrigin) }}
-        className={`group ${cellStackClass(0, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-r border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
+        className={`cursor-pointer group ${cellStackClass(0, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-r border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
         <div className="pointer-events-none absolute inset-0">
           <Image
@@ -177,7 +182,7 @@ export function HomeGrid({
           }
         }}
         style={{ viewTransitionName: vtNews(stackOrigin) }}
-        className={`group ${cellStackClass(1, stackOrigin)} flex min-h-0 cursor-pointer flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
+        className={`cursor-pointer group ${cellStackClass(1, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
         <span className="shrink-0 px-5 pb-1 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           Our News
@@ -188,17 +193,23 @@ export function HomeGrid({
       {/* Areas of expertise — bottom left (outer cell does not expand; inner tiles do) */}
       <div
         ref={setCellRef(2)}
-        className={`${cellStackClass(2, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-r border-border/15 bg-background`}
+        className={`cursor-pointer ${cellStackClass(2, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none`}
       >
         <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           Areas of expertise
         </span>
-        <div className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-px bg-border/20 p-px">
-          {EXPERTISE_AREAS.map((area, tileIndex) => (
+        <div
+          className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2"
+          onMouseLeave={() => setHoveredExpertiseSlug(null)}
+        >
+          {EXPERTISE_AREAS.map((area, tileIndex) => {
+            const ExpertiseIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[area.slug];
+            return (
             <button
               key={area.slug}
               type="button"
               ref={setTileRef(tileIndex)}
+              onMouseEnter={() => setHoveredExpertiseSlug(area.slug)}
               onClick={(e) => {
                 e.stopPropagation();
                 liftForExpand(e.currentTarget);
@@ -212,20 +223,19 @@ export function HomeGrid({
                   stackOrigin
                 ),
               }}
-              className={`flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-2 text-center outline-none transition-colors hover:bg-muted/20 focus-visible:ring-2 focus-visible:ring-ring ${tileStackClass(tileIndex, stackOrigin)}`}
+              className={`group/tile cursor-pointer flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-3 text-center outline-none transition-colors ${tileStackClass(tileIndex, stackOrigin)}`}
             >
-              <Image
-                src={area.icon}
-                alt=""
-                width={56}
-                height={56}
-                className="h-10 w-10 md:h-14 md:w-14"
-              />
+              <div className="h-10 w-10 transition-transform duration-200 group-hover/tile:scale-110 md:h-14 md:w-14">
+                <ExpertiseIcon
+                  isHovered={hoveredExpertiseSlug === area.slug}
+                />
+              </div>
               <span className="font-montserrat text-[8px] font-medium leading-tight text-foreground md:text-[10px]">
                 {area.label}
               </span>
             </button>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -238,7 +248,7 @@ export function HomeGrid({
           onOpenProfessionals();
         }}
         style={{ viewTransitionName: vtProfessionals(stackOrigin) }}
-        className={`group ${cellStackClass(3, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
+        className={`cursor-pointer group ${cellStackClass(3, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
         <div className="pointer-events-none absolute inset-0">
           <Image

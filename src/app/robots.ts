@@ -1,22 +1,25 @@
-import type { MetadataRoute } from 'next'
-import { baseUrl } from '@/constant/variabls';
+import type { MetadataRoute } from "next";
+import { WEBSITE_URL } from "@/constant/variabls";
 
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
       {
-        userAgent: ['Googlebot', 'Bingbot', 'GPTBot', 'ChatGPT-User', 'OAI-SearchBot'],
-        allow: '/',
+        userAgent: [
+          "Googlebot",
+          "Bingbot",
+          "GPTBot",
+          "ChatGPT-User",
+          "OAI-SearchBot",
+        ],
+        allow: "/",
       },
       {
-        userAgent: '*',
-        allow: '/',
-        disallow: ['/api/', '/admin/', '/preview/'],
+        userAgent: "*",
+        allow: "/",
+        disallow: ["/api/", "/admin/", "/preview/"],
       },
     ],
-    sitemap: [
-      `${baseUrl}/sitemap.xml`,
-      `${baseUrl}/video-sitemap.xml`,
-    ],
-  }
+    sitemap: [`${WEBSITE_URL}/sitemap.xml`],
+  };
 }

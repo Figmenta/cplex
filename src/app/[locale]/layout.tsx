@@ -42,7 +42,7 @@ export default async function RootLayout({
       </head>
       <body suppressHydrationWarning>
         <LocaleWrapper locale={locale}>
-            <main className="select-none">{children}</main>
+          <main className="select-none">{children}</main>
         </LocaleWrapper>
       </body>
     </html>

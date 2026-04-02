@@ -6,7 +6,7 @@ import gsap from "gsap";
 import Image from "next/image";
 import Script from "next/script";
 import { usePathname } from "next/navigation";
-import { baseUrl } from "@/constant/variabls";
+import { WEBSITE_URL } from "@/constant/variabls";
 
 interface ImageCarouselBlockProps {
   value: {
@@ -38,7 +38,7 @@ interface ImageCarouselBlockProps {
 export default function ImageCarouselBlock({ value }: ImageCarouselBlockProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
-  const pageUrl = `${baseUrl}${pathname}`;
+  const pageUrl = `${WEBSITE_URL}${pathname}`;
 
   // Double the media array for seamless looping
   const doubledMedia = [...value.media, ...value.media];
@@ -71,7 +71,7 @@ export default function ImageCarouselBlock({ value }: ImageCarouselBlockProps) {
           name: item.videoTitle || "Video content",
           description: item.videoDescription || "Video content",
           thumbnailUrl: [
-            item.videoThumbnail?.asset?.url || `${baseUrl}/logo.webp`,
+            item.videoThumbnail?.asset?.url || `${WEBSITE_URL}/logo.webp`,
           ],
           contentUrl: videoUrl,
           embedUrl: pageUrl,
@@ -84,7 +84,7 @@ export default function ImageCarouselBlock({ value }: ImageCarouselBlockProps) {
             name: "Figmenta Studio",
             logo: {
               "@type": "ImageObject",
-              url: `${baseUrl}/logo.webp`,
+              url: `${WEBSITE_URL}/logo.webp`,
             },
           },
         },
