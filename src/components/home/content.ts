@@ -60,7 +60,7 @@ export const NEWS_ITEMS: NewsItem[] = [
 
 The transaction strengthens NovaGrid's capacity to deploy next-generation grid infrastructure across Europe. Our team coordinated closely with corporate counsel and regulatory advisors to deliver a seamless closing.`,
     imageSrc:
-      "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&q=80",
+      "/images/user.png",
     imageAlt: "Solar panels in a rural landscape",
   },
   {
@@ -74,7 +74,7 @@ The transaction strengthens NovaGrid's capacity to deploy next-generation grid i
 
 The partnership targets utility-scale solar deployment in multiple jurisdictions, with CP LEX supporting regulatory alignment and cross-border coordination.`,
     imageSrc:
-      "https://images.unsplash.com/photo-1509391366360-2e959784a276?w=1200&q=80",
+      "/images/user.png",
     imageAlt: "Solar energy project",
   },
   {
@@ -88,7 +88,7 @@ The partnership targets utility-scale solar deployment in multiple jurisdictions
 
 The transaction reflects continued consolidation in the European organic food sector. Our team worked across corporate, employment, and regulatory workstreams.`,
     imageSrc:
-      "https://images.unsplash.com/photo-1542838132-92c53300491e?w=1200&q=80",
+      "/images/user.png",
     imageAlt: "Organic food production",
   },
   {
@@ -100,7 +100,7 @@ The transaction reflects continued consolidation in the European organic food se
 
 Our multidisciplinary team supported transaction structuring, disclosure obligations, and coordination with financial advisors.`,
     imageSrc:
-      "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&q=80",
+      "/images/user.png",
     imageAlt: "Business meeting",
   },
 ];
@@ -152,8 +152,12 @@ export const EXPERTISE_COPY: Record<
 
 /** Hero imagery — replace with client assets in /public/images/home/ when available */
 export const IMAGE_THE_FIRM_BUILDING =
-  "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=1600&q=80";
+  "/images/thefirm.png";
 export const IMAGE_OUR_PROFESSIONALS =
-  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1600&q=80";
+  "/images/professional.png";
 export const IMAGE_EXPERTISE_HERO =
-  "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1600&q=80";
+  "/images/expertise.png";
+export const IMAGE_THE_FIRM_2 =
+  "/images/thefirm-2.png";
+export const USER_IMAGE =
+  "/images/user.png";

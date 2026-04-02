@@ -125,10 +125,9 @@ export function HomeGrid({
     cellRefs.current[index] = el;
   };
 
-  const setTileRef =
-    (index: number) => (el: HTMLElement | null) => {
-      expertiseTileRefs.current[index] = el;
-    };
+  const setTileRef = (index: number) => (el: HTMLElement | null) => {
+    expertiseTileRefs.current[index] = el;
+  };
 
   const [hoveredExpertiseSlug, setHoveredExpertiseSlug] =
     useState<ExpertiseSlug | null>(null);
@@ -151,17 +150,25 @@ export function HomeGrid({
             src={IMAGE_THE_FIRM_BUILDING}
             alt="CP LEX office building exterior"
             fill
-            className="object-cover object-center brightness-[0.65] saturate-[0.85]"
+            className="object-cover object-center brightness-[0.65] saturate-[0.30]"
             sizes="50vw"
             priority
           />
-          <div className="absolute inset-0 bg-background/35" aria-hidden />
+          <div
+            className="absolute inset-0 opacity-50"
+            aria-hidden
+            style={{
+              background:
+                "linear-gradient(123.18deg, #000a21 3.93%, #0c1a39 34.71%)",
+            }}
+          />
         </div>
         <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           The Firm
         </span>
         <p className="relative z-10 mt-auto max-w-[min(100%,20rem)] px-5 pb-5 text-[10px] leading-snug text-foreground md:text-xs">
-          CP | LEX is a boutique law firm delivering sophisticated legal solutions.
+          CP | LEX is a boutique law firm delivering sophisticated legal
+          solutions.
         </p>
       </button>
 
@@ -205,35 +212,35 @@ export function HomeGrid({
           {EXPERTISE_AREAS.map((area, tileIndex) => {
             const ExpertiseIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[area.slug];
             return (
-            <button
-              key={area.slug}
-              type="button"
-              ref={setTileRef(tileIndex)}
-              onMouseEnter={() => setHoveredExpertiseSlug(area.slug)}
-              onClick={(e) => {
-                e.stopPropagation();
-                liftForExpand(e.currentTarget);
-                liftForExpand(cellRefs.current[2]);
-                onOpenExpertise(area.slug, tileIndex);
-              }}
-              style={{
-                viewTransitionName: vtExpertiseTile(
-                  tileIndex,
-                  area.slug,
-                  stackOrigin
-                ),
-              }}
-              className={`group/tile cursor-pointer flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-3 text-center outline-none transition-colors ${tileStackClass(tileIndex, stackOrigin)}`}
-            >
-              <div className="h-10 w-10 transition-transform duration-200 group-hover/tile:scale-110 md:h-14 md:w-14">
-                <ExpertiseIcon
-                  isHovered={hoveredExpertiseSlug === area.slug}
-                />
-              </div>
-              <span className="font-montserrat text-[8px] font-medium leading-tight text-foreground md:text-[10px]">
-                {area.label}
-              </span>
-            </button>
+              <button
+                key={area.slug}
+                type="button"
+                ref={setTileRef(tileIndex)}
+                onMouseEnter={() => setHoveredExpertiseSlug(area.slug)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  liftForExpand(e.currentTarget);
+                  liftForExpand(cellRefs.current[2]);
+                  onOpenExpertise(area.slug, tileIndex);
+                }}
+                style={{
+                  viewTransitionName: vtExpertiseTile(
+                    tileIndex,
+                    area.slug,
+                    stackOrigin
+                  ),
+                }}
+                className={`group/tile cursor-pointer flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-3 text-center outline-none transition-colors ${tileStackClass(tileIndex, stackOrigin)}`}
+              >
+                <div className="h-10 w-10 transition-transform duration-200 group-hover/tile:scale-110 md:h-14 md:w-14">
+                  <ExpertiseIcon
+                    isHovered={hoveredExpertiseSlug === area.slug}
+                  />
+                </div>
+                <span className="font-montserrat text-[8px] font-medium leading-tight text-foreground md:text-[10px]">
+                  {area.label}
+                </span>
+              </button>
             );
           })}
         </div>
@@ -255,10 +262,17 @@ export function HomeGrid({
             src={IMAGE_OUR_PROFESSIONALS}
             alt="CP LEX legal professionals"
             fill
-            className="object-cover object-[center_20%] brightness-[0.7] saturate-[0.8]"
+            className="object-cover object-[center_20%] brightness-[0.65] saturate-[0.30]"
             sizes="50vw"
           />
-          <div className="absolute inset-0 bg-background/40" aria-hidden />
+          <div
+            className="absolute inset-0 opacity-50"
+            aria-hidden
+            style={{
+              background:
+                "linear-gradient(123.18deg, #000a21 3.93%, #0c1a39 34.71%)",
+            }}
+          />
         </div>
         <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
           The Professionals

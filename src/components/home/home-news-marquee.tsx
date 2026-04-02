@@ -90,7 +90,7 @@ export function HomeNewsMarquee({
           const isHighlight = item.id === highlightId;
           const cardBase = compact
             ? `w-full text-left ${isHighlight ? "px-2 py-1.5" : "px-2 py-1"}`
-            : `w-full max-w-3xl text-left outline-none transition-opacity ${
+            : `w-full max-w-[900px] text-left outline-none transition-opacity ${
                 isHighlight ? "px-4 py-3" : "px-4 py-2"
               }`;
 
