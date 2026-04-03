@@ -78,7 +78,7 @@ export function ExpandedNewsArticle({
         </aside>
       </div>
       <nav
-        className="flex w-full shrink-0 flex-wrap items-center gap-2 overflow-hidden bg-[#121111] px-6 md:px-10"
+        className="flex w-full shrink-0 flex-wrap items-center gap-2 overflow-hidden px-6 md:px-10"
         style={SUBNAV_MIN_STYLE}
       >
         <BackButton onClick={onBack} />
