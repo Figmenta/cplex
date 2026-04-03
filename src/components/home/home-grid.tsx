@@ -139,12 +139,12 @@ export function HomeGrid({
             src={IMAGE_THE_FIRM_BUILDING}
             alt="CP LEX office building exterior"
             fill
-            className="object-cover object-center brightness-[0.65] saturate-[0.30]"
+            className="object-cover object-center brightness-[0.8] saturate-[0.30] transition-all duration-300 group-hover:brightness-100 group-hover:saturate-100"
             sizes="50vw"
             priority
           />
           <div
-            className="absolute inset-0 opacity-50"
+            className="absolute inset-0 opacity-50 transition-opacity duration-300 group-hover:opacity-0"
             aria-hidden
             style={{
               background:
@@ -246,11 +246,11 @@ export function HomeGrid({
             src={IMAGE_OUR_PROFESSIONALS}
             alt="CP LEX legal professionals"
             fill
-            className="object-cover object-[center_20%] brightness-[0.65] saturate-[0.30]"
+            className="object-cover object-[center_20%] brightness-[0.8] saturate-[0.30] transition-all duration-300 group-hover:brightness-100 group-hover:saturate-100"
             sizes="50vw"
           />
           <div
-            className="absolute inset-0 opacity-50"
+            className="absolute inset-0 opacity-50 transition-opacity duration-300 group-hover:opacity-0"
             aria-hidden
             style={{
               background:

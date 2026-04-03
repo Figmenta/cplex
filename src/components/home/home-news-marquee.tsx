@@ -82,7 +82,9 @@ export function HomeNewsMarquee({
       className={`relative flex min-h-0 w-full flex-1 flex-col ${compact ? "md:px-2" : "px-4"}`}
       aria-label="News"
     >
-      <div className="absolute top-0 left-0 right-0 h-10 z-10 pointer-events-none bg-linear-to-b from-[#0A1225] to-transparent" />
+      <div
+        className={`absolute top-0 left-0 right-0 h-${compact ? "8" : "10"} z-10 pointer-events-none bg-linear-to-b from-[#0A1225] to-transparent`}
+      />
       <CarouselContent
         className={cn("flex h-full max-h-full min-h-0 flex-col", contentGap)}
       >
@@ -138,7 +140,9 @@ export function HomeNewsMarquee({
         })}
       </CarouselContent>
 
-      <div className="absolute bottom-0 left-0 right-0 h-10 z-10 pointer-events-none bg-linear-to-t from-[#0A1225] to-transparent" />
+      <div
+        className={`absolute bottom-0 left-0 right-0 h-${compact ? "8" : "10"} z-10 pointer-events-none bg-linear-to-t from-[#0A1225] to-transparent`}
+      />
     </Carousel>
   );
 }

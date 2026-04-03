@@ -223,23 +223,17 @@
   }
 
   html[data-home-vt-active="home-expertise-mergers-acquisitions"]
-    ::view-transition-group(home-expertise-mergers-acquisitions) {
-    z-index: 100;
-  }
-
+    ::view-transition-group(home-expertise-mergers-acquisitions),
   html[data-home-vt-active="home-expertise-corporate-commercial"]
-    ::view-transition-group(home-expertise-corporate-commercial) {
-    z-index: 100;
-  }
-
+    ::view-transition-group(home-expertise-corporate-commercial),
   html[data-home-vt-active="home-expertise-intellectual-property"]
-    ::view-transition-group(home-expertise-intellectual-property) {
-    z-index: 100;
-  }
-
+    ::view-transition-group(home-expertise-intellectual-property),
   html[data-home-vt-active="home-expertise-litigation-dispute"]
     ::view-transition-group(home-expertise-litigation-dispute) {
+    /* Keep expertise morph above other groups, but clip anything that would
+       visually overflow past the card bounds to avoid a bottom stripe. */
     z-index: 100;
+    overflow: hidden;
   }
 
   ::view-transition-group(*) {
@@ -259,10 +253,10 @@
     animation-fill-mode: both !important;
     opacity: 1 !important;
   }
-
+/* 
   ::view-transition-image-pair(*) {
     opacity: 1 !important;
-  }
+  } */
 }
 
 body {

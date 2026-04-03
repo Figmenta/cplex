@@ -45,6 +45,7 @@ export default function HomePage() {
   const headerRef = useRef<HTMLElement>(null);
   const langSwitcherRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLElement | null)[]>([null, null, null, null]);
+  const footerRef = useRef<HTMLDivElement>(null);
   const busyRef = useRef(false);
   const originRef = useRef<GridOrigin>({ kind: "cell", index: 0 });
   const [introDone, setIntroDone] = useState(false);
@@ -116,6 +117,10 @@ export default function HomePage() {
     () => {
       const header = headerRef.current;
       const langSwitcher = langSwitcherRef.current;
+      const footer = footerRef.current;
+      const cells = cellRefs.current.filter(
+        (cell): cell is HTMLElement => Boolean(cell)
+      );
       if (!header) return;
 
       gsap.set(header, {
@@ -133,22 +138,36 @@ export default function HomePage() {
         gsap.set(langSwitcher, { autoAlpha: 0, pointerEvents: "none" });
       }
 
+      // Prepare grid cells: 0 & 2 from left, 1 & 3 from right (slightly further out for a softer, slower slide)
+      cells.forEach((cell, index) => {
+        const fromX = index % 2 === 0 ? -60 : 60;
+        gsap.set(cell, { xPercent: fromX, autoAlpha: 0 });
+      });
+
+      // Prepare footer: slightly below and hidden
+      if (footer) {
+        gsap.set(footer, { yPercent: 40, autoAlpha: 0 });
+      }
+
       const tl = gsap.timeline({
         defaults: { ease: "power3.out" },
-        onComplete: () => setIntroDone(true),
       });
 
       tl.to(header, {
-        scale: 1,
+        // Scale up from 50% to 150% in the center
+        scale: 1.5,
         duration: 0.85,
         ease: "power3.out",
       });
 
-      tl.add(pauseTween(1));
+      // Hold at 150% for ~2 seconds
+      tl.add(pauseTween(2));
 
       tl.to(header, {
+        // Move to top while easing back to 100%
         top: 0,
         yPercent: 0,
+        scale: 1,
         duration: 1.15,
         ease: "power3.inOut",
       });
@@ -163,6 +182,34 @@ export default function HomePage() {
             ease: "power2.out",
           },
           ">"
+        );
+      }
+
+      // Fade in main content wrapper so grid/footer are visible for their animations
+      tl.add(() => setIntroDone(true));
+
+      // Slide in the four grid cards (0 & 2 from left, 1 & 3 from right)
+      if (cells.length) {
+        tl.to(cells, {
+          xPercent: 0,
+          autoAlpha: 1,
+          duration: 1.0,
+          ease: "power3.out",
+          stagger: 0.12,
+        });
+      }
+
+      // Footer rises slightly from bottom and fades in, in parallel with cards
+      if (footer) {
+        tl.to(
+          footer,
+          {
+            yPercent: 0,
+            autoAlpha: 1,
+            duration: 0.9,
+            ease: "power2.out",
+          },
+          "<" // start at same time as cards animation
         );
       }
 
@@ -295,7 +342,9 @@ export default function HomePage() {
           )}
         </main>
 
-        <HomeFooter />
+        <div ref={footerRef}>
+          <HomeFooter />
+        </div>
       </div>
     </div>
   );

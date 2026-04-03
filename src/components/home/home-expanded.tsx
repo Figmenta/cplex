@@ -181,7 +181,7 @@ function FirmSubnavWithProgress({
         <button
           type="button"
           onClick={onBack}
-          className={`cursor-pointer flex min-h-0 min-w-0 items-center justify-center gap-2 bg-transparent px-2 py-2 text-center text-[9px] font-semibold uppercase leading-tight tracking-wide transition-opacity hover:opacity-90 md:px-3 md:text-[11px] ${
+          className={`cursor-pointer flex min-h-0 min-w-0 items-center justify-center gap-2 bg-transparent px-2 py-2 text-center text-[9px] font-semibold uppercase leading-tight tracking-wide transition-opacity hover:opacity-90 md:px-3 md:text-xs ${
             segmentFilled(0)
               ? "text-white"
               : "text-muted-foreground hover:text-foreground/90"
@@ -206,9 +206,9 @@ function FirmSubnavWithProgress({
               type="button"
               onClick={() => onTabClick(t.id)}
               aria-current={isActive ? "page" : undefined}
-              className={`cursor-pointer flex min-h-0 min-w-0 items-center justify-center px-1.5 py-2 text-center text-[9px] uppercase leading-tight tracking-wide transition-colors md:px-3 md:text-[11px] ${
+              className={`cursor-pointer flex min-h-0 min-w-0 items-center justify-center px-1.5 py-2 text-center text-[9px] uppercase leading-tight tracking-wide transition-colors md:px-3 md:text-xs text-white  ${
                 onFilledPortion
-                  ? "text-white"
+                  ? "font-semibold"
                   : "text-muted-foreground hover:text-foreground/90"
               } ${isActive ? "font-semibold" : "font-normal"}`}
             >
@@ -542,7 +542,7 @@ export function ExpandedFirm({
               src={IMAGE_THE_FIRM_BUILDING}
               alt=""
               fill
-              className="object-cover object-center brightness-[0.55] saturate-[0.30]"
+              className="object-cover object-center brightness-[0.8] saturate-[0.30]"
               sizes="100vw"
               priority
             />
@@ -758,16 +758,17 @@ export function ExpandedFirm({
             <h2 className="mb-8 font-montserrat text-[56px] font-bold uppercase leading-[1.08] tracking-[0.12em] text-[#6A1E2D]">
               A Legacy of Precision. A Future of Trust.
             </h2>
-            <p className="mx-auto mb-10 max-w-[700px] text-[18px] leading-[166%] text-[#d9d9d9]">
+            <p className="mx-auto mb-10 max-w-[700px] text-[18px] leading-[166%] text-white">
               Today, CP | LEX continues to advise Italian and international
               clients across key commercial, industrial, financial, and
               technology sectors.
             </p>
             <button
               onClick={onBack}
-              className="cursor-pointer mx-auto flex w-full items-center justify-center gap-2 text-xs uppercase tracking-[2px]"
+              className="cursor-pointer mx-auto flex w-full items-center justify-center group text-xs uppercase tracking-[2px] text-white pb-1 transition-all duration-300"
             >
-              Back to exploring other sections →
+              <span className="group-hover:underline">Back to exploring other sections</span>
+              <span className="pl-1 group-hover:pl-3 transition-all duration-300">→</span>
             </button>
           </div>
         </div>
@@ -862,11 +863,9 @@ export function ExpandedNewsArticle({
             ))}
           </div>
         </article>
-        <aside className="popup-scroll flex max-h-[36vh] min-h-0 w-fit shrink-0 flex-col md:w-[30%] md:py-6 bg-[#0B1327]">
-          <h4 className="px-6 pt-4 font-serif text-base text-foreground md:px-10">
-            Other news
-          </h4>
-          <ul className="flex flex-col gap-4 px-6 pb-6 pt-3 md:px-10">
+        <aside className="popup-scroll flex max-h-[36vh] min-h-0 w-fit shrink-0 flex-col md:w-[30%] p-6 bg-[#0B1327]">
+          <h4 className="text-[22px] text-foreground pb-4">Other news</h4>
+          <ul className="flex flex-col gap-4">
             {others.map((n) => (
               <li
                 key={n.id}
@@ -875,11 +874,11 @@ export function ExpandedNewsArticle({
                 <button
                   type="button"
                   onClick={() => onSelectArticle(n.id)}
-                  className="cursor-pointer w-full text-left text-xs text-foreground hover:underline md:text-sm"
+                  className="cursor-pointer w-full text-left text-xs text-foreground hover:underline md:text-[16px]"
                 >
                   {n.title.length > 90 ? `${n.title.slice(0, 90)}…` : n.title}
                 </button>
-                <p className="mt-1 text-[9px] uppercase tracking-wide text-muted-foreground">
+                <p className="mt-1 text-sm uppercase tracking-wide text-muted-foreground">
                   {n.date}
                 </p>
               </li>
@@ -930,16 +929,16 @@ export function ExpandedExpertise({
       style={{ viewTransitionName: HOME_VT.expertise(slug), borderRadius: 0 }}
     >
       {/* Hero fills the panel only; copy scrolls independently on top (image does not move with scroll) */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
-        <Image
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden bg-background">
+        {/* <Image
           src={IMAGE_EXPERTISE_HERO}
           alt=""
           fill
           className="object-cover object-[center_30%] brightness-[0.45]"
           sizes="100vw"
           priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/65 to-transparent" />
+        /> */}
+        {/* <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/65 to-transparent" /> */}
       </div>
       <div className="relative z-10 flex min-h-0 max-w-[900px] flex-1 flex-col overflow-y-auto overscroll-contain [scrollbar-width:none]">
         <div className="flex w-full flex-col items-start px-6 pb-44 pt-10 md:px-10 md:pb-40">
@@ -968,17 +967,23 @@ export function ExpandedExpertise({
         </div>
       </div>
       <nav
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col gap-2 bg-transparent "
+        data-expertise-footer-nav
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col bg-transparent"
         aria-label="Practice areas"
       >
         <div
-          className="pointer-events-auto flex w-full justify-end px-6 pb-3 pt-0 md:px-10"
+          className="pointer-events-auto flex w-full items-center gap-6 bg-[#000A21] px-6 md:px-10"
           onMouseLeave={() => setHoveredNavSlug(null)}
         >
-          <div
-            className="relative flex w-full max-w-[557px] overflow-hidden rounded-[8.4px] bg-[#0c1a39]"
-            style={{ height: "110px" }}
+          <button
+            type="button"
+            onClick={onBack}
+            className="group/back inline-flex cursor-pointer items-center gap-2 py-2 text-xs font-semibold uppercase tracking-wide text-white"
           >
+            <Image src="/icons/back-2.svg" alt="" width={14} height={14} />
+            <span className="font-body transition-colors">Back to home</span>
+          </button>
+          <div className="flex flex-wrap items-center gap-4 md:gap-6 transition-all duration-300">
             {EXPERTISE_AREAS.map((a) => {
               const NavIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[a.slug];
               const isActive = a.slug === slug;
@@ -989,39 +994,18 @@ export function ExpandedExpertise({
                   type="button"
                   onMouseEnter={() => setHoveredNavSlug(a.slug)}
                   onClick={() => onSelectSlug(a.slug)}
-                  className={`group/tab relative flex flex-1 cursor-pointer flex-col items-center justify-center gap-2 px-4 transition-all duration-300 ${
-                    isActive ? "bg-[#001F55]" : "bg-transparent"
+                  className={`inline-flex cursor-pointer items-center gap-1.5 py-2 px-2 text-xs uppercase tracking-wide transition-all duration-300 text-white ${
+                    isActive ? "bg-[#0B1931] font-semibold" : "font-normal"
                   }`}
                 >
-                  <div
-                    className={`transition-transform duration-200 group-hover/tab:scale-110 ${
-                      isActive ? "h-12 w-12" : "h-8 w-8"
-                    }`}
-                  >
+                  <span className="inline-flex h-3.5 w-3.5 items-center justify-center md:h-4 md:w-4">
                     <NavIcon isHovered={navActive} />
-                  </div>
-                  <span
-                    className="text-nowrap px-1 text-center text-white transition-all duration-300"
-                    style={{ fontSize: isActive ? "12px" : "6px" }}
-                  >
-                    {a.label}
                   </span>
+                  <span className="text-nowrap">{a.label}</span>
                 </button>
               );
             })}
           </div>
-        </div>
-        <div className="pointer-events-auto flex w-full items-center bg-background px-6 py-2 md:px-10">
-          <button
-            type="button"
-            onClick={onBack}
-            className="group/back inline-flex cursor-pointer items-center gap-2"
-          >
-            <Image src="/icons/back-2.svg" alt="" width={14} height={14} />
-            <span className="font-body text-xs font-semibold uppercase text-white transition-colors">
-              Back to home
-            </span>
-          </button>
         </div>
       </nav>
     </div>
@@ -1236,7 +1220,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
             src={IMAGE_OUR_PROFESSIONALS}
             alt="CP LEX professionals"
             fill
-            className="object-cover object-[center_28%] brightness-[0.65] saturate-[0.30]"
+            className="object-cover object-[center_28%] brightness-[0.8] saturate-[0.30]"
             sizes="100vw"
           />
           <div
