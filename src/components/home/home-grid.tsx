@@ -139,12 +139,12 @@ export function HomeGrid({
             src={IMAGE_THE_FIRM_BUILDING}
             alt="CP LEX office building exterior"
             fill
-            className="object-cover object-center brightness-[0.8] saturate-[0.30] transition-all duration-300 group-hover:brightness-100 group-hover:saturate-100"
+            className="object-cover object-center transition-all duration-300 brightness-[0.8] saturate-[0.50] group-hover:brightness-[0.8] group-hover:saturate-[1]"
             sizes="50vw"
             priority
           />
           <div
-            className="absolute inset-0 opacity-50 transition-opacity duration-300 group-hover:opacity-0"
+            className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-50 "
             aria-hidden
             style={{
               background:
@@ -152,10 +152,10 @@ export function HomeGrid({
             }}
           />
         </div>
-        <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
+        <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
           The Firm
         </span>
-        <p className="relative z-10 mt-auto max-w-[min(100%,20rem)] px-5 pb-5 text-[10px] leading-snug text-foreground md:text-xs">
+        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-sm">
           CP | LEX is a boutique law firm delivering sophisticated legal
           solutions.
         </p>
@@ -180,7 +180,7 @@ export function HomeGrid({
         style={{ viewTransitionName: vtNews(stackOrigin) }}
         className={`cursor-pointer group ${cellStackClass(1, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
-        <span className="shrink-0 px-5 pb-1 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
+        <span className="shrink-0 px-5 pb-1 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
           Our News
         </span>
         <HomeNewsMarquee compact interactive={false} />
@@ -191,7 +191,7 @@ export function HomeGrid({
         ref={setCellRef(2)}
         className={`cursor-pointer ${cellStackClass(2, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none`}
       >
-        <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
+        <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
           Areas of expertise
         </span>
         <div
@@ -246,11 +246,11 @@ export function HomeGrid({
             src={IMAGE_OUR_PROFESSIONALS}
             alt="CP LEX legal professionals"
             fill
-            className="object-cover object-[center_20%] brightness-[0.8] saturate-[0.30] transition-all duration-300 group-hover:brightness-100 group-hover:saturate-100"
+            className="object-cover object-[center_20%] transition-all duration-300 brightness-[0.8] saturate-[0.50] group-hover:brightness-[0.8] group-hover:saturate-[1]"
             sizes="50vw"
           />
           <div
-            className="absolute inset-0 opacity-50 transition-opacity duration-300 group-hover:opacity-0"
+            className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-50 "
             aria-hidden
             style={{
               background:
@@ -258,10 +258,10 @@ export function HomeGrid({
             }}
           />
         </div>
-        <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-semibold uppercase tracking-[0.35em] text-section-heading md:text-sm">
+        <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
           The Professionals
         </span>
-        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-xs">
+        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-sm">
           Meet our team of legal experts
         </p>
       </button>

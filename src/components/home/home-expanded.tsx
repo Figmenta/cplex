@@ -18,7 +18,10 @@ import {
 } from "./content";
 import { EXPERTISE_ANIMATED_ICON_BY_SLUG } from "@/components/icons/expertise-icon";
 import { HOME_VT } from "./home-view-transition";
-import { HomeNewsMarquee } from "./home-news-marquee";
+import {
+  HomeNewsMarquee,
+  NewsArticleOtherNewsMarquee,
+} from "./home-news-marquee";
 
 const sectionTitle =
   "font-montserrat text-lg font-bold uppercase tracking-[0.35em] text-section-heading md:text-[26px]";
@@ -542,7 +545,7 @@ export function ExpandedFirm({
               src={IMAGE_THE_FIRM_BUILDING}
               alt=""
               fill
-              className="object-cover object-center brightness-[0.8] saturate-[0.30]"
+              className="object-cover object-center brightness-[0.5] saturate-[0.30]"
               sizes="100vw"
               priority
             />
@@ -767,8 +770,12 @@ export function ExpandedFirm({
               onClick={onBack}
               className="cursor-pointer mx-auto flex w-full items-center justify-center group text-xs uppercase tracking-[2px] text-white pb-1 transition-all duration-300"
             >
-              <span className="group-hover:underline">Back to exploring other sections</span>
-              <span className="pl-1 group-hover:pl-3 transition-all duration-300">→</span>
+              <span className="group-hover:underline">
+                Back to exploring other sections
+              </span>
+              <span className="pl-1 group-hover:pl-3 transition-all duration-300">
+                →
+              </span>
             </button>
           </div>
         </div>
@@ -836,7 +843,7 @@ export function ExpandedNewsArticle({
       style={{ viewTransitionName: HOME_VT.news, borderRadius: 0 }}
     >
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
-        <article className="bg-[#1B2C5080] px-6 pt-5 md:px-10  flex min-h-0 min-w-0 flex-[1.7] flex-col overflow-y-auto">
+        <article className="bg-[#111F3F] px-6 pt-5 md:px-10  flex min-h-0 min-w-0 flex-[1.7] flex-col overflow-y-auto">
           <div className="max-w-[900px]">
             <h2 className={sectionTitle}>Our News</h2>
             <p className="mt-12 text-[10px] uppercase tracking-wider text-news-accent md:text-base">
@@ -853,6 +860,8 @@ export function ExpandedNewsArticle({
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 70vw"
+              quality={90}
+              priority
             />
           </div>
           <div className="max-w-[900px] pt-6 text-lg md:text-[18px] leading-relaxed text-foreground/95">
@@ -863,24 +872,23 @@ export function ExpandedNewsArticle({
             ))}
           </div>
         </article>
-        <aside className="popup-scroll flex max-h-[36vh] min-h-0 w-fit shrink-0 flex-col md:w-[30%] p-6 bg-[#0B1327]">
-          <h4 className="text-[22px] text-foreground pb-4">Other news</h4>
-          <ul className="flex flex-col gap-4">
+        <aside className="popup-scroll flex h-full min-h-0 w-fit shrink-0 flex-col md:w-[30%]">
+          <h4 className="text-[22px] text-foreground pb-2 px-6 pt-6">
+            Other news
+          </h4>
+          <ul className="flex flex-col overflow-y-auto h-full">
             {others.map((n) => (
-              <li
-                key={n.id}
-                className="border-b border-border/10 pb-3 last:border-0"
-              >
+              <li key={n.id} className="">
                 <button
                   type="button"
                   onClick={() => onSelectArticle(n.id)}
-                  className="cursor-pointer w-full text-left text-xs text-foreground hover:underline md:text-[16px]"
+                  className="cursor-pointer w-full px-6 py-4 hover:bg-[#14244A66] border-b-[0.5px] border-[#8A8A8A]/50 last:border-0 text-left text-xs text-foreground md:text-[14px] leading-[190%]"
                 >
-                  {n.title.length > 90 ? `${n.title.slice(0, 90)}…` : n.title}
+                  <p className="line-clamp-3">{n.title}</p>
+                  <p className="mt-1 text-xs uppercase tracking-wide text-muted-foreground">
+                    {n.date}
+                  </p>
                 </button>
-                <p className="mt-1 text-sm uppercase tracking-wide text-muted-foreground">
-                  {n.date}
-                </p>
               </li>
             ))}
           </ul>
@@ -1266,6 +1274,8 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                       alt={item.name}
                       fill
                       className="object-cover object-top grayscale transition-all duration-300 hover:grayscale-0"
+                      sizes="128px"
+                      quality={90}
                     />
                     <div
                       className="absolute inset-0"
@@ -1277,7 +1287,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                       {item.name}
                     </h3>
                     {item.role ? (
-                      <p className="text-[18px] leading-[35px] text-[#4d5873]">
+                      <p className="text-[18px] leading-[35px] text-muted-foreground">
                         {item.role}
                       </p>
                     ) : null}
@@ -1298,15 +1308,15 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
             />
             <div
               ref={panelRef}
-              className="absolute inset-y-0 right-0 z-40 flex w-[70%] flex-col overflow-y-auto bg-[#23345E] px-6 md:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="absolute inset-y-0 right-0 z-40 flex w-[70%] flex-col overflow-y-auto bg-[#111F3F] px-6 md:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
               style={{ visibility: "hidden" }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={handleClosePanel}
-                className="cursor-pointer flex items-center gap-2 pb-3 pt-7"
+                className="cursor-pointer flex items-center gap-2 pb-3 pt-7 mb-3"
               >
-                <Image src="/icons/back.svg" alt="" width={21} height={21} />
+                <Image src="/icons/back-2.svg" alt="" width={16} height={16} />
                 <span className="text-[10px] font-semibold uppercase tracking-[1.3px]">
                   Back to team
                 </span>
@@ -1318,13 +1328,15 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                     alt={selectedDetail.name}
                     fill
                     className="object-cover object-top"
+                    sizes="200px"
+                    quality={90}
                   />
                 </div>
                 <div className="min-h-0 flex-1 overflow-y-auto pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  <h3 className="text-[37px] font-semibold leading-none">
+                  <h3 className="text-[22px] font-semibold leading-none">
                     {selectedDetail.name}
                   </h3>
-                  <p className="mb-4 mt-2 text-[20px] text-[#4D5873]">
+                  <p className="mb-4 mt-2 text-[18px] text-muted-foreground">
                     {selectedDetail.role}
                   </p>
                   {selectedDetail.bioFormat === "prose" ? (
@@ -1334,7 +1346,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                         .map((paragraph) => (
                           <p
                             key={paragraph.slice(0, 30)}
-                            className="mb-6 text-[21px] leading-[30px] text-[#D9D9D9]"
+                            className="mb-6 text-[18px] leading-[30px] text-[#D9D9D9]"
                           >
                             {paragraph}
                           </p>
@@ -1411,15 +1423,15 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
         style={{ minHeight: "var(--home-subnav-height)" }}
       >
         <BackButton onClick={onBack} />
-        {/* {professionalsStageIndex === 0 && !selectedSlug ? ( */}
-        <button
-          type="button"
-          onClick={() => animateToStage(1)}
-          className="cursor-pointer inline-flex items-center gap-2 rounded-sm px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-foreground transition-opacity hover:opacity-90 md:text-xs"
-        >
-          View team
-        </button>
-        {/* ) : null} */}
+        {professionalsStageIndex === 0 && !selectedSlug ? (
+          <button
+            type="button"
+            onClick={() => animateToStage(1)}
+            className="cursor-pointer inline-flex items-center gap-2 rounded-sm px-3 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-foreground transition-opacity hover:opacity-90 md:text-xs"
+          >
+            View team
+          </button>
+        ) : null}
       </nav>
     </div>
   );

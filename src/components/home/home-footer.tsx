@@ -14,14 +14,14 @@ export function HomeFooter() {
         <div className="flex items-center gap-4">
           <p className="text-[#94A3B8] text-[12px]">© 2026 CP | LEX</p>
           <Link
-            href="/terms-and-conditions"
-            className="text-[#94A3B8] hover:text-white hover:underline text-[12px] transition-colors duration-300"
+            href="/"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
           >
             Terms & Conditions
           </Link>
           <Link
-            href="/privacy-policy"
-            className="text-[#94A3B8] hover:text-white hover:underline text-[12px] transition-colors duration-300"
+            href="/"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
           >
             Privacy Policy
           </Link>
@@ -34,13 +34,13 @@ export function HomeFooter() {
         <div className="flex items-center gap-4">
           <Link
             href="tel:+390612345678"
-            className="text-[#94A3B8] hover:text-white hover:underline text-[12px] transition-colors duration-300"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
           >
             Phone: +39 06 1234 5678
           </Link>
           <Link
             href="mailto:info@cplex.it"
-            className="text-[#94A3B8] hover:text-white hover:underline text-[12px] transition-colors duration-300"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
           >
             Email: info@cplex.it
           </Link>

@@ -188,14 +188,13 @@ export default function HomePage() {
       // Fade in main content wrapper so grid/footer are visible for their animations
       tl.add(() => setIntroDone(true));
 
-      // Slide in the four grid cards (0 & 2 from left, 1 & 3 from right)
+      // Slide in the four grid cards in parallel (0 & 2 from left, 1 & 3 from right)
       if (cells.length) {
         tl.to(cells, {
           xPercent: 0,
           autoAlpha: 1,
           duration: 1.0,
           ease: "power3.out",
-          stagger: 0.12,
         });
       }
 

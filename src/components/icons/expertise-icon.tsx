@@ -62,15 +62,16 @@ function useHoverAnimation(
 /** Mergers & Acquisitions: diamonds overlap and move apart in a loop */
 export function MergersIcon({ isHovered }: ExpertiseAnimatedIconProps) {
   const { svgRef, onMouseEnter, onMouseLeave } = useHoverAnimation((el) => {
+    // Slower, smoother overlap: diamonds slide toward each other, overlap, then return.
     const tl = gsap.timeline({ repeat: -1, yoyo: true });
     tl.to(
       el.querySelector('[data-animate="left"]'),
-      { x: 8, duration: 0.45, ease: "power1.inOut" },
+      { x: 6.5, duration: 0.9, ease: "power2.inOut" },
       0
     );
     tl.to(
       el.querySelector('[data-animate="right"]'),
-      { x: -8, duration: 0.45, ease: "power1.inOut" },
+      { x: -6.5, duration: 0.9, ease: "power2.inOut" },
       0
     );
     return tl;
@@ -134,16 +135,13 @@ export function MergersIcon({ isHovered }: ExpertiseAnimatedIconProps) {
 /** Corporate & Commercial Law: grid elements softly shift and align */
 export function CorporateIcon({ isHovered }: ExpertiseAnimatedIconProps) {
   const { svgRef, onMouseEnter, onMouseLeave } = useHoverAnimation((el) => {
+    // Four corner boxes gently scale up and down in place, in a continuous loop.
     const squares = el.querySelectorAll("[data-animate]");
     const tl = gsap.timeline({ repeat: -1, yoyo: true });
-    tl.to(
-      squares[0],
-      { x: -3, y: -3, duration: 0.45, ease: "power1.inOut" },
-      0
-    );
-    tl.to(squares[1], { x: 3, y: -3, duration: 0.45, ease: "power1.inOut" }, 0);
-    tl.to(squares[2], { x: -3, y: 3, duration: 0.45, ease: "power1.inOut" }, 0);
-    tl.to(squares[3], { x: 3, y: 3, duration: 0.45, ease: "power1.inOut" }, 0);
+    tl.to(squares[0],{ x: -4, y: -4, scale: 1.1, transformOrigin: "50% 50%", duration: 0.8, ease: "power2.inOut" },0);
+    tl.to(squares[1], { x: 4, y: -4, scale: 1.1, transformOrigin: "50% 50%", duration: 0.8, ease: "power2.inOut" }, 0);
+    tl.to(squares[2], { x: -4, y: 4, scale: 1.1, transformOrigin: "50% 50%", duration: 0.8, ease: "power2.inOut" }, 0);
+    tl.to(squares[3], { x: 4, y: 4, scale: 1.1, transformOrigin: "50% 50%", duration: 0.8, ease: "power2.inOut" }, 0);
     return tl;
   }, isHovered);
 
@@ -251,13 +249,16 @@ export function CorporateIcon({ isHovered }: ExpertiseAnimatedIconProps) {
 }
 
 /** Intellectual Property: outer dashed rim rotates */
-export function IntellectualPropertyIcon({ isHovered }: ExpertiseAnimatedIconProps) {
+export function IntellectualPropertyIcon({
+  isHovered,
+}: ExpertiseAnimatedIconProps) {
   const { svgRef, onMouseEnter, onMouseLeave } = useHoverAnimation((el) => {
+    // Slower, smooth continuous rotation of the outer rim.
     const tl = gsap.timeline({ repeat: -1 });
     tl.to(el.querySelector('[data-animate="rim"]'), {
       rotation: 360,
       svgOrigin: "32 32",
-      duration: 1.8,
+      duration: 6,
       ease: "none",
     });
     return tl;
@@ -287,6 +288,7 @@ export function IntellectualPropertyIcon({ isHovered }: ExpertiseAnimatedIconPro
           strokeWidth="1.5"
           fill="none"
         />
+        {/* Outer ring + red radials rotate together */}
         <g data-animate="rim">
           <circle
             cx="32"
@@ -297,63 +299,63 @@ export function IntellectualPropertyIcon({ isHovered }: ExpertiseAnimatedIconPro
             strokeDasharray="2.56 2.56"
             fill="none"
           />
+          <path
+            d="M32 16V6.4"
+            stroke="#D54561"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M32 48V57.6"
+            stroke="#D54561"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M16 32H6.4"
+            stroke="#D54561"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M48 32H57.6"
+            stroke="#D54561"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M20.8 20.8L12.8 12.8"
+            stroke="#D54561"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M43.2 43.2L51.2 51.2"
+            stroke="#D54561"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M20.8 43.2L12.8 51.2"
+            stroke="#D54561"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <path
+            d="M43.2 20.8L51.2 12.8"
+            stroke="#D54561"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <circle cx="32" cy="6.4" r="1.6" fill="#D54561" />
+          <circle cx="32" cy="57.6" r="1.6" fill="#D54561" />
+          <circle cx="6.4" cy="32" r="1.6" fill="#D54561" />
+          <circle cx="57.6" cy="32" r="1.6" fill="#D54561" />
+          <circle cx="12.8" cy="12.8" r="1.6" fill="#D54561" />
+          <circle cx="51.2" cy="51.2" r="1.6" fill="#D54561" />
+          <circle cx="12.8" cy="51.2" r="1.6" fill="#D54561" />
+          <circle cx="51.2" cy="12.8" r="1.6" fill="#D54561" />
         </g>
-        <path
-          d="M32 16V6.4"
-          stroke="#D54561"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M32 48V57.6"
-          stroke="#D54561"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M16 32H6.4"
-          stroke="#D54561"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M48 32H57.6"
-          stroke="#D54561"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M20.8 20.8L12.8 12.8"
-          stroke="#D54561"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M43.2 43.2L51.2 51.2"
-          stroke="#D54561"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M20.8 43.2L12.8 51.2"
-          stroke="#D54561"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <path
-          d="M43.2 20.8L51.2 12.8"
-          stroke="#D54561"
-          strokeWidth="1.5"
-          strokeLinecap="round"
-        />
-        <circle cx="32" cy="6.4" r="1.6" fill="#D54561" />
-        <circle cx="32" cy="57.6" r="1.6" fill="#D54561" />
-        <circle cx="6.4" cy="32" r="1.6" fill="#D54561" />
-        <circle cx="57.6" cy="32" r="1.6" fill="#D54561" />
-        <circle cx="12.8" cy="12.8" r="1.6" fill="#D54561" />
-        <circle cx="51.2" cy="51.2" r="1.6" fill="#D54561" />
-        <circle cx="12.8" cy="51.2" r="1.6" fill="#D54561" />
-        <circle cx="51.2" cy="12.8" r="1.6" fill="#D54561" />
       </svg>
     </div>
   );
@@ -362,15 +364,16 @@ export function IntellectualPropertyIcon({ isHovered }: ExpertiseAnimatedIconPro
 /** Litigation & Dispute Resolution: red arrow shapes move apart and closer */
 export function LitigationIcon({ isHovered }: ExpertiseAnimatedIconProps) {
   const { svgRef, onMouseEnter, onMouseLeave } = useHoverAnimation((el) => {
+    // Same motion as before, but slower and smoother.
     const tl = gsap.timeline({ repeat: -1, yoyo: true });
     tl.to(
       el.querySelector('[data-animate="left"]'),
-      { x: -7, duration: 0.45, ease: "power1.inOut" },
+      { x: -7, scale: 1.1, transformOrigin: "50% 50%", duration: 0.9, ease: "power2.inOut" },
       0
     );
     tl.to(
       el.querySelector('[data-animate="right"]'),
-      { x: 7, duration: 0.45, ease: "power1.inOut" },
+      { x: 7, scale: 1.1, transformOrigin: "50% 50%", duration: 0.9, ease: "power2.inOut" },
       0
     );
     return tl;
