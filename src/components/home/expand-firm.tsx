@@ -18,6 +18,11 @@ import { sectionTitle } from "@/constant/variabls";
 import { IMAGE_THE_FIRM_2 } from "./content";
 import { HOME_VT } from "./home-view-transition";
 
+/** Longer timeline segments = less rushed motion between firm stages (progress 0–1 unchanged). */
+const FIRM_TL_SCALE = 1.55;
+/** Time to scrub the timeline when changing tab / wheel step. */
+const FIRM_STAGE_SCRUB_DURATION = 1.35;
+
 export function ExpandedFirm({
   onBack,
   tab,
@@ -69,8 +74,8 @@ export function ExpandedFirm({
       onTabChange(mappedTab);
       gsap.to(tl, {
         progress: targetProgress,
-        duration: 0.72,
-        ease: "power2.inOut",
+        duration: FIRM_STAGE_SCRUB_DURATION,
+        ease: "sine.inOut",
         overwrite: true,
         onUpdate: () => syncProgressFromTimeline(tl.progress()),
         onComplete: () => {
@@ -164,89 +169,123 @@ export function ExpandedFirm({
     });
     gsap.set(complexCards, { y: 48, autoAlpha: 0 });
     gsap.set(closingStage, { xPercent: -100, autoAlpha: 0 });
+    const s = FIRM_TL_SCALE;
     const tl = gsap.timeline({ paused: true });
-    tl.to(imageWrap, { width: "58%", duration: 0.11, ease: "none" }, 0);
+    tl.to(imageWrap, { width: "58%", duration: 0.11 * s, ease: "none" }, 0);
     tl.to(
       contentPanel,
-      { xPercent: 0, autoAlpha: 1, duration: 0.11, ease: "none" },
+      { xPercent: 0, autoAlpha: 1, duration: 0.11 * s, ease: "none" },
       0
     );
     tl.to(
       imageDesc,
-      { autoAlpha: 1, y: 0, duration: 0.06, ease: "none" },
-      0.04
+      { autoAlpha: 1, y: 0, duration: 0.06 * s, ease: "none" },
+      0.04 * s
     );
     tl.to(
       imageDesc,
-      { autoAlpha: 0, y: 20, duration: 0.07, ease: "power2.in" },
-      0.13
+      { autoAlpha: 0, y: 20, duration: 0.07 * s, ease: "power2.inOut" },
+      0.13 * s
     );
     tl.to(
       splitWrap,
-      { yPercent: 130, duration: 0.11, ease: "power2.inOut" },
-      0.13
+      { yPercent: 130, duration: 0.11 * s, ease: "power2.inOut" },
+      0.13 * s
     );
     tl.to(
       principlesStage,
-      { yPercent: 0, duration: 0.11, ease: "power2.inOut" },
-      0.13
+      { yPercent: 0, duration: 0.11 * s, ease: "power2.inOut" },
+      0.13 * s
     );
     tl.to(
       principlesStage,
-      { xPercent: -100, autoAlpha: 0, duration: 0.08, ease: "power2.inOut" },
-      0.26
-    );
-    tl.to(dualCardsStage, { autoAlpha: 1, duration: 0.02, ease: "none" }, 0.3);
-    tl.to(
-      dualLeft,
-      { x: 0, autoAlpha: 1, duration: 0.11, ease: "power3.out" },
-      0.3
-    );
-    tl.to(
-      dualRight,
-      { x: 0, autoAlpha: 1, duration: 0.11, ease: "power3.out" },
-      0.3
+      {
+        xPercent: -100,
+        autoAlpha: 0,
+        duration: 0.1 * s,
+        ease: "power2.inOut",
+      },
+      0.26 * s
     );
     tl.to(
       dualCardsStage,
-      { yPercent: -130, autoAlpha: 0, duration: 0.08, ease: "power2.inOut" },
-      0.44
-    );
-    tl.to(complexStage, { autoAlpha: 1, duration: 0.02, ease: "none" }, 0.54);
-    tl.to(
-      complexHeading,
-      { y: 0, autoAlpha: 1, duration: 0.13, ease: "power2.out" },
-      0.54
+      { autoAlpha: 1, duration: 0.05 * s, ease: "power1.out" },
+      0.3 * s
     );
     tl.to(
-      complexHeading,
-      { y: -100, autoAlpha: 0, duration: 0.06, ease: "power2.in" },
-      0.69
+      dualLeft,
+      { x: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power3.out" },
+      0.3 * s
     );
     tl.to(
-      complexCards,
-      { y: 0, autoAlpha: 1, duration: 0.11, ease: "power2.out" },
-      0.76
+      dualRight,
+      { x: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power3.out" },
+      0.3 * s
+    );
+    tl.to(
+      dualCardsStage,
+      {
+        yPercent: -130,
+        autoAlpha: 0,
+        duration: 0.1 * s,
+        ease: "power2.inOut",
+      },
+      0.44 * s
     );
     tl.to(
       complexStage,
-      { yPercent: -100, autoAlpha: 0, duration: 0.08, ease: "power2.inOut" },
-      0.89
+      { autoAlpha: 1, duration: 0.05 * s, ease: "power1.out" },
+      0.54 * s
+    );
+    tl.to(
+      complexHeading,
+      { y: 0, autoAlpha: 1, duration: 0.13 * s, ease: "power2.out" },
+      0.54 * s
+    );
+    tl.to(
+      complexHeading,
+      { y: -100, autoAlpha: 0, duration: 0.08 * s, ease: "power2.inOut" },
+      0.69 * s
+    );
+    tl.to(
+      complexCards,
+      { y: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power2.out" },
+      0.76 * s
+    );
+    // Stage 5 → 6: complex exits, short hold, then closing (tighter than 1.29s total)
+    const complexExitT = 0.89 * s;
+    const complexExitDur = 0.12 * s;
+    const closingEnterT = complexExitT + complexExitDur;
+    const closingEnterDur = 0.11 * s;
+    tl.to(
+      complexStage,
+      {
+        yPercent: -100,
+        autoAlpha: 0,
+        duration: complexExitDur,
+        ease: "power2.inOut",
+      },
+      complexExitT
     );
     tl.to(
       persistentTitle,
       {
         y: -window.innerHeight * 1.2,
         autoAlpha: 0,
-        duration: 0.08,
+        duration: complexExitDur,
         ease: "power2.inOut",
       },
-      0.89
+      complexExitT
     );
     tl.to(
       closingStage,
-      { xPercent: 0, autoAlpha: 1, duration: 0.11, ease: "power2.out" },
-      0.89
+      {
+        xPercent: 0,
+        autoAlpha: 1,
+        duration: closingEnterDur,
+        ease: "power2.out",
+      },
+      closingEnterT
     );
     timelineRef.current = tl;
     syncProgressFromTimeline(0);
@@ -464,7 +503,8 @@ export function ExpandedFirm({
           data-anim="stage-complex"
           className="absolute inset-0 z-40 flex items-center justify-center px-6 pt-[104px] md:px-10"
         >
-          <div className="relative min-h-[min(52vh,400px)] w-full">
+          {/* min(52vh,cap): on tall screens the 400px cap was too small — scale cap + vh on lg+ so ~3 cards fit */}
+          <div className="relative w-full min-h-[min(52vh,400px)] 2xl:min-h-[min(65vh,720px)]">
             <h2
               data-anim="complex-heading"
               className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center font-montserrat text-[52px] font-bold uppercase leading-[1.1] tracking-[0.18em] md:px-10"

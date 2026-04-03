@@ -36,7 +36,7 @@ const LanguageSwitcher: React.FC = () => {
           key={loc}
           onClick={() => handleLanguageChange(loc)}
           className={`
-            uppercase
+            uppercase cursor-pointer
             px-2 py-1.5 rounded-[4px]
             text-[15px] font-bold
             leading-none

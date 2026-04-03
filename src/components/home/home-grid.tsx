@@ -155,7 +155,7 @@ export function HomeGrid({
         <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
           The Firm
         </span>
-        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-[11px]">
+        <p className="relative z-10 mt-auto translate-y-2 px-5 pb-5 text-[10px] leading-snug text-foreground opacity-0 pt-4 group-hover:opacity-100 group-hover:translate-y-0 duration-300 ease-out md:text-[11px]">
           CP | LEX is a boutique law firm delivering sophisticated legal
           solutions.
         </p>
@@ -214,14 +214,14 @@ export function HomeGrid({
                 style={{
                   viewTransitionName: vtExpertiseTile(stackOrigin, area.slug),
                 }}
-                className={`group/tile cursor-pointer flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-3 text-center outline-none transition-colors ${tileStackClass(tileIndex, stackOrigin)}`}
+                className={`group cursor-pointer flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-3 text-center outline-none transition-colors ${tileStackClass(tileIndex, stackOrigin)}`}
               >
-                <div className="h-10 w-10 transition-transform duration-200 group-hover/tile:scale-110 md:h-14 md:w-14">
+                <div className="h-10 w-10 transition-transform duration-200 group-hover:scale-110 md:h-14 md:w-14">
                   <ExpertiseIcon
                     isHovered={hoveredExpertiseSlug === area.slug}
                   />
                 </div>
-                <span className="font-montserrat text-[8px] font-medium leading-tight text-foreground md:text-[10px]">
+                <span className="font-montserrat text-[8px] font-medium leading-tight text-[#666] group-hover:text-white duration-300 transition-all md:text-[10px]">
                   {area.label}
                 </span>
               </button>
@@ -261,7 +261,7 @@ export function HomeGrid({
         <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
           The Professionals
         </span>
-        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-[11px]">
+        <p className="relative z-10 mt-auto translate-y-2 px-5 pb-5 text-[10px] leading-snug text-foreground opacity-0 pt-4 group-hover:opacity-100 group-hover:translate-y-0 duration-300 ease-out md:text-[11px]">
           Meet our team of legal experts
         </p>
       </button>

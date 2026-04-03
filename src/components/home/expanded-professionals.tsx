@@ -10,13 +10,24 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { SUBNAV_MIN_STYLE, subnavRowClass } from "@/constant/variabls";
 import { BackButton } from "./back-button";
-import { subnavPrimaryBtnClass } from "@/constant/variabls";
 import { sectionTitle } from "@/constant/variabls";
 import { IMAGE_OUR_PROFESSIONALS } from "./content";
 
-/** Timeline: hero 0–1s, cards 1–1.4s → hero ends at 1/1.4 ≈ 0.714 */
+/**
+ * Timeline: hero then cards; normalized progress 0–1 unchanged when scaling
+ * (hero ends at 1/1.4 ≈ 0.714).
+ */
 const HEADER_BG_THRESHOLD = 0.72;
 const TEAM_STAGE_SCROLL_THRESHOLD = 0.75;
+/** Stretch hero/cards segment lengths — same idea as firm `FIRM_TL_SCALE`. */
+const PROS_TL_SCALE = 1.55;
+/** Wall-clock time to scrub timeline 0→1 (smooth, not rushed). */
+const TEAM_SCRUB_DURATION = 2.1;
+/** After opening, auto-advance to team grid (no scroll / wheel to change stage). */
+const TEAM_AUTO_ADVANCE_MS = 1000;
+/** Team member detail drawer: slide from / to the right */
+const TEAM_DETAIL_PANEL_IN_DURATION = 0.50;
+const TEAM_DETAIL_PANEL_OUT_DURATION = 0.40;
 
 export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -25,11 +36,8 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const scrubTargetRef = useRef(0);
   const scrubTweenRef = useRef<gsap.core.Tween | null>(null);
-  const wheelAccumRef = useRef(0);
-  const wheelIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stageRef = useRef(0);
-  const [professionalsStageIndex, setProfessionalsStageIndex] = useState(0);
-  /** Solid bar under title: only after hero finishes exiting forward; hidden first when returning to stage 1 hero */
+  /** Solid bar under title: after hero scrubs off-screen during auto-advance to team grid */
   const [showHeaderBg, setShowHeaderBg] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<
     (typeof PROFESSIONALS_ITEMS)[number]["slug"] | null
@@ -42,59 +50,31 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
     stageRef.current = progress >= TEAM_STAGE_SCROLL_THRESHOLD ? 1 : 0;
   }, []);
 
-  const animateToStage = useCallback(
-    (nextStage: number) => {
-      const tl = timelineRef.current;
-      if (!tl) return;
-      const target = Math.max(
-        0,
-        Math.min(PROFESSIONALS_STOPS.length - 1, nextStage)
-      );
-      const targetProgress = PROFESSIONALS_STOPS[target];
-      scrubTweenRef.current?.kill();
+  /** Only forward to team grid; no return to hero (use Back to home). */
+  const animateToTeamStage = useCallback(() => {
+    const tl = timelineRef.current;
+    if (!tl) return;
+    const targetProgress = PROFESSIONALS_STOPS[1];
+    if (scrubTargetRef.current >= targetProgress - 0.001) return;
 
-      const duration = 1.35;
-      const ease = "power2.inOut";
-
-      if (target === 1) {
-        setShowHeaderBg(false);
-        scrubTweenRef.current = gsap.to(tl, {
-          progress: targetProgress,
-          duration,
-          ease,
-          overwrite: true,
-          onUpdate: () => {
-            const p = tl.progress();
-            syncUiFromProgress(p);
-            setShowHeaderBg(p >= HEADER_BG_THRESHOLD);
-          },
-          onComplete: () => {
-            scrubTargetRef.current = targetProgress;
-            setProfessionalsStageIndex(1);
-            setShowHeaderBg(true);
-          },
-        });
-      } else {
-        setShowHeaderBg(false);
-        scrubTweenRef.current = gsap.to(tl, {
-          progress: targetProgress,
-          duration,
-          ease,
-          delay: 0.14,
-          overwrite: true,
-          onUpdate: () => {
-            syncUiFromProgress(tl.progress());
-          },
-          onComplete: () => {
-            scrubTargetRef.current = targetProgress;
-            setProfessionalsStageIndex(0);
-            setShowHeaderBg(false);
-          },
-        });
-      }
-    },
-    [syncUiFromProgress]
-  );
+    scrubTweenRef.current?.kill();
+    setShowHeaderBg(false);
+    scrubTweenRef.current = gsap.to(tl, {
+      progress: targetProgress,
+      duration: TEAM_SCRUB_DURATION,
+      ease: "sine.inOut",
+      overwrite: true,
+      onUpdate: () => {
+        const p = tl.progress();
+        syncUiFromProgress(p);
+        setShowHeaderBg(p >= HEADER_BG_THRESHOLD);
+      },
+      onComplete: () => {
+        scrubTargetRef.current = targetProgress;
+        setShowHeaderBg(true);
+      },
+    });
+  }, [syncUiFromProgress]);
 
   const handleSelectCard = useCallback(
     (slug: (typeof PROFESSIONALS_ITEMS)[number]["slug"]) => {
@@ -106,7 +86,12 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
         gsap.fromTo(
           panel,
           { x: "100%", autoAlpha: 0 },
-          { x: 0, autoAlpha: 1, duration: 0.45, ease: "power2.out" }
+          {
+            x: 0,
+            autoAlpha: 1,
+            duration: TEAM_DETAIL_PANEL_IN_DURATION,
+            ease: "sine.out",
+          }
         );
       });
     },
@@ -122,8 +107,8 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
     gsap.to(panel, {
       x: "100%",
       autoAlpha: 0,
-      duration: 0.35,
-      ease: "power2.in",
+      duration: TEAM_DETAIL_PANEL_OUT_DURATION,
+      ease: "sine.in",
       onComplete: () => setSelectedSlug(null),
     });
   }, []);
@@ -140,52 +125,56 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
     if (!heroPhoto || !cardsStage) return;
     gsap.set(cardsStage, { autoAlpha: 0 });
     gsap.set(heroPhoto, { xPercent: 0 });
+    const s = PROS_TL_SCALE;
     const tl = gsap.timeline({ paused: true });
     // Fully clear the hero off-screen left (100% = one full width; small extra margin for edges)
     tl.to(
       heroPhoto,
       {
         xPercent: -108,
-        duration: 1,
-        ease: "power2.inOut",
+        duration: 1 * s,
+        ease: "sine.inOut",
       },
       0
     );
-    // Cards only after hero — then header bg is driven by progress in animateToStage
+    // Cards only after hero — header bg follows scrub progress
     tl.to(
       cardsStage,
       {
         autoAlpha: 1,
-        duration: 0.4,
+        duration: 0.4 * s,
         ease: "power2.out",
       },
-      1
+      1 * s
     );
     timelineRef.current = tl;
     scrubTargetRef.current = 0;
-    setProfessionalsStageIndex(0);
     setShowHeaderBg(false);
     syncUiFromProgress(0);
     return () => {
       scrubTweenRef.current?.kill();
-      if (wheelIdleTimerRef.current) clearTimeout(wheelIdleTimerRef.current);
       tl.kill();
       timelineRef.current = null;
     };
   }, [syncUiFromProgress]);
 
   useEffect(() => {
+    const id = window.setTimeout(() => {
+      animateToTeamStage();
+    }, TEAM_AUTO_ADVANCE_MS);
+    return () => {
+      clearTimeout(id);
+    };
+  }, [animateToTeamStage]);
+
+  useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
     const MAX_WHEEL_STEP = 60;
-    /** Accumulated delta before snapping to the next / previous stage (no continuous scrub). */
-    const ACCUM_THRESHOLD = 72;
 
     const onWheel = (e: WheelEvent) => {
-      const tl = timelineRef.current;
-      if (!tl) return;
-
       if (selectedSlug) return;
+
       const cardsEl = cardsScrollRef.current;
       if (
         cardsEl &&
@@ -216,36 +205,13 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
       }
 
       e.preventDefault();
-      const delta = Math.max(
-        -MAX_WHEEL_STEP,
-        Math.min(MAX_WHEEL_STEP, e.deltaY)
-      );
-      const current = stageRef.current;
-      if ((delta > 0 && current === 1) || (delta < 0 && current === 0)) {
-        return;
-      }
-
-      wheelAccumRef.current += delta;
-      if (wheelIdleTimerRef.current) clearTimeout(wheelIdleTimerRef.current);
-      wheelIdleTimerRef.current = setTimeout(() => {
-        wheelAccumRef.current = 0;
-      }, 140);
-
-      if (Math.abs(wheelAccumRef.current) < ACCUM_THRESHOLD) return;
-
-      const dir = wheelAccumRef.current > 0 ? 1 : -1;
-      wheelAccumRef.current = 0;
-
-      if (dir > 0 && current === 0) animateToStage(1);
-      else if (dir < 0 && current === 1) animateToStage(0);
     };
 
     el.addEventListener("wheel", onWheel, { passive: false });
     return () => {
-      if (wheelIdleTimerRef.current) clearTimeout(wheelIdleTimerRef.current);
       el.removeEventListener("wheel", onWheel);
     };
-  }, [animateToStage, selectedSlug]);
+  }, [selectedSlug]);
 
   return (
     <div
@@ -455,20 +421,21 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
           </>
         )}
       </div>
-      <nav
-        className={cn(subnavRowClass, "bg-background")}
-        style={SUBNAV_MIN_STYLE}
-      >
-        <BackButton onClick={onBack} />
-        {professionalsStageIndex === 0 && !selectedSlug ? (
-          <button
-            type="button"
-            onClick={() => animateToStage(1)}
-            className={subnavPrimaryBtnClass}
-          >
-            View team
-          </button>
-        ) : null}
+      <nav style={{ minHeight: "var(--home-subnav-height)" }} className="flex w-full shrink-0 overflow-hidden bg-[#0A1225]">
+        <button
+          type="button"
+          onClick={onBack}
+          className="flex w-fit shrink-0 items-center gap-2 px-6 md:px-14 cursor-pointer py-1 text-[10px] uppercase tracking-wide hover:opacity-90 md:text-[11px] font-semibold bg-gradient-to-r from-[#0C152A] to-[#0646D0] transition-all h-full"
+        >
+          <Image
+            src="/icons/back-2.svg"
+            alt="back button"
+            width={16}
+            height={16}
+            className="h-4 w-4 shrink-0"
+          />
+          Back to home
+        </button>
       </nav>
     </div>
   );

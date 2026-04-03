@@ -5,7 +5,7 @@ import gsap from "gsap";
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { flushSync } from "react-dom";
-import LanguageSwitcher from "@/components/LanguageSwitcher";
+import LanguageSwitcher from "@/components/language-switcher";
 import { FIRM_TABS } from "./content";
 import type { ExpertiseSlug } from "./content";
 import { NEWS_ITEMS, expertiseSlugToIndex } from "./content";

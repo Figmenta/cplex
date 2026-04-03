@@ -125,7 +125,7 @@
 @media (min-width: 768px) {
   :root {
     --home-footer-height: 58px;
-    --home-subnav-height: 51px;
+    --home-subnav-height: 48px;
   }
 }
 

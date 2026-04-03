@@ -31,8 +31,11 @@ export const subnavPrimaryBtnClass = cn(
 export const subnavFirmSegmentClass =
   "flex min-h-0 min-w-0 cursor-pointer items-center justify-center px-2 py-1.5 text-center text-[10px] uppercase leading-tight tracking-wide transition-colors transition-opacity hover:opacity-90 md:px-3 md:text-[11px]";
 
+/**
+ * Normalized timeline progress for each firm stage (stage 5→6 has a gap; total ~1.2s in s-units).
+ */
 export const FIRM_INTERNAL_STOPS = [
-  0, 0.12, 0.24, 0.42, 0.67, 0.87, 1,
+  0, 0.1, 0.2, 0.35, 0.55833, 0.725, 1,
 ] as const;
 export const FIRM_EXTERNAL_PROGRESS = [
   1 / 6,
