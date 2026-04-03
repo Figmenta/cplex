@@ -121,6 +121,14 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+/* md and up: 1px tighter footer + expanded subnav bars (matches Tailwind `md`) */
+@media (min-width: 768px) {
+  :root {
+    --home-footer-height: 58px;
+    --home-subnav-height: 51px;
+  }
+}
+
 .dark {
   --background: oklch(13.3% 0.015 223.07);
   --foreground: oklch(100% 0 0);

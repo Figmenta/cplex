@@ -12,35 +12,35 @@ export function HomeFooter() {
       >
         <div className="flex h-full w-full items-center justify-between">
         <div className="flex items-center gap-4">
-          <p className="text-[#94A3B8] text-[12px]">© 2026 CP | LEX</p>
+          <p className="text-[#94A3B8] text-[12px] md:text-[11px]">© 2026 CP | LEX</p>
           <Link
             href="/"
-            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300 md:text-[11px]"
           >
             Terms & Conditions
           </Link>
           <Link
             href="/"
-            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300 md:text-[11px]"
           >
             Privacy Policy
           </Link>
         </div>
         <div className="flex items-center gap-4">
-          <p className="text-[#94A3B8] text-[12px] italic">
+          <p className="text-[#94A3B8] text-[12px] italic md:text-[11px]">
             Legal expertise, strategically delivered.
           </p>
         </div>
         <div className="flex items-center gap-4">
           <Link
             href="tel:+390612345678"
-            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300 md:text-[11px]"
           >
             Phone: +39 06 1234 5678
           </Link>
           <Link
             href="mailto:info@cplex.it"
-            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300"
+            className="text-[#94A3B8] hover:text-white text-[12px] transition-colors duration-300 md:text-[11px]"
           >
             Email: info@cplex.it
           </Link>

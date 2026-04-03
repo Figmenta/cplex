@@ -155,7 +155,7 @@ export function HomeGrid({
         <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
           The Firm
         </span>
-        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-sm">
+        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-[11px]">
           CP | LEX is a boutique law firm delivering sophisticated legal
           solutions.
         </p>
@@ -261,7 +261,7 @@ export function HomeGrid({
         <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
           The Professionals
         </span>
-        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-sm">
+        <p className="relative z-10 mt-auto px-5 pb-5 text-[10px] leading-snug text-foreground md:text-[11px]">
           Meet our team of legal experts
         </p>
       </button>

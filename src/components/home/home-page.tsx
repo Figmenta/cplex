@@ -9,15 +9,13 @@ import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { FIRM_TABS } from "./content";
 import type { ExpertiseSlug } from "./content";
 import { NEWS_ITEMS, expertiseSlugToIndex } from "./content";
-import {
-  ExpandedExpertise,
-  ExpandedFirm,
-  ExpandedNewsArticle,
-  ExpandedNewsIndex,
-  ExpandedProfessionals,
-} from "./home-expanded";
 import { HomeFooter } from "./home-footer";
 import { HomeGrid } from "./home-grid";
+import { ExpandedFirm } from "./expand-firm";
+import { ExpandedNewsIndex } from "./expand-news-index";
+import { ExpandedNewsArticle } from "./expanded-news-article";
+import { ExpandedExpertise } from "./expanded-expertise";
+import { ExpandedProfessionals } from "./expanded-professionals";
 import {
   gridOriginToVtName,
   startHomeViewTransition,
@@ -118,8 +116,8 @@ export default function HomePage() {
       const header = headerRef.current;
       const langSwitcher = langSwitcherRef.current;
       const footer = footerRef.current;
-      const cells = cellRefs.current.filter(
-        (cell): cell is HTMLElement => Boolean(cell)
+      const cells = cellRefs.current.filter((cell): cell is HTMLElement =>
+        Boolean(cell)
       );
       if (!header) return;
 
