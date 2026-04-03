@@ -266,7 +266,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
         >
           <div
             ref={cardsScrollRef}
-            className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-32 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-12 md:pt-32 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             <div className="grid w-full grid-cols-1 px-6 md:grid-cols-3 md:px-10">
               {PROFESSIONALS_ITEMS.map((item, index) => (

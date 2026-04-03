@@ -31,16 +31,13 @@ export function FirmSubnavWithProgress({
     />
   );
 
-  const backButton = (compact: boolean) => (
+  const backButtonDesktop = (
     <button
       type="button"
       onClick={onBack}
       className={cn(
         subnavFirmSegmentClass,
         "gap-2 bg-transparent font-semibold",
-        compact
-          ? "relative z-10 shrink-0 border-r border-white/10 px-3 py-2 md:border-0 md:px-2"
-          : "",
         segmentFilled(0)
           ? "text-white"
           : "text-muted-foreground hover:text-foreground/90"
@@ -53,15 +50,11 @@ export function FirmSubnavWithProgress({
         height={16}
         className="h-4 w-4 shrink-0"
       />
-      <span
-        className={cn("min-w-0 leading-tight", compact && "max-md:sr-only")}
-      >
-        Back to home
-      </span>
+      <span className="min-w-0 leading-tight">Back to home</span>
     </button>
   );
 
-  const tabButtons = (tabClass: string) =>
+  const tabButtons = (options: { mobile: boolean }) =>
     FIRM_TABS.map((t, i) => {
       const isActive = activeTab === t.id;
       const s = 1 + i;
@@ -74,7 +67,8 @@ export function FirmSubnavWithProgress({
           aria-current={isActive ? "page" : undefined}
           className={cn(
             subnavFirmSegmentClass,
-            tabClass,
+            options.mobile &&
+              "min-h-0 shrink-0 self-stretch whitespace-nowrap px-3 py-0 text-nowrap",
             onFilledPortion || isActive ? "font-semibold" : "font-normal",
             "text-white"
           )}
@@ -85,23 +79,41 @@ export function FirmSubnavWithProgress({
     });
 
   return (
-    <div className="relative h-full min-h-0 w-full flex-1">
+    <div className="relative flex h-full min-h-0 w-full flex-1 flex-col overflow-hidden">
       {progressFill}
 
       {/* Desktop / tablet: 6-column grid (unchanged) */}
-      <div className="relative z-10 hidden h-full w-full min-w-0 md:grid md:grid-cols-6">
-        {backButton(false)}
-        {tabButtons("")}
+      <div className="relative z-10 hidden h-full min-h-0 w-full md:grid md:grid-cols-6">
+        {backButtonDesktop}
+        {tabButtons({ mobile: false })}
         <div aria-hidden className="min-h-0 min-w-0" />
       </div>
 
-      {/* Mobile: fixed back + horizontal scroll for tabs */}
-      <div className="relative z-10 flex h-full w-full min-h-0 md:hidden">
-        {backButton(true)}
+      {/* Mobile: fixed back column + scroll strip (matches expanded-expertise) */}
+      <div className="relative z-10 flex h-full min-h-0 w-full min-w-0 items-stretch overflow-hidden md:hidden">
+        <button
+          type="button"
+          onClick={onBack}
+          className={cn(
+            "flex min-h-0 shrink-0 items-center justify-center gap-2 self-stretch border-r border-white/10 bg-transparent px-3 py-0 text-center text-[10px] font-semibold uppercase leading-tight tracking-wide transition-colors hover:opacity-90",
+            segmentFilled(0)
+              ? "text-white"
+              : "text-muted-foreground hover:text-foreground/90"
+          )}
+        >
+          <Image
+            src="/icons/back-2.svg"
+            alt=""
+            width={16}
+            height={16}
+            className="h-4 w-4 shrink-0"
+          />
+          <span className="sr-only">Back to home</span>
+        </button>
         <div className="min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          <div className="flex min-h-full min-w-max items-stretch">
-            {tabButtons("whitespace-nowrap px-4 py-2")}
-            <div aria-hidden className="w-12 min-w-12 shrink-0" />
+          <div className="flex h-full min-h-0 min-w-max flex-nowrap items-stretch gap-x-px px-0.5">
+            {tabButtons({ mobile: true })}
+            <div aria-hidden className="w-10 min-w-10 shrink-0" />
           </div>
         </div>
       </div>

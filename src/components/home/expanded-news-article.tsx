@@ -3,8 +3,7 @@ import { NEWS_ITEMS } from "./content";
 import { HOME_VT } from "./home-view-transition";
 import { sectionTitle } from "@/constant/variabls";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { SUBNAV_MIN_STYLE, subnavRowClass } from "@/constant/variabls";
+import { SUBNAV_MIN_STYLE } from "@/constant/variabls";
 import { BackButton } from "./back-button";
 import { subnavPrimaryBtnClass } from "@/constant/variabls";
 
@@ -26,8 +25,8 @@ export function ExpandedNewsArticle({
       className="flex h-full min-h-0 flex-col bg-background"
       style={{ viewTransitionName: HOME_VT.news, borderRadius: 0 }}
     >
-      <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row">
-        <article className="bg-[#111F3F] px-6 pt-5 md:px-10  flex min-h-0 min-w-0 flex-[1.7] flex-col overflow-y-auto">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden md:flex-row md:items-stretch">
+        <article className="flex min-h-0 min-w-0 flex-[1.7] flex-col overflow-y-auto bg-[#111F3F] px-6 pt-5 md:px-10">
           <div className="max-w-[900px]">
             <h2 className={sectionTitle}>Our News</h2>
             <p className="mt-12 text-[10px] uppercase tracking-wider text-news-accent md:text-base">
@@ -56,11 +55,11 @@ export function ExpandedNewsArticle({
             ))}
           </div>
         </article>
-        <aside className="popup-scroll flex h-full min-h-0 w-fit shrink-0 flex-col md:w-[30%]">
-          <h4 className="text-[22px] text-foreground pb-2 px-6 pt-6">
+        <aside className="flex min-h-0 w-full shrink-0 flex-col overflow-hidden md:w-[30%] md:min-w-0">
+          <h4 className="shrink-0 px-6 pb-2 pt-6 text-[22px] text-foreground">
             Other news
           </h4>
-          <ul className="flex flex-col overflow-y-auto h-full">
+          <ul className="popup-scroll flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain">
             {others.map((n) => (
               <li key={n.id} className="">
                 <button
@@ -78,7 +77,10 @@ export function ExpandedNewsArticle({
           </ul>
         </aside>
       </div>
-      <nav className={cn(subnavRowClass, "flex-wrap")} style={SUBNAV_MIN_STYLE}>
+      <nav
+        className="flex w-full shrink-0 flex-wrap items-center gap-2 overflow-hidden bg-[#121111] px-6 md:px-10"
+        style={SUBNAV_MIN_STYLE}
+      >
         <BackButton onClick={onBack} />
         <button
           type="button"

@@ -76,38 +76,41 @@ export function ExpandedExpertise({
         aria-label="Practice areas"
       >
         <div
-          className="pointer-events-auto flex w-full shrink-0 items-stretch gap-2 px-6 md:px-10 bg-[#000A21]"
+          className="pointer-events-auto flex w-full shrink-0 items-stretch overflow-hidden bg-[#121111]"
           style={SUBNAV_MIN_STYLE}
           onMouseLeave={() => setHoveredNavSlug(null)}
         >
           <BackButton
             onClick={onBack}
-            className="min-h-0 shrink-0 self-stretch rounded-none px-3 py-0 text-white"
+            className="min-h-0 shrink-0 self-stretch rounded-none border-r border-white/10 px-3 py-0 text-white"
           />
-          <div className="flex min-h-0 min-w-0 flex-1 flex-wrap items-stretch gap-x-2 gap-y-0 md:gap-x-3">
-            {EXPERTISE_AREAS.map((a) => {
-              const NavIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[a.slug];
-              const isActive = a.slug === slug;
-              const navActive = isActive || hoveredNavSlug === a.slug;
-              return (
-                <button
-                  key={a.slug}
-                  type="button"
-                  onMouseEnter={() => setHoveredNavSlug(a.slug)}
-                  onClick={() => onSelectSlug(a.slug)}
-                  className={cn(
-                    "cursor-pointer flex min-h-0 min-w-0 shrink-0 items-center justify-center gap-1.5 self-stretch px-3 text-[10px] uppercase tracking-wide transition-colors md:text-[11px]",
-                    "text-white",
-                    isActive ? "bg-[#0B1931] font-semibold" : "font-normal"
-                  )}
-                >
-                  <span className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center md:h-4 md:w-4">
-                    <NavIcon isHovered={navActive} />
-                  </span>
-                  <span className="text-nowrap">{a.label}</span>
-                </button>
-              );
-            })}
+          <div className="min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] md:overflow-visible [&::-webkit-scrollbar]:hidden">
+            <div className="flex h-full min-h-0 min-w-max flex-nowrap items-stretch gap-x-1 px-1 md:min-w-0 md:flex-1 md:flex-wrap md:gap-x-3 md:gap-y-0 md:px-4 md:pl-2">
+              {EXPERTISE_AREAS.map((a) => {
+                const NavIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[a.slug];
+                const isActive = a.slug === slug;
+                const navActive = isActive || hoveredNavSlug === a.slug;
+                const label = a.labelShort ?? a.label;
+                return (
+                  <button
+                    key={a.slug}
+                    type="button"
+                    onMouseEnter={() => setHoveredNavSlug(a.slug)}
+                    onClick={() => onSelectSlug(a.slug)}
+                    className={cn(
+                      "cursor-pointer flex min-h-0 shrink-0 items-center justify-center gap-1.5 self-stretch px-2.5 text-[10px] uppercase tracking-wide transition-colors md:min-w-0 md:px-3 md:text-[11px]",
+                      "text-white",
+                      isActive ? "bg-[#0B1931] font-semibold" : "font-normal"
+                    )}
+                  >
+                    <span className="inline-flex h-3.5 w-3.5 shrink-0 items-center justify-center md:h-4 md:w-4">
+                      <NavIcon isHovered={navActive} />
+                    </span>
+                    <span className="text-nowrap">{label}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       </nav>

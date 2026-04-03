@@ -403,7 +403,7 @@ export default function HomePage() {
 
         <div
           ref={footerRef}
-          className={cn(view.mode === "firm" && "max-md:hidden")}
+          className={cn(view.mode !== "grid" && "max-md:hidden")}
         >
           <HomeFooter />
         </div>

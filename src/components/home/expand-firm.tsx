@@ -790,7 +790,7 @@ export function ExpandedFirm({
         </div>
       </div>
       <nav
-        className="flex w-full shrink-0 overflow-hidden bg-[#121111]"
+        className="flex min-h-0 w-full shrink-0 items-stretch overflow-hidden bg-[#121111]"
         style={SUBNAV_MIN_STYLE}
         aria-label="Firm sections"
       >
