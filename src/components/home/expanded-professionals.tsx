@@ -13,7 +13,10 @@ import { BackButton } from "./back-button";
 import { subnavPrimaryBtnClass } from "@/constant/variabls";
 import { sectionTitle } from "@/constant/variabls";
 import { IMAGE_OUR_PROFESSIONALS } from "./content";
-import { USER_IMAGE } from "./content";
+
+/** Timeline: hero 0–1s, cards 1–1.4s → hero ends at 1/1.4 ≈ 0.714 */
+const HEADER_BG_THRESHOLD = 0.72;
+const TEAM_STAGE_SCROLL_THRESHOLD = 0.75;
 
 export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -26,6 +29,8 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
   const wheelIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const stageRef = useRef(0);
   const [professionalsStageIndex, setProfessionalsStageIndex] = useState(0);
+  /** Solid bar under title: only after hero finishes exiting forward; hidden first when returning to stage 1 hero */
+  const [showHeaderBg, setShowHeaderBg] = useState(false);
   const [selectedSlug, setSelectedSlug] = useState<
     (typeof PROFESSIONALS_ITEMS)[number]["slug"] | null
   >(null);
@@ -34,7 +39,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
     : null;
 
   const syncUiFromProgress = useCallback((progress: number) => {
-    stageRef.current = progress >= 0.5 ? 1 : 0;
+    stageRef.current = progress >= TEAM_STAGE_SCROLL_THRESHOLD ? 1 : 0;
   }, []);
 
   const animateToStage = useCallback(
@@ -47,17 +52,46 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
       );
       const targetProgress = PROFESSIONALS_STOPS[target];
       scrubTweenRef.current?.kill();
-      scrubTweenRef.current = gsap.to(tl, {
-        progress: targetProgress,
-        duration: 1,
-        ease: "power2.inOut",
-        overwrite: true,
-        onUpdate: () => syncUiFromProgress(tl.progress()),
-        onComplete: () => {
-          scrubTargetRef.current = targetProgress;
-          setProfessionalsStageIndex(target);
-        },
-      });
+
+      const duration = 1.35;
+      const ease = "power2.inOut";
+
+      if (target === 1) {
+        setShowHeaderBg(false);
+        scrubTweenRef.current = gsap.to(tl, {
+          progress: targetProgress,
+          duration,
+          ease,
+          overwrite: true,
+          onUpdate: () => {
+            const p = tl.progress();
+            syncUiFromProgress(p);
+            setShowHeaderBg(p >= HEADER_BG_THRESHOLD);
+          },
+          onComplete: () => {
+            scrubTargetRef.current = targetProgress;
+            setProfessionalsStageIndex(1);
+            setShowHeaderBg(true);
+          },
+        });
+      } else {
+        setShowHeaderBg(false);
+        scrubTweenRef.current = gsap.to(tl, {
+          progress: targetProgress,
+          duration,
+          ease,
+          delay: 0.14,
+          overwrite: true,
+          onUpdate: () => {
+            syncUiFromProgress(tl.progress());
+          },
+          onComplete: () => {
+            scrubTargetRef.current = targetProgress;
+            setProfessionalsStageIndex(0);
+            setShowHeaderBg(false);
+          },
+        });
+      }
     },
     [syncUiFromProgress]
   );
@@ -105,28 +139,32 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
     ) as HTMLElement | null;
     if (!heroPhoto || !cardsStage) return;
     gsap.set(cardsStage, { autoAlpha: 0 });
+    gsap.set(heroPhoto, { xPercent: 0 });
     const tl = gsap.timeline({ paused: true });
+    // Fully clear the hero off-screen left (100% = one full width; small extra margin for edges)
     tl.to(
       heroPhoto,
       {
-        xPercent: -120,
-        duration: 0.55,
+        xPercent: -108,
+        duration: 1,
         ease: "power2.inOut",
       },
       0
     );
+    // Cards only after hero — then header bg is driven by progress in animateToStage
     tl.to(
       cardsStage,
       {
         autoAlpha: 1,
-        duration: 0.38,
-        ease: "power2.inOut",
+        duration: 0.4,
+        ease: "power2.out",
       },
-      0.18
+      1
     );
     timelineRef.current = tl;
     scrubTargetRef.current = 0;
     setProfessionalsStageIndex(0);
+    setShowHeaderBg(false);
     syncUiFromProgress(0);
     return () => {
       scrubTweenRef.current?.kill();
@@ -235,22 +273,26 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
             }}
           />
         </div>
-        <h2
-          className={`absolute left-6 top-5 z-30 md:left-10 md:top-8 ${sectionTitle}`}
+        <div
+          className={cn(
+            "pointer-events-none absolute left-0 right-0 top-0 z-30 px-6 pt-5 pb-4 transition-colors duration-200 md:px-10 md:pt-8 md:pb-5",
+            showHeaderBg && "bg-background"
+          )}
         >
-          The Professionals
-        </h2>
+          <h2 className={sectionTitle}>The Professionals</h2>
+        </div>
         <div
           data-anim="pros-cards-stage"
-          className={`absolute inset-0 z-20 ${
-            selectedSlug ? "pointer-events-none" : ""
-          }`}
+          className={cn(
+            "absolute inset-0 z-20 flex min-h-0 flex-col",
+            selectedSlug && "pointer-events-none"
+          )}
         >
           <div
             ref={cardsScrollRef}
-            className="pt-40 h-[min(78vh,760px)] overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-32 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className="grid grid-cols-3 w-full px-6 pb-12 md:px-10">
+            <div className="grid grid-cols-3 w-full px-6 md:px-10">
               {PROFESSIONALS_ITEMS.map((item, index) => (
                 <article
                   key={item.slug}
@@ -265,7 +307,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                 >
                   <div className="relative h-[123px] w-[116px] shrink-0 overflow-hidden rounded-[5px]">
                     <Image
-                      src={USER_IMAGE}
+                      src={item.image}
                       alt={item.name}
                       fill
                       className="object-cover object-top grayscale transition-all duration-300 hover:grayscale-0"
@@ -298,7 +340,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
             <button
               type="button"
               aria-label="Close professional details"
-              className="absolute inset-0 z-[35] cursor-default bg-transparent"
+              className="absolute inset-0 z-[35] cursor-pointer bg-[#0A1225]/80 backdrop-blur-md backdrop-saturate-150 transition-colors"
               onClick={handleClosePanel}
             />
             <div
@@ -319,7 +361,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
               <div className="flex min-h-0 flex-1 gap-6 overflow-hidden pb-8">
                 <div className="relative h-[212px] w-[200px] shrink-0 overflow-hidden rounded-[8px]">
                   <Image
-                    src={USER_IMAGE}
+                    src={selectedDetail.image}
                     alt={selectedDetail.name}
                     fill
                     className="object-cover object-top"
