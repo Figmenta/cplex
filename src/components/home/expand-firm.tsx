@@ -22,6 +22,8 @@ import { HOME_VT } from "./home-view-transition";
 const FIRM_TL_SCALE = 1.55;
 /** Time to scrub the timeline when changing tab / wheel step. */
 const FIRM_STAGE_SCRUB_DURATION = 1.35;
+/** Tailwind `md` — mobile firm timeline uses vertical / bottom-based motion. */
+const FIRM_MOBILE_MQ = "(max-width: 767px)";
 
 export function ExpandedFirm({
   onBack,
@@ -99,6 +101,7 @@ export function ExpandedFirm({
   useEffect(() => {
     const root = containerRef.current;
     if (!root) return;
+
     const splitWrap = root.querySelector(
       '[data-anim="split-wrap"]'
     ) as HTMLElement | null;
@@ -155,142 +158,313 @@ export function ExpandedFirm({
     ) {
       return;
     }
-    gsap.set(contentPanel, { xPercent: 100, autoAlpha: 0 });
-    gsap.set(imageDesc, { autoAlpha: 1, y: 0 });
-    gsap.set(splitWrap, { yPercent: 0 });
-    gsap.set(principlesStage, { yPercent: -100, xPercent: 0, autoAlpha: 1 });
-    gsap.set(dualCardsStage, { autoAlpha: 0 });
-    gsap.set(dualLeft, { x: -window.innerWidth, autoAlpha: 0 });
-    gsap.set(dualRight, { x: window.innerWidth, autoAlpha: 0 });
-    gsap.set(complexStage, { autoAlpha: 0, xPercent: 0, yPercent: 0 });
-    gsap.set(complexHeading, {
-      y: Math.min(window.innerHeight * 0.42, 320),
-      autoAlpha: 0,
+
+    const vh = typeof window !== "undefined" ? window.innerHeight : 800;
+    const dualFromBottom = vh * 1.05;
+
+    const buildDesktopTimeline = () => {
+      gsap.set(contentPanel, { xPercent: 100, yPercent: 0, autoAlpha: 0 });
+      gsap.set(imageWrap, { clearProps: "width,height" });
+      gsap.set(imageDesc, { autoAlpha: 1, y: 0 });
+      gsap.set(splitWrap, { yPercent: 0 });
+      gsap.set(principlesStage, { yPercent: -100, xPercent: 0, autoAlpha: 1 });
+      gsap.set(dualCardsStage, { autoAlpha: 0 });
+      gsap.set(dualLeft, { x: -window.innerWidth, y: 0, autoAlpha: 0 });
+      gsap.set(dualRight, { x: window.innerWidth, y: 0, autoAlpha: 0 });
+      gsap.set(complexStage, { autoAlpha: 0, xPercent: 0, yPercent: 0 });
+      gsap.set(complexHeading, {
+        y: Math.min(window.innerHeight * 0.42, 320),
+        autoAlpha: 0,
+      });
+      gsap.set(complexCards, { y: 48, autoAlpha: 0 });
+      gsap.set(closingStage, { xPercent: -100, yPercent: 0, autoAlpha: 0 });
+
+      const s = FIRM_TL_SCALE;
+      const tl = gsap.timeline({ paused: true });
+      tl.to(imageWrap, { width: "58%", duration: 0.11 * s, ease: "none" }, 0);
+      tl.to(
+        contentPanel,
+        { xPercent: 0, autoAlpha: 1, duration: 0.11 * s, ease: "none" },
+        0
+      );
+      tl.to(
+        imageDesc,
+        { autoAlpha: 1, y: 0, duration: 0.06 * s, ease: "none" },
+        0.04 * s
+      );
+      tl.to(
+        imageDesc,
+        { autoAlpha: 0, y: 20, duration: 0.07 * s, ease: "power2.inOut" },
+        0.13 * s
+      );
+      tl.to(
+        splitWrap,
+        { yPercent: 130, duration: 0.11 * s, ease: "power2.inOut" },
+        0.13 * s
+      );
+      tl.to(
+        principlesStage,
+        { yPercent: 0, duration: 0.11 * s, ease: "power2.inOut" },
+        0.13 * s
+      );
+      tl.to(
+        principlesStage,
+        {
+          xPercent: -100,
+          autoAlpha: 0,
+          duration: 0.1 * s,
+          ease: "power2.inOut",
+        },
+        0.26 * s
+      );
+      tl.to(
+        dualCardsStage,
+        { autoAlpha: 1, duration: 0.05 * s, ease: "power1.out" },
+        0.3 * s
+      );
+      tl.to(
+        dualLeft,
+        { x: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power3.out" },
+        0.3 * s
+      );
+      tl.to(
+        dualRight,
+        { x: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power3.out" },
+        0.3 * s
+      );
+      tl.to(
+        dualCardsStage,
+        {
+          yPercent: -130,
+          autoAlpha: 0,
+          duration: 0.1 * s,
+          ease: "power2.inOut",
+        },
+        0.44 * s
+      );
+      tl.to(
+        complexStage,
+        { autoAlpha: 1, duration: 0.05 * s, ease: "power1.out" },
+        0.54 * s
+      );
+      tl.to(
+        complexHeading,
+        { y: 0, autoAlpha: 1, duration: 0.13 * s, ease: "power2.out" },
+        0.54 * s
+      );
+      tl.to(
+        complexHeading,
+        { y: -100, autoAlpha: 0, duration: 0.08 * s, ease: "power2.inOut" },
+        0.69 * s
+      );
+      tl.to(
+        complexCards,
+        { y: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power2.out" },
+        0.76 * s
+      );
+      const complexExitT = 0.89 * s;
+      const complexExitDur = 0.12 * s;
+      const closingEnterT = complexExitT + complexExitDur;
+      const closingEnterDur = 0.11 * s;
+      tl.to(
+        complexStage,
+        {
+          yPercent: -100,
+          autoAlpha: 0,
+          duration: complexExitDur,
+          ease: "power2.inOut",
+        },
+        complexExitT
+      );
+      tl.to(
+        persistentTitle,
+        {
+          y: -window.innerHeight * 1.2,
+          autoAlpha: 0,
+          duration: complexExitDur,
+          ease: "power2.inOut",
+        },
+        complexExitT
+      );
+      tl.to(
+        closingStage,
+        {
+          xPercent: 0,
+          autoAlpha: 1,
+          duration: closingEnterDur,
+          ease: "power2.out",
+        },
+        closingEnterT
+      );
+      return tl;
+    };
+
+    const buildMobileTimeline = () => {
+      gsap.set(contentPanel, { xPercent: 0, yPercent: 100, autoAlpha: 0 });
+      gsap.set(imageWrap, { width: "100%", height: "100%" });
+      gsap.set(imageDesc, { autoAlpha: 1, y: 0 });
+      gsap.set(splitWrap, { yPercent: 0 });
+      gsap.set(principlesStage, { yPercent: -100, xPercent: 0, autoAlpha: 1 });
+      gsap.set(dualCardsStage, { autoAlpha: 0 });
+      gsap.set(dualLeft, { x: 0, y: dualFromBottom, autoAlpha: 0 });
+      gsap.set(dualRight, { x: 0, y: dualFromBottom, autoAlpha: 0 });
+      gsap.set(complexStage, { autoAlpha: 0, xPercent: 0, yPercent: 0 });
+      gsap.set(complexHeading, {
+        y: Math.min(window.innerHeight * 0.42, 320),
+        autoAlpha: 0,
+      });
+      gsap.set(complexCards, { y: 48, autoAlpha: 0 });
+      gsap.set(closingStage, { xPercent: 0, yPercent: 100, autoAlpha: 0 });
+
+      const s = FIRM_TL_SCALE;
+      const tl = gsap.timeline({ paused: true });
+      tl.to(
+        imageWrap,
+        { height: "52%", duration: 0.11 * s, ease: "power2.out" },
+        0
+      );
+      tl.to(
+        contentPanel,
+        { yPercent: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power2.out" },
+        0
+      );
+      tl.to(
+        imageDesc,
+        { autoAlpha: 1, y: 0, duration: 0.06 * s, ease: "none" },
+        0.04 * s
+      );
+      tl.to(
+        imageDesc,
+        { autoAlpha: 0, y: 20, duration: 0.07 * s, ease: "power2.inOut" },
+        0.13 * s
+      );
+      tl.to(
+        splitWrap,
+        { yPercent: 130, duration: 0.11 * s, ease: "power2.inOut" },
+        0.13 * s
+      );
+      tl.to(
+        principlesStage,
+        { yPercent: 0, duration: 0.11 * s, ease: "power2.inOut" },
+        0.13 * s
+      );
+      tl.to(
+        principlesStage,
+        {
+          xPercent: -100,
+          autoAlpha: 0,
+          duration: 0.1 * s,
+          ease: "power2.inOut",
+        },
+        0.26 * s
+      );
+      tl.to(
+        dualCardsStage,
+        { autoAlpha: 1, duration: 0.05 * s, ease: "power1.out" },
+        0.3 * s
+      );
+      tl.to(
+        dualLeft,
+        { y: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power3.out" },
+        0.3 * s
+      );
+      tl.to(
+        dualRight,
+        { y: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power3.out" },
+        0.3 * s
+      );
+      tl.to(
+        dualCardsStage,
+        {
+          yPercent: -130,
+          autoAlpha: 0,
+          duration: 0.1 * s,
+          ease: "power2.inOut",
+        },
+        0.44 * s
+      );
+      tl.to(
+        complexStage,
+        { autoAlpha: 1, duration: 0.05 * s, ease: "power1.out" },
+        0.54 * s
+      );
+      tl.to(
+        complexHeading,
+        { y: 0, autoAlpha: 1, duration: 0.13 * s, ease: "power2.out" },
+        0.54 * s
+      );
+      tl.to(
+        complexHeading,
+        { y: -100, autoAlpha: 0, duration: 0.08 * s, ease: "power2.inOut" },
+        0.69 * s
+      );
+      tl.to(
+        complexCards,
+        { y: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power2.out" },
+        0.76 * s
+      );
+      const complexExitT = 0.89 * s;
+      const complexExitDur = 0.12 * s;
+      const closingEnterT = complexExitT + complexExitDur;
+      const closingEnterDur = 0.11 * s;
+      tl.to(
+        complexStage,
+        {
+          yPercent: -100,
+          autoAlpha: 0,
+          duration: complexExitDur,
+          ease: "power2.inOut",
+        },
+        complexExitT
+      );
+      tl.to(
+        persistentTitle,
+        {
+          y: -window.innerHeight * 1.2,
+          autoAlpha: 0,
+          duration: complexExitDur,
+          ease: "power2.inOut",
+        },
+        complexExitT
+      );
+      tl.to(
+        closingStage,
+        {
+          yPercent: 0,
+          autoAlpha: 1,
+          duration: closingEnterDur,
+          ease: "power2.out" },
+        closingEnterT
+      );
+      return tl;
+    };
+
+    const mm = gsap.matchMedia();
+
+    mm.add(`(min-width: 768px)`, () => {
+      const tl = buildDesktopTimeline();
+      timelineRef.current = tl;
+      tl.progress(FIRM_INTERNAL_STOPS[stageRef.current] ?? 0);
+      syncProgressFromTimeline(tl.progress());
+      return () => {
+        tl.kill();
+        if (timelineRef.current === tl) timelineRef.current = null;
+      };
     });
-    gsap.set(complexCards, { y: 48, autoAlpha: 0 });
-    gsap.set(closingStage, { xPercent: -100, autoAlpha: 0 });
-    const s = FIRM_TL_SCALE;
-    const tl = gsap.timeline({ paused: true });
-    tl.to(imageWrap, { width: "58%", duration: 0.11 * s, ease: "none" }, 0);
-    tl.to(
-      contentPanel,
-      { xPercent: 0, autoAlpha: 1, duration: 0.11 * s, ease: "none" },
-      0
-    );
-    tl.to(
-      imageDesc,
-      { autoAlpha: 1, y: 0, duration: 0.06 * s, ease: "none" },
-      0.04 * s
-    );
-    tl.to(
-      imageDesc,
-      { autoAlpha: 0, y: 20, duration: 0.07 * s, ease: "power2.inOut" },
-      0.13 * s
-    );
-    tl.to(
-      splitWrap,
-      { yPercent: 130, duration: 0.11 * s, ease: "power2.inOut" },
-      0.13 * s
-    );
-    tl.to(
-      principlesStage,
-      { yPercent: 0, duration: 0.11 * s, ease: "power2.inOut" },
-      0.13 * s
-    );
-    tl.to(
-      principlesStage,
-      {
-        xPercent: -100,
-        autoAlpha: 0,
-        duration: 0.1 * s,
-        ease: "power2.inOut",
-      },
-      0.26 * s
-    );
-    tl.to(
-      dualCardsStage,
-      { autoAlpha: 1, duration: 0.05 * s, ease: "power1.out" },
-      0.3 * s
-    );
-    tl.to(
-      dualLeft,
-      { x: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power3.out" },
-      0.3 * s
-    );
-    tl.to(
-      dualRight,
-      { x: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power3.out" },
-      0.3 * s
-    );
-    tl.to(
-      dualCardsStage,
-      {
-        yPercent: -130,
-        autoAlpha: 0,
-        duration: 0.1 * s,
-        ease: "power2.inOut",
-      },
-      0.44 * s
-    );
-    tl.to(
-      complexStage,
-      { autoAlpha: 1, duration: 0.05 * s, ease: "power1.out" },
-      0.54 * s
-    );
-    tl.to(
-      complexHeading,
-      { y: 0, autoAlpha: 1, duration: 0.13 * s, ease: "power2.out" },
-      0.54 * s
-    );
-    tl.to(
-      complexHeading,
-      { y: -100, autoAlpha: 0, duration: 0.08 * s, ease: "power2.inOut" },
-      0.69 * s
-    );
-    tl.to(
-      complexCards,
-      { y: 0, autoAlpha: 1, duration: 0.11 * s, ease: "power2.out" },
-      0.76 * s
-    );
-    // Stage 5 → 6: complex exits, short hold, then closing (tighter than 1.29s total)
-    const complexExitT = 0.89 * s;
-    const complexExitDur = 0.12 * s;
-    const closingEnterT = complexExitT + complexExitDur;
-    const closingEnterDur = 0.11 * s;
-    tl.to(
-      complexStage,
-      {
-        yPercent: -100,
-        autoAlpha: 0,
-        duration: complexExitDur,
-        ease: "power2.inOut",
-      },
-      complexExitT
-    );
-    tl.to(
-      persistentTitle,
-      {
-        y: -window.innerHeight * 1.2,
-        autoAlpha: 0,
-        duration: complexExitDur,
-        ease: "power2.inOut",
-      },
-      complexExitT
-    );
-    tl.to(
-      closingStage,
-      {
-        xPercent: 0,
-        autoAlpha: 1,
-        duration: closingEnterDur,
-        ease: "power2.out",
-      },
-      closingEnterT
-    );
-    timelineRef.current = tl;
-    syncProgressFromTimeline(0);
+
+    mm.add(FIRM_MOBILE_MQ, () => {
+      const tl = buildMobileTimeline();
+      timelineRef.current = tl;
+      tl.progress(FIRM_INTERNAL_STOPS[stageRef.current] ?? 0);
+      syncProgressFromTimeline(tl.progress());
+      return () => {
+        tl.kill();
+        if (timelineRef.current === tl) timelineRef.current = null;
+      };
+    });
+
     return () => {
-      tl.kill();
+      mm.revert();
       timelineRef.current = null;
     };
   }, [syncProgressFromTimeline]);
@@ -362,15 +536,12 @@ export function ExpandedFirm({
         className="relative min-h-0 flex-1 overflow-hidden"
       >
         <div
-          data-anim="firm-title"
-          className="absolute left-6 top-5 z-[45] md:left-10 md:top-8"
+          data-anim="split-wrap"
+          className="absolute inset-0 flex flex-col overflow-hidden md:flex-row"
         >
-          <h2 className={sectionTitle}>The Firm</h2>
-        </div>
-        <div data-anim="split-wrap" className="absolute inset-0 flex">
           <div
             data-anim="firm-image"
-            className="relative h-full w-full shrink-0 overflow-hidden"
+            className="relative h-full w-full shrink-0 overflow-hidden md:h-full"
           >
             <Image
               src={IMAGE_THE_FIRM_BUILDING}
@@ -388,13 +559,28 @@ export function ExpandedFirm({
                   "linear-gradient(123.18deg, #000a21 3.93%, #0c1a39 34.71%)",
               }}
             />
+            <div
+              data-anim="firm-title"
+              className="absolute left-6 top-5 z-[45] md:left-10 md:top-8"
+            >
+              <h2 className={sectionTitle}>The Firm</h2>
+            </div>
+            <div
+              data-anim="image-desc"
+              className="pointer-events-none absolute bottom-6 left-6 z-[15] max-w-[min(100%,560px)] pr-4 md:bottom-[140px] md:left-10 md:pr-0"
+            >
+              <p className="text-foreground text-[18px] leading-[1.45] md:text-[27px]">
+                CP | LEX is a boutique law firm delivering sophisticated legal
+                solutions.
+              </p>
+            </div>
           </div>
           <div
             data-anim="content-panel"
-            className="absolute bottom-0 right-0 top-0 z-[5] w-[42%]"
+            className="absolute bottom-0 left-0 right-0 top-auto z-[5] flex h-[48%] w-full shrink-0 flex-col md:bottom-auto md:left-auto md:right-0 md:top-0 md:h-full md:w-[42%]"
             style={{ backgroundColor: "#581525" }}
           >
-            <div className="flex h-full items-center px-6 md:px-10">
+            <div className="flex min-h-0 flex-1 items-center overflow-y-auto px-6 py-6 md:h-full md:py-0 md:px-10">
               <p className="text-sm leading-[190%] text-foreground md:text-[20px] md:leading-[1.55]">
                 The Firm supports companies in designing and implementing
                 compliance systems, including risk mapping, protocols,
@@ -406,15 +592,6 @@ export function ExpandedFirm({
               </p>
             </div>
           </div>
-        </div>
-        <div
-          data-anim="image-desc"
-          className="pointer-events-none absolute bottom-[140px] left-6 z-[15] max-w-[560px] md:left-10"
-        >
-          <p className="text-foreground text-[27px] leading-[1.45]">
-            CP | LEX is a boutique law firm delivering sophisticated legal
-            solutions.
-          </p>
         </div>
         <div
           data-anim="stage-principles"
@@ -468,7 +645,7 @@ export function ExpandedFirm({
           data-anim="stage-dual-cards"
           className="absolute inset-0 z-30 px-6 pt-[104px] md:px-10"
         >
-          <div className="grid h-[74%] grid-cols-2">
+          <div className="grid h-[74%] max-md:h-[min(78vh,640px)] max-md:grid-cols-1 max-md:gap-3 max-md:pb-4 grid-cols-2">
             <div
               data-anim="dual-left"
               className="flex flex-col justify-between bg-[#152241] p-[32px]"
@@ -504,10 +681,10 @@ export function ExpandedFirm({
           className="absolute inset-0 z-40 flex items-center justify-center px-6 pt-[104px] md:px-10"
         >
           {/* min(52vh,cap): on tall screens the 400px cap was too small — scale cap + vh on lg+ so ~3 cards fit */}
-          <div className="relative w-full min-h-[min(52vh,400px)] 2xl:min-h-[min(65vh,720px)]">
+          <div className="relative w-full min-h-[min(70vh,800px)] md:min-h-[min(52vh,400px)] 2xl:min-h-[min(65vh,720px)]">
             <h2
               data-anim="complex-heading"
-              className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center font-montserrat text-[52px] font-bold uppercase leading-[1.1] tracking-[0.18em] md:px-10"
+              className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center font-montserrat text-[22px] md:text-[52px] font-bold uppercase tracking-[0.18em] md:px-10"
             >
               Built for Complex Legal Challenges
             </h2>
@@ -590,10 +767,10 @@ export function ExpandedFirm({
           className="absolute inset-0 z-50 flex items-center justify-center px-6 text-center md:px-10"
         >
           <div className="max-w-[960px]">
-            <h2 className="mb-8 font-montserrat text-[56px] font-bold uppercase leading-[1.08] tracking-[0.12em] text-[#6A1E2D]">
+            <h2 className="mb-3 md:mb-8 font-montserrat text-[22px] md:text-[56px] font-bold uppercase tracking-[0.12em] text-[#6A1E2D]">
               A Legacy of Precision. A Future of Trust.
             </h2>
-            <p className="mx-auto mb-10 max-w-[700px] text-[18px] leading-[166%] text-white">
+            <p className="mx-auto mb-6 md:mb-10 max-w-[700px] text-[14px] md:text-[18px] leading-[166%] text-white">
               Today, CP | LEX continues to advise Italian and international
               clients across key commercial, industrial, financial, and
               technology sectors.

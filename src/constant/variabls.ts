@@ -80,7 +80,7 @@ export const PROFESSIONALS_ITEMS = [
   {
     slug: "Maria",
     name: "Maria Elena",
-    role: "Co-founder",
+  role: "",
     image: "/team/team-4.png",
   },
   {

@@ -25,9 +25,14 @@ const PROS_TL_SCALE = 1.55;
 const TEAM_SCRUB_DURATION = 2.1;
 /** After opening, auto-advance to team grid (no scroll / wheel to change stage). */
 const TEAM_AUTO_ADVANCE_MS = 1000;
-/** Team member detail drawer: slide from / to the right */
-const TEAM_DETAIL_PANEL_IN_DURATION = 0.50;
-const TEAM_DETAIL_PANEL_OUT_DURATION = 0.40;
+/** Team member detail drawer: slide from right (md+) or bottom (mobile) */
+const TEAM_DETAIL_PANEL_IN_DURATION = 0.5;
+const TEAM_DETAIL_PANEL_OUT_DURATION = 0.4;
+
+function isMdUpViewport(): boolean {
+  if (typeof window === "undefined") return true;
+  return window.matchMedia("(min-width: 768px)").matches;
+}
 
 export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -83,11 +88,15 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
       requestAnimationFrame(() => {
         const panel = panelRef.current;
         if (!panel) return;
+        const desktop = isMdUpViewport();
         gsap.fromTo(
           panel,
-          { x: "100%", autoAlpha: 0 },
+          desktop
+            ? { x: "100%", y: 0, autoAlpha: 0 }
+            : { y: "100%", x: 0, autoAlpha: 0 },
           {
             x: 0,
+            y: 0,
             autoAlpha: 1,
             duration: TEAM_DETAIL_PANEL_IN_DURATION,
             ease: "sine.out",
@@ -104,8 +113,9 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
       setSelectedSlug(null);
       return;
     }
+    const desktop = isMdUpViewport();
     gsap.to(panel, {
-      x: "100%",
+      ...(desktop ? { x: "100%" } : { y: "100%" }),
       autoAlpha: 0,
       duration: TEAM_DETAIL_PANEL_OUT_DURATION,
       ease: "sine.in",
@@ -258,18 +268,17 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
             ref={cardsScrollRef}
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-32 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className="grid grid-cols-3 w-full px-6 md:px-10">
+            <div className="grid w-full grid-cols-1 px-6 md:grid-cols-3 md:px-10">
               {PROFESSIONALS_ITEMS.map((item, index) => (
                 <article
                   key={item.slug}
                   onClick={() => handleSelectCard(item.slug)}
-                  className={`cursor-pointer flex min-h-[180px] items-center gap-5 border-[#22355E] hover:bg-[#14244A66] p-6 transition-colors duration-300 ${
-                    index % 3 !== 2 ? "border-r-[0.5px]" : ""
-                  } ${
-                    index < PROFESSIONALS_ITEMS.length - 3
-                      ? "border-b-[0.5px]"
-                      : ""
-                  }`}
+                  className={cn(
+                    "flex min-h-[180px] cursor-pointer items-center gap-5 border-[#22355E] p-6 transition-colors duration-300 hover:bg-[#14244A66]",
+                    index < PROFESSIONALS_ITEMS.length - 1 && "border-b-[0.5px]",
+                    index % 3 !== 2 && "md:border-r-[0.5px]",
+                    index < PROFESSIONALS_ITEMS.length - 3 && "md:border-b-[0.5px]"
+                  )}
                 >
                   <div className="relative h-[123px] w-[116px] shrink-0 overflow-hidden rounded-[5px]">
                     <Image
@@ -285,12 +294,12 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                       style={{ backgroundColor: "rgba(20, 36, 74, 0.4)" }}
                     />
                   </div>
-                  <div>
-                    <h3 className="text-[18px] font-medium leading-[35px] text-white">
+                  <div className="flex min-h-0 min-w-0 flex-1 flex-row items-start gap-3 md:flex-col md:justify-center">
+                    <h3 className="text-[18px] font-medium leading-snug text-white [text-orientation:mixed] writing-vertical-rl md:leading-[35px] md:writing-horizontal-tb">
                       {item.name}
                     </h3>
                     {item.role ? (
-                      <p className="text-[18px] leading-[35px] text-muted-foreground">
+                      <p className="text-[16px] leading-snug text-muted-foreground [text-orientation:mixed] writing-vertical-rl md:text-[18px] md:leading-[35px] md:writing-horizontal-tb">
                         {item.role}
                       </p>
                     ) : null}
@@ -311,20 +320,24 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
             />
             <div
               ref={panelRef}
-              className="absolute inset-y-0 right-0 z-40 flex w-[70%] flex-col overflow-y-auto bg-[#111F3F] px-6 md:px-10 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className={cn(
+                "absolute z-40 flex flex-col overflow-y-auto bg-[#111F3F] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+                "inset-x-0 bottom-0 top-auto max-h-[90dvh] w-full rounded-t-2xl px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2",
+                "md:inset-x-auto md:inset-y-0 md:bottom-auto md:left-auto md:right-0 md:top-0 md:max-h-none md:h-full md:w-[70%] md:rounded-none md:px-10 md:pb-0 md:pt-0"
+              )}
               style={{ visibility: "hidden" }}
               onClick={(e) => e.stopPropagation()}
             >
               <button
                 onClick={handleClosePanel}
-                className="cursor-pointer flex items-center gap-2 pb-3 pt-7 mb-3"
+                className="mb-3 flex cursor-pointer items-center gap-2 pb-3 pt-5 md:pt-7"
               >
                 <Image src="/icons/back-2.svg" alt="" width={16} height={16} />
                 <span className="text-[10px] font-semibold uppercase tracking-[1.3px]">
                   Back to team
                 </span>
               </button>
-              <div className="flex min-h-0 flex-1 gap-6 overflow-hidden pb-8">
+              <div className="flex min-h-0 flex-1 flex-col items-start gap-3 overflow-hidden pb-6 md:gap-6 md:pb-8">
                 <div className="relative h-[212px] w-[200px] shrink-0 overflow-hidden rounded-[8px]">
                   <Image
                     src={selectedDetail.image}
@@ -335,13 +348,16 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                     quality={90}
                   />
                 </div>
-                <div className="min-h-0 flex-1 overflow-y-auto pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-                  <h3 className="text-[22px] font-semibold leading-none">
-                    {selectedDetail.name}
-                  </h3>
-                  <p className="mb-4 mt-2 text-[18px] text-muted-foreground">
-                    {selectedDetail.role}
-                  </p>
+                <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                  <div className="flex shrink-0 flex-col items-start gap-3 md:flex-col md:gap-2">
+                    <h3 className="mt-2 lg:mt-0 text-[22px] font-semibold leading-none [text-orientation:mixed] writing-vertical-rl md:writing-horizontal-tb">
+                      {selectedDetail.name}
+                    </h3>
+                    <p className="text-[18px] text-muted-foreground [text-orientation:mixed] writing-vertical-rl md:mb-4 md:mt-2 md:writing-horizontal-tb">
+                      {selectedDetail.role}
+                    </p>
+                  </div>
+                  <div className="mt-4 min-w-0 md:mt-0">
                   {selectedDetail.bioFormat === "prose" ? (
                     <div className="max-w-[771px]">
                       {(selectedDetail.proseBio ?? "")
@@ -415,6 +431,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                       )}
                     </div>
                   )}
+                  </div>
                 </div>
               </div>
             </div>

@@ -30,29 +30,37 @@ const LanguageSwitcher: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center gap-2 h-full">
-      {SWITCHERLOCALES.map((loc) => (
-        <button
-          key={loc}
-          onClick={() => handleLanguageChange(loc)}
-          className={`
-            uppercase cursor-pointer
-            px-2 py-1.5 rounded-[4px]
-            text-[15px] font-bold
-            leading-none
-            transition-colors duration-200
-            ${
-              locale === loc
-                ? "text-foreground bg-[#232E48]"
-                : "text-foreground/50 bg-transparent"
-            }
-            focus:outline-none
-          `}
-          disabled={locale === loc}
-          tabIndex={0}
-        >
-          {loc}
-        </button>
+    <div className="flex h-full items-center gap-0.5 md:gap-2">
+      {SWITCHERLOCALES.map((loc, index) => (
+        <span key={loc} className="flex items-center gap-0.5 md:gap-2">
+          {index > 0 ? (
+            <span
+              className="select-none text-[10px] font-semibold text-foreground/40 md:text-[13px]"
+              aria-hidden
+            >
+              |
+            </span>
+          ) : null}
+          <button
+            onClick={() => handleLanguageChange(loc)}
+            className={`
+              cursor-pointer uppercase
+              rounded-[4px] px-1.5 py-1 text-[10px] font-bold leading-none
+              transition-colors duration-200
+              md:px-2 md:py-1.5 md:text-[15px]
+              ${
+                locale === loc
+                  ? "text-foreground lg:bg-[#232E48]"
+                  : "text-foreground/50 bg-transparent"
+              }
+              focus:outline-none
+            `}
+            disabled={locale === loc}
+            tabIndex={0}
+          >
+            {loc}
+          </button>
+        </span>
       ))}
     </div>
   );

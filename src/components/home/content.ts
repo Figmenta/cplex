@@ -9,6 +9,8 @@ export type ExpertiseSlug =
 export const EXPERTISE_AREAS: {
   slug: ExpertiseSlug;
   label: string;
+  /** Narrow layouts (e.g. mobile home strip) */
+  labelShort?: string;
   icon: string;
 }[] = [
   {
@@ -19,6 +21,7 @@ export const EXPERTISE_AREAS: {
   {
     slug: "corporate-commercial",
     label: "Corporate & Commercial Law",
+    labelShort: "Corporate & Commercial",
     icon: "/icons/corporate.svg",
   },
   {
@@ -29,6 +32,7 @@ export const EXPERTISE_AREAS: {
   {
     slug: "litigation-dispute",
     label: "Litigation & Dispute Resolution",
+    labelShort: "Litigation & Dispute",
     icon: "/icons/litigation.svg",
   },
 ];

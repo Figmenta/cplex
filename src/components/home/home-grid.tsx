@@ -122,8 +122,10 @@ export function HomeGrid({
     useState<ExpertiseSlug | null>(null);
 
   return (
-    <div className="relative grid h-full min-h-0 w-full grid-cols-2 grid-rows-2 gap-0 border border-border/15">
-      {/* The Firm — top left */}
+    <div
+      className="relative grid h-full min-h-0 w-full grid-cols-2 gap-0 border border-border/15 max-md:[grid-template-areas:'firm_prof'_'expertise_expertise'_'news_news'] max-md:[grid-template-rows:minmax(0,1fr)_auto_auto] md:[grid-template-areas:'firm_news'_'expertise_professionals'] md:grid-rows-2"
+    >
+      {/* The Firm — desktop top-left | mobile top-left */}
       <button
         type="button"
         ref={setCellRef(0)}
@@ -132,19 +134,19 @@ export function HomeGrid({
           onOpenFirm();
         }}
         style={{ viewTransitionName: vtFirm(stackOrigin) }}
-        className={`cursor-pointer group ${cellStackClass(0, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-r border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
+        className={`[grid-area:firm] cursor-pointer group ${cellStackClass(0, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-r border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
       >
         <div className="pointer-events-none absolute inset-0">
           <Image
             src={IMAGE_THE_FIRM_BUILDING}
             alt="CP LEX office building exterior"
             fill
-            className="object-cover object-center transition-all duration-300 brightness-[0.8] saturate-[0.50] group-hover:brightness-[0.8] group-hover:saturate-[1]"
-            sizes="50vw"
+            className="object-cover object-center transition-all duration-300 brightness-[0.8] saturate-[0.50]  group-hover:saturate-[1]"
+            sizes="(max-width: 767px) 50vw, 50vw"
             priority
           />
           <div
-            className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-50 "
+            className="absolute inset-0 opacity-50 sm:opacity-0 transition-opacity duration-300 group-hover:opacity-50"
             aria-hidden
             style={{
               background:
@@ -152,16 +154,16 @@ export function HomeGrid({
             }}
           />
         </div>
-        <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
+        <span className="relative z-10 mt-auto px-3 pb-3 pt-0 font-montserrat text-[14px] font-bold uppercase tracking-[0.35em] text-section-heading md:mt-0 md:px-5 md:pb-3 md:pt-5 md:text-[16px]">
           The Firm
         </span>
-        <p className="relative z-10 mt-auto translate-y-2 px-5 pb-5 text-[10px] leading-snug text-foreground opacity-0 pt-4 group-hover:opacity-100 group-hover:translate-y-0 duration-300 ease-out md:text-[11px]">
+        <p className="relative z-10 mt-auto max-md:hidden max-w-full translate-y-2 px-5 pb-5 pt-4 text-[10px] leading-snug text-foreground opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block md:text-[11px]">
           CP | LEX is a boutique law firm delivering sophisticated legal
           solutions.
         </p>
       </button>
 
-      {/* Our News — top right (div: marquee is scrollable; nested buttons invalid inside <button>) */}
+      {/* Our News — desktop top-right | mobile full-width row 3 */}
       <div
         ref={setCellRef(1)}
         role="button"
@@ -178,28 +180,34 @@ export function HomeGrid({
           }
         }}
         style={{ viewTransitionName: vtNews(stackOrigin) }}
-        className={`cursor-pointer group ${cellStackClass(1, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
+        className={`[grid-area:news] max-md:shrink-0 cursor-pointer group ${cellStackClass(1, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring md:border-b`}
       >
-        <span className="shrink-0 px-5 pb-1 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
+        <span className="shrink-0 px-4 pb-4 pt-6 text-left font-montserrat text-[10px] font-bold uppercase tracking-[0.35em] text-section-heading md:px-5 md:pb-1 md:pt-5 md:text-[16px]">
           Our News
         </span>
-        <HomeNewsMarquee compact interactive={false} />
+        <div
+          className="pb-4 flex min-h-0 w-full flex-col max-md:flex-none max-md:shrink-0 md:flex-1"
+          onPointerDown={(e) => e.stopPropagation()}
+        >
+          <HomeNewsMarquee compact interactive={false} />
+        </div>
       </div>
 
-      {/* Areas of expertise — bottom left (outer cell does not expand; inner tiles do) */}
+      {/* Areas of expertise — desktop bottom-left | mobile row 2 full width */}
       <div
         ref={setCellRef(2)}
-        className={`cursor-pointer ${cellStackClass(2, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none`}
+        className={`[grid-area:expertise] max-md:shrink-0 cursor-pointer ${cellStackClass(2, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 md:border-b-0 md:border-r md:border-border/15`}
       >
-        <span className="px-5 pb-2 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
+        <span className="shrink-0 px-4 pb-3 pt-6 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:px-5 md:pb-2 md:pt-5 md:text-[16px]">
           Areas of expertise
         </span>
         <div
-          className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2"
+          className="grid min-h-0 shrink-0 grid-cols-4 grid-rows-1 gap-1 px-1 pb-1 md:min-h-0 md:flex-1 md:grid-cols-2 md:grid-rows-2 md:gap-0 md:px-0 md:pb-0"
           onMouseLeave={() => setHoveredExpertiseSlug(null)}
         >
           {EXPERTISE_AREAS.map((area, tileIndex) => {
             const ExpertiseIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[area.slug];
+            const labelMobile = area.labelShort ?? area.label;
             return (
               <button
                 key={area.slug}
@@ -214,15 +222,16 @@ export function HomeGrid({
                 style={{
                   viewTransitionName: vtExpertiseTile(stackOrigin, area.slug),
                 }}
-                className={`group cursor-pointer flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-3 text-center outline-none transition-colors ${tileStackClass(tileIndex, stackOrigin)}`}
+                className={`cursor-pointer group flex min-h-0 min-w-0 flex-col items-center justify-center rounded-md px-0.5 py-1 text-center outline-none transition-colors gap-2 md:rounded-none md:bg-background md:px-1 md:py-3 ${tileStackClass(tileIndex, stackOrigin)}`}
               >
-                <div className="h-10 w-10 transition-transform duration-200 group-hover:scale-110 md:h-14 md:w-14">
+                <div className="flex h-10 w-10 p-1 md:p-0 shrink-0 items-center justify-center rounded-md bg-[#FFFFFF0A]  border border-[#FFFFFF0F] md:border-none transition-transform duration-200 group-hover:scale-110 md:h-14 md:w-14 md:rounded-none md:bg-transparent">
                   <ExpertiseIcon
                     isHovered={hoveredExpertiseSlug === area.slug}
                   />
                 </div>
-                <span className="font-montserrat text-[8px] font-medium leading-tight text-[#666] group-hover:text-white duration-300 transition-all md:text-[10px]">
-                  {area.label}
+                <span className="line-clamp-2 w-full px-0.5 font-montserrat text-[9px] md:font-medium leading-[135%] text-white transition-all duration-300 group-hover:text-white max-md:min-h-0 md:min-h-0 md:text-[10px] md:text-[#666] md:leading-tight">
+                  <span className="md:hidden">{labelMobile}</span>
+                  <span className="hidden md:inline">{area.label}</span>
                 </span>
               </button>
             );
@@ -230,7 +239,7 @@ export function HomeGrid({
         </div>
       </div>
 
-      {/* The Professionals — bottom right */}
+      {/* The Professionals — desktop bottom-right | mobile top-right */}
       <button
         type="button"
         ref={setCellRef(3)}
@@ -239,18 +248,18 @@ export function HomeGrid({
           onOpenProfessionals();
         }}
         style={{ viewTransitionName: vtProfessionals(stackOrigin) }}
-        className={`cursor-pointer group ${cellStackClass(3, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring`}
+        className={`max-md:[grid-area:prof] md:[grid-area:professionals] cursor-pointer group ${cellStackClass(3, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-b border-border/15 text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring md:border-b-0`}
       >
         <div className="pointer-events-none absolute inset-0">
           <Image
             src={IMAGE_OUR_PROFESSIONALS}
             alt="CP LEX legal professionals"
             fill
-            className="object-cover object-[center_20%] transition-all duration-300 brightness-[0.8] saturate-[0.50] group-hover:brightness-[0.8] group-hover:saturate-[1]"
-            sizes="50vw"
+            className="object-cover object-[center_20%] transition-all duration-300 brightness-[0.8] saturate-[0.50] group-hover:saturate-[1]"
+            sizes="(max-width: 767px) 50vw, 50vw"
           />
           <div
-            className="absolute inset-0 transition-opacity duration-300 opacity-0 group-hover:opacity-50 "
+            className="absolute inset-0 opacity-50 sm:opacity-0 transition-opacity duration-300 group-hover:opacity-50"
             aria-hidden
             style={{
               background:
@@ -258,10 +267,10 @@ export function HomeGrid({
             }}
           />
         </div>
-        <span className="relative z-10 px-5 pb-3 pt-5 font-montserrat text-[11px] font-bold uppercase tracking-[0.35em] text-section-heading md:text-[16px]">
+        <span className="relative z-10 mt-auto px-3 pb-3 pt-0 font-montserrat text-[14px] font-bold uppercase tracking-[0.35em] text-section-heading md:mt-0 md:px-5 md:pb-3 md:pt-5 md:text-[16px]">
           The Professionals
         </span>
-        <p className="relative z-10 mt-auto translate-y-2 px-5 pb-5 text-[10px] leading-snug text-foreground opacity-0 pt-4 group-hover:opacity-100 group-hover:translate-y-0 duration-300 ease-out md:text-[11px]">
+        <p className="relative z-10 mt-auto max-md:hidden max-w-full translate-y-2 px-5 pb-5 pt-4 text-[10px] leading-snug text-foreground opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block md:text-[11px]">
           Meet our team of legal experts
         </p>
       </button>

@@ -20,6 +20,7 @@ import {
   gridOriginToVtName,
   startHomeViewTransition,
 } from "./home-view-transition";
+import { cn } from "@/lib/utils";
 
 const pauseTween = (duration: number) =>
   gsap.to({ t: 0 }, { t: 1, duration, ease: "none" });
@@ -280,13 +281,17 @@ export default function HomePage() {
     >
       <header
         ref={headerRef}
-        className="fixed left-0 right-0 top-1/2 z-50 flex -translate-y-1/2 scale-[0.5] transform items-center justify-between gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 md:gap-5 md:px-10"
+        className={cn(
+          "fixed left-0 right-0 top-1/2 z-50 grid -translate-y-1/2 scale-[0.5] transform grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 md:gap-5 md:px-10",
+          view.mode !== "grid" &&
+            "max-md:bg-gradient-to-b max-md:from-[#0a1225]/92 max-md:from-[28%] max-md:via-[#0a1225]/45 max-md:via-[55%] max-md:to-transparent"
+        )}
         style={{ minHeight: "var(--home-header-height)" }}
       >
-        <div className="min-w-0 flex-1" aria-hidden />
+        <div className="min-w-0" aria-hidden />
         <div
           ref={logoBlockRef}
-          className="relative z-[60] flex w-full min-w-0 max-w-2xl shrink-0 flex-col items-center gap-0.5 px-2 text-center sm:px-4"
+          className="relative z-[60] flex min-w-0 max-w-2xl shrink-0 flex-col items-center gap-0.5 px-1 text-center sm:px-4"
         >
           {view.mode !== "grid" ? (
             <button
@@ -305,7 +310,7 @@ export default function HomePage() {
         </div>
         <div
           ref={langSwitcherRef}
-          className="pointer-events-none invisible flex min-h-[36px] min-w-[72px] flex-1 items-center justify-end md:min-w-[88px]"
+          className="pointer-events-none invisible flex min-h-[36px] min-w-0 shrink-0 items-center justify-self-end justify-end self-center pr-0 opacity-0 md:min-w-[88px]"
         >
           <LanguageSwitcher />
         </div>
@@ -396,7 +401,10 @@ export default function HomePage() {
           )}
         </main>
 
-        <div ref={footerRef}>
+        <div
+          ref={footerRef}
+          className={cn(view.mode === "firm" && "max-md:hidden")}
+        >
           <HomeFooter />
         </div>
       </div>

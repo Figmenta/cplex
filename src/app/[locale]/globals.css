@@ -80,7 +80,8 @@
   --radius: 0.5rem;
   /* Home layout — Figmenta24 frame 12679:4613 (1440×1064 reference) */
   --home-header-height: 96px;
-  --home-footer-height: 61px;
+  /* Desktop footer bar min-height (`md:`); mobile footer is content-sized in HomeFooter */
+  --home-footer-height: 56px;
   --home-subnav-height: 52px;
   /* Brand accents (Figma) */
   --section-heading: #ff4b4b;
@@ -121,10 +122,16 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
+/* Narrow screens: slightly shorter bottom subnav rows */
+@media (max-width: 767px) {
+  :root {
+    --home-subnav-height: 42px;
+  }
+}
+
 /* md and up: 1px tighter footer + expanded subnav bars (matches Tailwind `md`) */
 @media (min-width: 768px) {
   :root {
-    --home-footer-height: 58px;
     --home-subnav-height: 48px;
   }
 }
