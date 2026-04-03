@@ -64,8 +64,9 @@ export function FirmSubnavWithProgress({
               className={cn(
                 subnavFirmSegmentClass,
                 onFilledPortion || isActive
-                  ? "font-semibold text-white"
-                  : "font-normal text-muted-foreground hover:text-foreground/90"
+                  ? "font-semibold"
+                  : "font-normal",
+                "text-white"
               )}
             >
               {t.label}

@@ -24,6 +24,50 @@ import {
 const pauseTween = (duration: number) =>
   gsap.to({ t: 0 }, { t: 1, duration, ease: "none" });
 
+/** Quick opacity pulse before View Transition (no scale — avoids “shrink on click”). */
+function playLogoBackAnimation(logoWrap: HTMLElement): Promise<void> {
+  if (
+    typeof window !== "undefined" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  ) {
+    return Promise.resolve();
+  }
+  return new Promise((resolve) => {
+    gsap.to(logoWrap, {
+      opacity: 0.82,
+      duration: 0.06,
+      ease: "power2.in",
+      yoyo: true,
+      repeat: 1,
+      onComplete: () => {
+        gsap.set(logoWrap, { clearProps: "opacity" });
+        resolve();
+      },
+    });
+  });
+}
+
+function HomeLogoMarkup({ imageDecorative = false }: { imageDecorative?: boolean }) {
+  return (
+    <>
+      <Image
+        src="/logo.svg"
+        alt={imageDecorative ? "" : "CP | LEX"}
+        width={800}
+        height={800}
+        className="h-7 w-auto max-w-full cursor-inherit select-none md:h-8"
+        aria-hidden={imageDecorative}
+      />
+      <p className="cursor-inherit select-none font-montserrat text-[8px] font-medium leading-tight tracking-wide text-foreground md:leading-snug">
+        Justice, Integrity, and Excellence in Practice
+      </p>
+      <p className="cursor-inherit select-none text-[7px] font-light leading-tight tracking-[0.2em] uppercase">
+        EST. 1985
+      </p>
+    </>
+  );
+}
+
 type FirmTab = (typeof FIRM_TABS)[number]["id"];
 
 type HomeView =
@@ -41,6 +85,7 @@ type GridOrigin =
 export default function HomePage() {
   const containerRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
+  const logoBlockRef = useRef<HTMLDivElement>(null);
   const langSwitcherRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLElement | null)[]>([null, null, null, null]);
   const footerRef = useRef<HTMLDivElement>(null);
@@ -87,10 +132,18 @@ export default function HomePage() {
     [runViewTransition]
   );
 
-  const collapseToGrid = useCallback(() => {
+  const collapseToGrid = useCallback(async () => {
     if (busyRef.current) return;
     busyRef.current = true;
     const lift = gridOriginToVtName(originRef.current);
+    const logoWrap = logoBlockRef.current;
+    if (logoWrap) {
+      try {
+        await playLogoBackAnimation(logoWrap);
+      } catch {
+        /* ignore */
+      }
+    }
     void startHomeViewTransition(
       () => {
         flushSync(() => {
@@ -231,20 +284,24 @@ export default function HomePage() {
         style={{ minHeight: "var(--home-header-height)" }}
       >
         <div className="min-w-0 flex-1" aria-hidden />
-        <div className="flex w-full min-w-0 max-w-2xl shrink-0 flex-col items-center gap-0.5 px-2 text-center sm:px-4">
-          <Image
-            src="/logo.svg"
-            alt="CP | LEX"
-            width={800}
-            height={800}
-            className="h-7 w-auto max-w-full select-none md:h-8"
-          />
-          <p className="font-montserrat text-[8px] font-medium leading-tight tracking-wide text-foreground md:leading-snug">
-            Justice, Integrity, and Excellence in Practice
-          </p>
-          <p className="text-[7px] font-light leading-tight tracking-[0.2em] uppercase">
-            EST. 1985
-          </p>
+        <div
+          ref={logoBlockRef}
+          className="relative z-[60] flex w-full min-w-0 max-w-2xl shrink-0 flex-col items-center gap-0.5 px-2 text-center sm:px-4"
+        >
+          {view.mode !== "grid" ? (
+            <button
+              type="button"
+              onClick={() => void collapseToGrid()}
+              className="flex w-full cursor-pointer flex-col items-center gap-0.5 rounded-md border-0 bg-transparent p-0 text-inherit outline-none ring-offset-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Back to home"
+            >
+              <HomeLogoMarkup imageDecorative />
+            </button>
+          ) : (
+            <div className="flex w-full cursor-pointer flex-col items-center gap-0.5">
+              <HomeLogoMarkup />
+            </div>
+          )}
         </div>
         <div
           ref={langSwitcherRef}
