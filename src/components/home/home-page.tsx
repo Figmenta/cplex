@@ -45,12 +45,6 @@ export default function HomePage() {
   const headerRef = useRef<HTMLElement>(null);
   const langSwitcherRef = useRef<HTMLDivElement>(null);
   const cellRefs = useRef<(HTMLElement | null)[]>([null, null, null, null]);
-  const expertiseTileRefs = useRef<(HTMLElement | null)[]>([
-    null,
-    null,
-    null,
-    null,
-  ]);
   const busyRef = useRef(false);
   const originRef = useRef<GridOrigin>({ kind: "cell", index: 0 });
   const [introDone, setIntroDone] = useState(false);
@@ -226,7 +220,6 @@ export default function HomePage() {
             <div className="absolute inset-0">
               <HomeGrid
                 cellRefs={cellRefs}
-                expertiseTileRefs={expertiseTileRefs}
                 stackOrigin={gridStackOrigin}
                 onOpenFirm={() =>
                   openFromGrid(
@@ -289,8 +282,8 @@ export default function HomePage() {
               <ExpandedExpertise
                 slug={view.slug}
                 onBack={collapseToGrid}
-                onSelectSlug={(slug) =>
-                  transitionToView({ mode: "expertise", slug })
+                onSelectSlug={(s) =>
+                  transitionToView({ mode: "expertise", slug: s })
                 }
               />
             </div>

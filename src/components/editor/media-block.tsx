@@ -86,7 +86,7 @@ export default function MediaBlock({ value }: { value: MediaBlockValue }) {
           name: item.videoTitle || "Video content",
           description: item.videoDescription || "Video content",
           thumbnailUrl: [
-            item.videoThumbnail?.asset?.url || `${WEBSITE_URL}/logo.webp`,
+            item.videoThumbnail?.asset?.url || `${WEBSITE_URL}/logo.png`,
           ],
           contentUrl: videoUrl,
           embedUrl: pageUrl,
@@ -99,7 +99,7 @@ export default function MediaBlock({ value }: { value: MediaBlockValue }) {
             name: "Figmenta Studio",
             logo: {
               "@type": "ImageObject",
-              url: `${WEBSITE_URL}/logo.webp`,
+              url: `${WEBSITE_URL}/logo.png`,
             },
           },
         },

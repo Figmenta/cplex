@@ -11,7 +11,7 @@ export default function NotFound() {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const ogImage = `${WEBSITE_URL}/logo.svg`;
+  const ogImage = `${WEBSITE_URL}/logo.png`;
   return {
     metadataBase: new URL(WEBSITE_URL),
     title: "Page not found | CPLEX",

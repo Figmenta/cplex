@@ -84,18 +84,13 @@ function vtProfessionals(stackOrigin: HomeExpandOrigin | null): string {
 }
 
 function vtExpertiseTile(
-  tileIndex: number,
-  slug: ExpertiseSlug,
-  stackOrigin: HomeExpandOrigin | null
+  stackOrigin: HomeExpandOrigin | null,
+  slug: ExpertiseSlug
 ): string {
   if (!stackOrigin) return HOME_VT.expertise(slug);
-  if (
-    stackOrigin.kind === "expertise-tile" &&
-    stackOrigin.innerIndex === tileIndex
-  ) {
-    return HOME_VT.expertise(slug);
-  }
-  return "none";
+  if (stackOrigin.kind !== "expertise-tile") return "none";
+  const originSlug = EXPERTISE_AREAS[stackOrigin.innerIndex]?.slug;
+  return originSlug === slug ? HOME_VT.expertise(slug) : "none";
 }
 
 /** 0 firm | 1 news | 2 expertise | 3 professionals */
@@ -103,7 +98,6 @@ export type HomeGridCellIndex = 0 | 1 | 2 | 3;
 
 type HomeGridProps = {
   cellRefs: React.MutableRefObject<(HTMLElement | null)[]>;
-  expertiseTileRefs: React.MutableRefObject<(HTMLElement | null)[]>;
   /** Set during collapse VT so the incoming “new” snapshot stacks the returning card above siblings. */
   stackOrigin: HomeExpandOrigin | null;
   onOpenFirm: () => void;
@@ -114,7 +108,6 @@ type HomeGridProps = {
 
 export function HomeGrid({
   cellRefs,
-  expertiseTileRefs,
   stackOrigin,
   onOpenFirm,
   onOpenNews,
@@ -123,10 +116,6 @@ export function HomeGrid({
 }: HomeGridProps) {
   const setCellRef = (index: HomeGridCellIndex) => (el: HTMLElement | null) => {
     cellRefs.current[index] = el;
-  };
-
-  const setTileRef = (index: number) => (el: HTMLElement | null) => {
-    expertiseTileRefs.current[index] = el;
   };
 
   const [hoveredExpertiseSlug, setHoveredExpertiseSlug] =
@@ -215,7 +204,6 @@ export function HomeGrid({
               <button
                 key={area.slug}
                 type="button"
-                ref={setTileRef(tileIndex)}
                 onMouseEnter={() => setHoveredExpertiseSlug(area.slug)}
                 onClick={(e) => {
                   e.stopPropagation();
@@ -224,11 +212,7 @@ export function HomeGrid({
                   onOpenExpertise(area.slug, tileIndex);
                 }}
                 style={{
-                  viewTransitionName: vtExpertiseTile(
-                    tileIndex,
-                    area.slug,
-                    stackOrigin
-                  ),
+                  viewTransitionName: vtExpertiseTile(stackOrigin, area.slug),
                 }}
                 className={`group/tile cursor-pointer flex min-h-0 flex-col items-center justify-center gap-2 rounded-none bg-background px-1 py-3 text-center outline-none transition-colors ${tileStackClass(tileIndex, stackOrigin)}`}
               >

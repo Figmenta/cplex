@@ -927,10 +927,7 @@ export function ExpandedExpertise({
   return (
     <div
       className="relative flex h-full min-h-0 flex-col"
-      style={{
-        viewTransitionName: HOME_VT.expertise(slug),
-        borderRadius: 0,
-      }}
+      style={{ viewTransitionName: HOME_VT.expertise(slug), borderRadius: 0 }}
     >
       {/* Hero fills the panel only; copy scrolls independently on top (image does not move with scroll) */}
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden">

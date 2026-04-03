@@ -27,7 +27,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const ogImage = `${WEBSITE_URL}/logo.svg`;
+  const ogImage = `${WEBSITE_URL}/logo.png`;
 
   const commonMetadata = {
     formatDetection: {

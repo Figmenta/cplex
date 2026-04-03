@@ -35,7 +35,7 @@ export default function FileBlock({ value }: any) {
           name: value.videoTitle || "Video content",
           description: value.videoDescription || "Video content",
           thumbnailUrl: [
-            value.videoThumbnail?.asset?.url || `${WEBSITE_URL}/logo.webp`,
+            value.videoThumbnail?.asset?.url || `${WEBSITE_URL}/logo.png`,
           ],
           contentUrl: videoUrl,
           embedUrl: pageUrl,
@@ -50,7 +50,7 @@ export default function FileBlock({ value }: any) {
             name: "Figmenta Studio",
             logo: {
               "@type": "ImageObject",
-              url: `${WEBSITE_URL}/logo.webp`,
+              url: `${WEBSITE_URL}/logo.png`,
             },
           },
         }
