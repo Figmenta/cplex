@@ -438,11 +438,11 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
           </>
         )}
       </div>
-      <nav style={{ minHeight: "var(--home-subnav-height)" }} className="flex w-full shrink-0 overflow-hidden bg-[#0A1225]">
+      <nav style={{ minHeight: "var(--home-subnav-height)" }} className="flex w-full shrink-0 overflow-hidden bg-[#121111]">
         <button
           type="button"
           onClick={onBack}
-          className="flex w-fit shrink-0 items-center gap-2 px-6 md:px-14 cursor-pointer py-1 text-[10px] uppercase tracking-wide hover:opacity-90 md:text-[11px] font-semibold bg-gradient-to-r from-[#0C152A] to-[#0646D0] transition-all h-full"
+          className="flex w-fit shrink-0 items-center gap-2 px-6 md:px-12 cursor-pointer py-1 text-[10px] uppercase tracking-wide hover:opacity-90 md:text-[11px] font-semibold transition-all h-full"
         >
           <Image
             src="/icons/back-2.svg"

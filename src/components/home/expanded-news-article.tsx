@@ -28,7 +28,7 @@ export function ExpandedNewsArticle({
       {/* Mobile: stack article above "Other news", whole container scrolls.
           Desktop: side-by-side columns. */}
       <div className="flex flex-1 flex-col overflow-y-auto md:flex-row md:items-stretch md:min-h-0 md:overflow-hidden">
-        <article className="flex-none min-w-0 flex-col bg-[#111F3F] px-6 pt-5 md:min-h-0 md:w-[60%] md:shrink-0 md:overflow-y-auto md:px-10">
+        <article className="flex-none min-w-0 flex-col bg-[#111F3F] px-6 py-5 md:min-h-0 md:w-[60%] md:shrink-0 md:overflow-y-auto md:px-10">
           <div className="max-w-[900px]">
             <h2 className={`${sectionTitle} text-[#D54561] text-[11px] mt-4 md:mt-0`}>Our News</h2>
             <p className="md:mt-12 mt-2 text-[14px] uppercase tracking-wider text-[#D54561] md:text-news-accent md:text-base">
@@ -81,7 +81,7 @@ export function ExpandedNewsArticle({
       </div>
 
       <nav
-        className="flex w-full shrink-0 flex-wrap items-center gap-2 overflow-hidden bg-[#0A1225] px-6 md:px-10"
+        className="flex w-full shrink-0 flex-wrap items-center gap-2 overflow-hidden bg-[#121111] px-6 md:px-10"
         style={SUBNAV_MIN_STYLE}
       >
         <BackButton onClick={onBack} />

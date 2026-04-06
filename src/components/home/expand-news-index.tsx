@@ -22,7 +22,7 @@ export function ExpandedNewsIndex({
       </div>
       <HomeNewsMarquee onSelect={onSelectArticle} highlightId={highlightId} />
       <nav
-        className="flex w-full shrink-0 items-center gap-2 overflow-hidden px-6 md:px-10"
+        className="flex w-full shrink-0 items-center gap-2 overflow-hidden px-6 md:px-10 bg-[#121111]"
         style={SUBNAV_MIN_STYLE}
       >
         <BackButton onClick={onBack} />
