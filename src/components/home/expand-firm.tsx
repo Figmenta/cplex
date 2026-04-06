@@ -683,6 +683,24 @@ export function ExpandedFirm({
         ref={containerRef}
         className="relative min-h-0 flex-1 overflow-hidden overscroll-none"
       >
+        <button
+          type="button"
+          onClick={() => animateToStage(1)}
+          aria-label="Scroll to next section"
+          className="absolute bottom-6 left-6 z-[25] flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wide text-white transition-opacity hover:opacity-90 md:hidden"
+          style={{
+            opacity: stageRef.current === 0 ? 1 : 0,
+            pointerEvents: stageRef.current === 0 ? "auto" : "none",
+          }}
+        >
+          Scroll
+          <Image
+            src="/icons/scroll.svg"
+            alt=""
+            width={16}
+            height={16}
+          />
+        </button>
         <div
           data-anim="split-wrap"
           className="absolute inset-0 flex flex-col overflow-hidden md:flex-row"
@@ -721,15 +739,6 @@ export function ExpandedFirm({
                 CP | LEX is a boutique law firm delivering sophisticated legal
                 solutions.
               </p>
-              <div className="mt-4 flex items-center gap-1 text-xs md:hidden tex-[#FFFFFF] uppercase">
-                Scroll
-                <Image
-                  src="/icons/scroll.svg"
-                  alt="Scroll down"
-                  width={16}
-                  height={16}
-                />
-              </div>
             </div>
           </div>
           <div
@@ -757,7 +766,7 @@ export function ExpandedFirm({
         </div>
         <div
           data-anim="stage-principles"
-          className="absolute inset-0 z-20 flex flex-col"
+          className="absolute inset-0 z-20 flex flex-col overflow-hidden"
         >
           <div className="relative h-[34%] shrink-0 overflow-hidden ">
             <Image
@@ -768,7 +777,7 @@ export function ExpandedFirm({
             />
           </div>
           <div className="px-6 pt-[28px] md:px-10 ">
-            <p className="text-[24px] md:text-[27px] text-[#f5f5f5]">
+            <p className="text-[20px] md:text-[27px] text-[#f5f5f5]">
               Our practice is built on three core principles: clarity,
               integrity, and strategic thinking.
             </p>
@@ -945,7 +954,7 @@ export function ExpandedFirm({
           className="absolute inset-0 z-50 flex items-center justify-center px-6 text-center md:px-10"
         >
           <div className="max-w-[960px]">
-            <h2 className="mb-3 md:mb-8 font-montserrat text-[22px] md:text-[56px] font-bold uppercase tracking-[0.12em] text-[#6A1E2D]">
+            <h2 className="mb-3 md:mb-8 font-montserrat text-[20px] md:text-[56px] font-bold uppercase tracking-[0.12em] text-[#6A1E2D]">
               A Legacy of Precision. A Future of Trust.
             </h2>
             <p className="mx-auto mb-6 md:mb-10 max-w-[700px] text-[14px] md:text-[18px] leading-[166%] text-white">

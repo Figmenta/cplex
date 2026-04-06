@@ -282,7 +282,7 @@ export default function HomePage() {
       <header
         ref={headerRef}
         className={cn(
-          "fixed left-0 right-0 top-1/2 z-50 grid -translate-y-1/2 scale-[0.5] transform grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-4 pt-[max(1rem,env(safe-area-inset-top))] pb-3 md:gap-5 md:px-10",
+          "fixed left-0 right-0 top-1/2 z-50 grid -translate-y-1/2 scale-[0.5] transform grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2 md:gap-5 md:px-10",
           view.mode !== "grid" &&
             "max-md:bg-gradient-to-b max-md:from-[#0a1225]/92 max-md:from-[28%] max-md:via-[#0a1225]/45 max-md:via-[55%] max-md:to-transparent"
         )}

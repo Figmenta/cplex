@@ -122,10 +122,11 @@
   --sidebar-ring: oklch(0.552 0.016 285.938);
 }
 
-/* Narrow screens: slightly shorter bottom subnav rows */
+/* Narrow screens: slightly shorter bottom subnav rows + reduced header height */
 @media (max-width: 767px) {
   :root {
     --home-subnav-height: 42px;
+    --home-header-height: 67px;
   }
 }
 
