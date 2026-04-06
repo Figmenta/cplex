@@ -762,7 +762,7 @@ export function ExpandedFirm({
           >
             <div
               ref={contentPanelRef}
-              className="flex min-h-0 flex-1 md:items-center overflow-y-auto px-6 md:px-10 p-6"
+              className="flex min-h-0 flex-1 flex-col md:items-center overflow-y-auto px-6 pb-6 pt-6 md:px-10 md:pb-0"
             >
               <p className="text-[16px] leading-[190%] text-foreground md:text-[20px] md:leading-[1.55] ">
                 The Firm supports companies in designing and implementing
@@ -772,10 +772,6 @@ export function ExpandedFirm({
                 compliance frameworks with privacy/GDPR, anti-corruption,
                 anti-money-laundering, workplace safety, environmental
                 responsibility, and ESG standards. compliance frameworks.
-              <span className="sr-only">
-                compliance frameworks with privacy/GDPR, anti-corruption,
-                anti-money-laundering.
-              </span>
               </p>
             </div>
           </div>
@@ -833,7 +829,7 @@ export function ExpandedFirm({
           data-anim="stage-dual-cards"
           className="absolute inset-0 z-30 md:pt-8 md:px-10 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          <div className="grid h-full grid-1 md:grid-cols-2">
+          <div className="grid min-h-full grid-cols-1 md:grid-cols-2">
             <div
               data-anim="dual-left"
               className="flex gap-4 flex-col md:flex-col-reverse justify-between bg-[#152241] p-[32px]"
@@ -891,7 +887,7 @@ export function ExpandedFirm({
             <div
               ref={cardsScrollRef}
               data-anim="complex-cards"
-              className="absolute inset-0 z-[5] flex w-full flex-col overflow-y-auto overscroll-contain bg-red-500 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="absolute inset-0 z-[5] flex w-full flex-col overflow-y-auto overscroll-contain  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <div className="bg-[#152241] p-[24px]">
                 <div className="mb-3 flex flex-col gap-4">
