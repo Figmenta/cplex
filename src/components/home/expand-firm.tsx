@@ -762,7 +762,7 @@ export function ExpandedFirm({
           >
             <div
               ref={contentPanelRef}
-              className="flex min-h-0 flex-1 flex-col md:items-center overflow-y-auto px-6 pb-6 pt-6 md:px-10 md:pb-0"
+              className="flex min-h-0 flex-1 flex-col md:items-center overflow-y-auto overscroll-none px-6 pb-6 pt-6 md:px-10 md:pb-0"
             >
               <p className="text-[16px] leading-[190%] text-foreground md:text-[20px] md:leading-[1.55] ">
                 The Firm supports companies in designing and implementing
@@ -827,12 +827,12 @@ export function ExpandedFirm({
         <div
           ref={dualCardsScrollRef}
           data-anim="stage-dual-cards"
-          className="absolute inset-0 z-30 md:pt-8 md:px-10 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          className="absolute inset-0 z-30 md:pt-8 md:px-10 overflow-y-auto overscroll-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          <div className="grid min-h-full grid-cols-1 md:grid-cols-2">
+          <div className="flex flex-col h-full md:flex-row">
             <div
               data-anim="dual-left"
-              className="flex gap-4 flex-col md:flex-col-reverse justify-between bg-[#152241] p-[32px]"
+              className="h-full flex gap-4 flex-col md:flex-col-reverse justify-between bg-[#152241] p-[32px] flex-1"
             >
               <Image
                 src="/icons/quote-1.svg"
@@ -855,7 +855,7 @@ export function ExpandedFirm({
             </div>
             <div
               data-anim="dual-right"
-              className="flex gap-4 flex-col md:flex-col-reverse justify-between bg-[#172547] p-[32px]"
+              className="h-full flex gap-4 flex-col md:flex-col-reverse justify-between bg-[#172547] p-[32px] flex-1"
             >
               <Image
                 src="/icons/quote-2.svg"
@@ -887,7 +887,7 @@ export function ExpandedFirm({
             <div
               ref={cardsScrollRef}
               data-anim="complex-cards"
-              className="absolute inset-0 z-[5] flex w-full flex-col overflow-y-auto overscroll-contain  [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="absolute inset-0 z-[5] flex w-full flex-col overflow-y-auto overscroll-none [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <div className="bg-[#152241] p-[24px]">
                 <div className="mb-3 flex flex-col gap-4">

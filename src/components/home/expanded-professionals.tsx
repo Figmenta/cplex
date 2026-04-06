@@ -266,7 +266,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
         >
           <div
             ref={cardsScrollRef}
-            className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-12 md:pt-32 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="min-h-0 flex-1 overflow-y-auto overscroll-none pt-12 md:pt-32 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             <div className="grid w-full grid-cols-2 px-6 md:grid-cols-3 gap-x-3 lg:gap-0 md:px-10">
               {PROFESSIONALS_ITEMS.map((item, index) => (
@@ -337,7 +337,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                   Back to team
                 </span>
               </button>
-              <div className="flex min-h-0 flex-1 flex-col md:flex-row items-start gap-3 pb-6 md:min-h-0 md:gap-6 md:pb-8  overflow-y-auto">
+              <div className="flex min-h-0 flex-1 flex-col md:flex-row items-start gap-3 pb-6 md:min-h-0 md:gap-6 md:pb-8 overflow-y-auto overscroll-none">
                 <div className="relative h-[212px] w-[200px] shrink-0 rounded-[8px]">
                   <Image
                     src={selectedDetail.image}

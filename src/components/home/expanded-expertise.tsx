@@ -54,9 +54,13 @@ export function ExpandedExpertise({
 
       {/* Main content: title, Overview, Services, Approach */}
       <div
-          ref={scrollRef}
-          className="relative z-10 flex min-h-0 max-w-[900px] flex-1 flex-col overflow-y-auto overscroll-contain [scrollbar-width:none]"
-        >
+        ref={scrollRef}
+        className="relative z-10 flex min-h-0 max-w-[900px] flex-1 flex-col overflow-y-auto overscroll-none [scrollbar-width:none]"
+        style={{
+          overscrollBehavior: "none",
+          WebkitOverflowScrolling: "touch",
+        }}
+      >
         <div className="flex w-full flex-col items-start px-6 pb-8 pt-10 md:px-10 md:pb-24">
           <div className="mb-6 flex flex-col items-start gap-4">
             <div className="h-14 w-14 shrink-0 md:h-16 md:w-16">

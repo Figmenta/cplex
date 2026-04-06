@@ -38,7 +38,7 @@ export function ExpandedNewsArticle({
           Desktop: side-by-side columns. */}
       <div
           ref={articleRef}
-          className="flex flex-1 flex-col overflow-y-auto md:flex-row md:items-stretch md:min-h-0 md:overflow-hidden"
+          className="flex flex-1 flex-col overflow-y-auto overscroll-none md:flex-row md:items-stretch md:min-h-0 md:overflow-hidden"
         >
         <article className="flex-none min-w-0 flex-col bg-[#111F3F] px-6 py-5 md:min-h-0 md:w-[60%] md:shrink-0 md:overflow-y-auto md:px-10">
           <div className="max-w-[900px]">
