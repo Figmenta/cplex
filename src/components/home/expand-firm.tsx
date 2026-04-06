@@ -23,7 +23,7 @@ const FIRM_TL_SCALE = 1.55;
 /** Time to scrub the timeline when changing tab / wheel step (desktop). */
 const FIRM_STAGE_SCRUB_DURATION_DESKTOP = 1.35;
 /** Faster transition on mobile for snappier feel. */
-const FIRM_STAGE_SCRUB_DURATION_MOBILE = 1.20;
+const FIRM_STAGE_SCRUB_DURATION_MOBILE = 1.2;
 /** Tailwind `md` — mobile firm timeline uses vertical / bottom-based motion. */
 const FIRM_MOBILE_MQ = "(max-width: 767px)";
 
@@ -189,7 +189,7 @@ export function ExpandedFirm({
         y: Math.min(window.innerHeight * 0.42, 320),
         autoAlpha: 0,
       });
-      gsap.set(complexCards, { y: 48, autoAlpha: 0 });
+      gsap.set(complexCards, { y: 0, autoAlpha: 0 });
       gsap.set(closingStage, { xPercent: -100, yPercent: 0, autoAlpha: 0 });
 
       const s = FIRM_TL_SCALE;
@@ -326,7 +326,7 @@ export function ExpandedFirm({
         y: Math.min(window.innerHeight * 0.42, 320),
         autoAlpha: 0,
       });
-      gsap.set(complexCards, { y: 48, autoAlpha: 0 });
+      gsap.set(complexCards, { y: 0, autoAlpha: 0 });
       gsap.set(closingStage, { xPercent: 0, yPercent: 100, autoAlpha: 0 });
 
       const s = FIRM_TL_SCALE;
@@ -497,14 +497,13 @@ export function ExpandedFirm({
       const dualEl = dualCardsScrollRef.current;
 
       // Determine which scrollable area the target is in
-      const targetEl =
-        cardsEl?.contains(e.target as Node)
-          ? cardsEl
-          : contentEl?.contains(e.target as Node)
-            ? contentEl
-            : dualEl?.contains(e.target as Node)
-              ? dualEl
-              : null;
+      const targetEl = cardsEl?.contains(e.target as Node)
+        ? cardsEl
+        : contentEl?.contains(e.target as Node)
+          ? contentEl
+          : dualEl?.contains(e.target as Node)
+            ? dualEl
+            : null;
 
       // Check if we're in the correct stage for this scrollable area
       const isCorrectStage =
@@ -574,13 +573,28 @@ export function ExpandedFirm({
       const content = contentPanelRef.current;
       const dual = dualCardsScrollRef.current;
 
-      if (cards && stageRef.current === CARDS_STAGE_INDEX && cards.contains(target) && cards.scrollHeight > cards.clientHeight) {
+      if (
+        cards &&
+        stageRef.current === CARDS_STAGE_INDEX &&
+        cards.contains(target) &&
+        cards.scrollHeight > cards.clientHeight
+      ) {
         return cards;
       }
-      if (content && stageRef.current === 1 && content.contains(target) && content.scrollHeight > content.clientHeight) {
+      if (
+        content &&
+        stageRef.current === 1 &&
+        content.contains(target) &&
+        content.scrollHeight > content.clientHeight
+      ) {
         return content;
       }
-      if (dual && stageRef.current === 3 && dual.contains(target) && dual.scrollHeight > dual.clientHeight) {
+      if (
+        dual &&
+        stageRef.current === 3 &&
+        dual.contains(target) &&
+        dual.scrollHeight > dual.clientHeight
+      ) {
         return dual;
       }
       return null;
@@ -626,7 +640,13 @@ export function ExpandedFirm({
         // Non-scrollable area - stage transition
         touchAccumulator += delta;
         if (Math.abs(touchAccumulator) >= STAGE_THRESHOLD) {
-          const next = Math.max(0, Math.min(FIRM_INTERNAL_STOPS.length - 1, stageRef.current + (touchAccumulator > 0 ? 1 : -1)));
+          const next = Math.max(
+            0,
+            Math.min(
+              FIRM_INTERNAL_STOPS.length - 1,
+              stageRef.current + (touchAccumulator > 0 ? 1 : -1)
+            )
+          );
           if (next !== stageRef.current) animateToStage(next);
           touchAccumulator = 0;
         }
@@ -646,9 +666,8 @@ export function ExpandedFirm({
         const endY = e.changedTouches[0].clientY;
         // For next (swipe up): boundaryHitY - endY > threshold (finger continued upward)
         // For prev (swipe down): endY - boundaryHitY > threshold (finger continued downward)
-        const overscrollDist = boundaryDir === 1
-          ? boundaryHitY - endY
-          : endY - boundaryHitY;
+        const overscrollDist =
+          boundaryDir === 1 ? boundaryHitY - endY : endY - boundaryHitY;
         if (overscrollDist > OVERSCROLL_THRESHOLD) {
           const next = stageRef.current + boundaryDir;
           if (next >= 0 && next < FIRM_INTERNAL_STOPS.length) {
@@ -694,12 +713,7 @@ export function ExpandedFirm({
           }}
         >
           Scroll
-          <Image
-            src="/icons/scroll.svg"
-            alt=""
-            width={16}
-            height={16}
-          />
+          <Image src="/icons/scroll.svg" alt="" width={16} height={16} />
         </button>
         <div
           data-anim="split-wrap"
@@ -757,9 +771,11 @@ export function ExpandedFirm({
                 Professionals also conduct internal investigations and integrate
                 compliance frameworks with privacy/GDPR, anti-corruption,
                 anti-money-laundering, workplace safety, environmental
-                responsibility, and ESG standards. compliance frameworks with
-                privacy/GDPR, anti-corruption, anti-money-laundering, workplace
-                safety, environmental responsibility, and ESG standards.
+                responsibility, and ESG standards. compliance frameworks.
+              <span className="sr-only">
+                compliance frameworks with privacy/GDPR, anti-corruption,
+                anti-money-laundering.
+              </span>
               </p>
             </div>
           </div>
@@ -862,7 +878,7 @@ export function ExpandedFirm({
         </div>
         <div
           data-anim="stage-complex"
-          className="absolute inset-0 z-40 flex items-center justify-center md:pt-6 md:px-10"
+          className="absolute inset-0 z-40 flex items-start justify-center md:items-center md:pt-6 md:px-10"
         >
           {/* min(52vh,cap): on tall screens the 400px cap was too small — scale cap + vh on lg+ so ~3 cards fit */}
           <div className="relative w-full h-full">
@@ -875,7 +891,7 @@ export function ExpandedFirm({
             <div
               ref={cardsScrollRef}
               data-anim="complex-cards"
-              className="absolute inset-0 z-[5] flex w-full flex-col overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              className="absolute inset-0 z-[5] flex w-full flex-col overflow-y-auto overscroll-contain bg-red-500 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <div className="bg-[#152241] p-[24px]">
                 <div className="mb-3 flex flex-col gap-4">

@@ -154,7 +154,7 @@ export function HomeGrid({
             }}
           />
         </div>
-        <span className="relative z-10 mt-auto px-3 pb-3 pt-0 font-montserrat text-[14px] font-bold uppercase tracking-[0.35em] text-section-heading md:mt-0 md:px-5 md:pb-3 md:pt-5 md:text-[16px]">
+        <span className="relative z-10 mt-auto px-3 pb-3 pt-0 font-montserrat text-[13px] font-bold uppercase tracking-[0.35em] text-section-heading md:mt-0 md:px-5 md:pb-3 md:pt-5 md:text-[16px]">
           The Firm
         </span>
         <p className="relative z-10 mt-auto max-md:hidden max-w-full translate-y-2 px-5 pb-5 pt-4 text-[10px] leading-snug text-foreground opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block md:text-[11px]">
@@ -267,7 +267,7 @@ export function HomeGrid({
             }}
           />
         </div>
-        <span className="relative z-10 mt-auto px-3 pb-3 pt-0 font-montserrat text-[14px] font-bold uppercase tracking-[0.35em] text-section-heading md:mt-0 md:px-5 md:pb-3 md:pt-5 md:text-[16px]">
+        <span className="relative z-10 mt-auto px-3 pb-3 pt-0 font-montserrat text-[13px] font-bold uppercase tracking-[0.35em] text-section-heading md:mt-0 md:px-5 md:pb-3 md:pt-5 md:text-[16px]">
           The Professionals
         </span>
         <p className="relative z-10 mt-auto max-md:hidden max-w-full translate-y-2 px-5 pb-5 pt-4 text-[10px] leading-snug text-foreground opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block md:text-[11px]">

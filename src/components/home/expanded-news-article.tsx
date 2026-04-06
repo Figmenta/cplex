@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react";
 import { NewsItem } from "./content";
 import { NEWS_ITEMS } from "./content";
 import { HOME_VT } from "./home-view-transition";
@@ -18,6 +19,14 @@ export function ExpandedNewsArticle({
   onBackToIndex: () => void;
   onSelectArticle: (id: string) => void;
 }) {
+  const articleRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (articleRef.current) {
+      articleRef.current.scrollTop = 0;
+    }
+  }, [item.id]);
+
   const others = NEWS_ITEMS.filter((n) => n.id !== item.id).slice(0, 4);
 
   return (
@@ -27,7 +36,10 @@ export function ExpandedNewsArticle({
     >
       {/* Mobile: stack article above "Other news", whole container scrolls.
           Desktop: side-by-side columns. */}
-      <div className="flex flex-1 flex-col overflow-y-auto md:flex-row md:items-stretch md:min-h-0 md:overflow-hidden">
+      <div
+          ref={articleRef}
+          className="flex flex-1 flex-col overflow-y-auto md:flex-row md:items-stretch md:min-h-0 md:overflow-hidden"
+        >
         <article className="flex-none min-w-0 flex-col bg-[#111F3F] px-6 py-5 md:min-h-0 md:w-[60%] md:shrink-0 md:overflow-y-auto md:px-10">
           <div className="max-w-[900px]">
             <h2 className={`${sectionTitle} text-[#D54561] text-[11px] mt-4 md:mt-0`}>Our News</h2>

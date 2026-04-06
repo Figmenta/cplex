@@ -1,7 +1,7 @@
 import { ExpertiseSlug } from "./content";
 import { EXPERTISE_AREAS, EXPERTISE_COPY } from "./content";
 import { EXPERTISE_ANIMATED_ICON_BY_SLUG } from "@/components/icons/expertise-icon";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { HOME_VT } from "./home-view-transition";
 import { BackButton } from "./back-button";
 import { cn } from "@/lib/utils";
@@ -22,9 +22,16 @@ export function ExpandedExpertise({
   const [hoveredNavSlug, setHoveredNavSlug] = useState<ExpertiseSlug | null>(
     null
   );
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setHoveredNavSlug(null);
+  }, [slug]);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = 0;
+    }
   }, [slug]);
 
   return (
@@ -46,7 +53,10 @@ export function ExpandedExpertise({
       </div>
 
       {/* Main content: title, Overview, Services, Approach */}
-      <div className="relative z-10 flex min-h-0 max-w-[900px] flex-1 flex-col overflow-y-auto overscroll-contain [scrollbar-width:none]">
+      <div
+          ref={scrollRef}
+          className="relative z-10 flex min-h-0 max-w-[900px] flex-1 flex-col overflow-y-auto overscroll-contain [scrollbar-width:none]"
+        >
         <div className="flex w-full flex-col items-start px-6 pb-8 pt-10 md:px-10 md:pb-24">
           <div className="mb-6 flex flex-col items-start gap-4">
             <div className="h-14 w-14 shrink-0 md:h-16 md:w-16">
@@ -129,7 +139,7 @@ export function ExpandedExpertise({
         >
           <BackButton
             onClick={onBack}
-            className="min-h-0 shrink-0 self-stretch rounded-none border-r border-white/10 px-3 py-0 text-white md:border-0 md:pr-8"
+            className="min-h-0 shrink-0 self-stretch rounded-none px-3 py-0 text-white md:pr-8"
           />
           {/* Desktop only: horizontal scrollable expertise tabs */}
           <div className="hidden md:flex min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
