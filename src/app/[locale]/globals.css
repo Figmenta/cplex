@@ -214,65 +214,19 @@
 }
 
 @supports (view-transition-name: none) {
-  /*
-   * Stacking: collapsing from one panel remounts the full grid with four different
-   * view-transition-names. Names that exist only in the "new" snapshot are separate
-   * entering groups; the UA can paint them above the shared morph unless the active
-   * group is lifted. DOM z-index on the grid does not apply to ::view-transition-group.
-   * data-home-vt-active is set in startHomeViewTransition({ liftTransitionName }).
-   */
-  html[data-home-vt-active] ::view-transition-group(*) {
-    z-index: 1;
-  }
-
-  html[data-home-vt-active="home-the-firm"] ::view-transition-group(home-the-firm) {
-    z-index: 100;
-  }
-
-  html[data-home-vt-active="home-news"] ::view-transition-group(home-news) {
-    z-index: 100;
-  }
-
-  html[data-home-vt-active="home-professionals"] ::view-transition-group(home-professionals) {
-    z-index: 100;
-  }
-
-  html[data-home-vt-active="home-expertise-mergers-acquisitions"]
-    ::view-transition-group(home-expertise-mergers-acquisitions),
-  html[data-home-vt-active="home-expertise-corporate-commercial"]
-    ::view-transition-group(home-expertise-corporate-commercial),
-  html[data-home-vt-active="home-expertise-intellectual-property"]
-    ::view-transition-group(home-expertise-intellectual-property),
-  html[data-home-vt-active="home-expertise-litigation-dispute"]
-    ::view-transition-group(home-expertise-litigation-dispute) {
-    /* Keep expertise morph above other groups, but clip anything that would
-       visually overflow past the card bounds to avoid a bottom stripe. */
-    z-index: 100;
-    overflow: hidden;
-  }
-
   ::view-transition-group(*) {
-    animation-duration: 0.68s;
-    animation-timing-function: cubic-bezier(0.33, 1, 0.68, 1);
+    animation-duration: 0.5s;
+    animation-timing-function: cubic-bezier(0.33, 1, 0.5, 1);
     opacity: 1 !important;
   }
 
-  /* Replace UA fade-out / fade-in on snapshots so expand/contract stay fully opaque */
-  ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-old(*),
-  ::view-transition-new(*) {
-    animation-name: home-vt-opacity-flat !important;
-    animation-duration: 0.68s !important;
-    animation-timing-function: linear !important;
-    animation-fill-mode: both !important;
-    opacity: 1 !important;
-  }
+
 /* 
   ::view-transition-image-pair(*) {
     opacity: 1 !important;
   } */
 }
+
 
 body {
   font-family: var(--font-inter), sans-serif;

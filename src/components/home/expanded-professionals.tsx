@@ -321,8 +321,8 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
             <div
               ref={panelRef}
               className={cn(
-                "absolute z-40 flex flex-col overflow-y-auto bg-[#111F3F] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
-                "inset-x-0 bottom-0 top-auto max-h-[90dvh] w-full rounded-t-2xl px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2",
+                "absolute z-40 flex flex-col bg-[#111F3F] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+                "inset-x-0 bottom-0 top-0 max-h-[90dvh] w-full rounded-t-2xl px-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-2",
                 "md:inset-x-auto md:inset-y-0 md:bottom-auto md:left-auto md:right-0 md:top-0 md:max-h-none md:h-full md:w-[70%] md:rounded-none md:px-10 md:pb-0 md:pt-0"
               )}
               style={{ visibility: "hidden" }}
@@ -337,8 +337,8 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                   Back to team
                 </span>
               </button>
-              <div className="flex min-h-0 flex-1 flex-col md:flex-row items-start gap-3 overflow-hidden pb-6 md:gap-6 md:pb-8">
-                <div className="relative h-[212px] w-[200px] shrink-0 overflow-hidden rounded-[8px]">
+              <div className="flex min-h-0 flex-1 flex-col md:flex-row items-start gap-3 pb-6 md:min-h-0 md:gap-6 md:pb-8  overflow-y-auto">
+                <div className="relative h-[212px] w-[200px] shrink-0 rounded-[8px]">
                   <Image
                     src={selectedDetail.image}
                     alt={selectedDetail.name}
@@ -348,9 +348,9 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                     quality={90}
                   />
                 </div>
-                <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-y-auto pr-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                <div className="flex min-h-0 min-w-0 flex-1 flex-col pr-2 md:min-h-0 ">
                   <div className="flex shrink-0 flex-col items-start gap-3 md:flex-col md:gap-2">
-                    <h3 className="mt-2 lg:mt-0 text-[22px] font-semibold leading-none [text-orientation:mixed] writing-vertical-rl md:writing-horizontal-tb">
+                    <h3 className="mt-2 lg:mt-0 text-[32px] md:text-[22px] font-semibold leading-none [text-orientation:mixed] writing-vertical-rl md:writing-horizontal-tb">
                       {selectedDetail.name}
                     </h3>
                     <p className="text-[18px] text-muted-foreground [text-orientation:mixed] writing-vertical-rl md:mb-4 md:mt-2 md:writing-horizontal-tb">
@@ -365,7 +365,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                         .map((paragraph) => (
                           <p
                             key={paragraph.slice(0, 30)}
-                            className="mb-6 text-[18px] leading-[30px] text-[#D9D9D9]"
+                            className="mb-6 text-[20px] md:text-[18px] leading-[30px] text-white md:text-[#D9D9D9]"
                           >
                             {paragraph}
                           </p>

@@ -23,7 +23,7 @@ const FIRM_TL_SCALE = 1.55;
 /** Time to scrub the timeline when changing tab / wheel step (desktop). */
 const FIRM_STAGE_SCRUB_DURATION_DESKTOP = 1.35;
 /** Faster transition on mobile for snappier feel. */
-const FIRM_STAGE_SCRUB_DURATION_MOBILE = 0.55;
+const FIRM_STAGE_SCRUB_DURATION_MOBILE = 1.20;
 /** Tailwind `md` — mobile firm timeline uses vertical / bottom-based motion. */
 const FIRM_MOBILE_MQ = "(max-width: 767px)";
 
@@ -38,6 +38,8 @@ export function ExpandedFirm({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const cardsScrollRef = useRef<HTMLDivElement>(null);
+  const contentPanelRef = useRef<HTMLDivElement>(null);
+  const dualCardsScrollRef = useRef<HTMLDivElement>(null);
   const timelineRef = useRef<gsap.core.Timeline | null>(null);
   const stageRef = useRef(0);
   const animatingRef = useRef(false);
@@ -76,11 +78,15 @@ export function ExpandedFirm({
       const mappedTab = STAGE_TO_TAB[target] ?? "overview";
       setActiveTab(mappedTab);
       onTabChange(mappedTab);
-      // Use faster duration on mobile for snappier feel
+      // Scale duration by how far the timeline actually travels so short
+      // segments (e.g. stage 0→1) don't feel sluggish vs. longer ones.
       const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-      const duration = isMobile
+      const baseDuration = isMobile
         ? FIRM_STAGE_SCRUB_DURATION_MOBILE
         : FIRM_STAGE_SCRUB_DURATION_DESKTOP;
+      const currentProgress = tl.progress();
+      const travelDist = Math.abs(targetProgress - currentProgress);
+      const duration = baseDuration * Math.sqrt(travelDist / 0.25);
       gsap.to(tl, {
         progress: targetProgress,
         duration,
@@ -485,15 +491,31 @@ export function ExpandedFirm({
     const MAX_WHEEL_STEP = 60;
     const onWheel = (e: WheelEvent) => {
       if (animatingRef.current) return;
+
       const cardsEl = cardsScrollRef.current;
-      if (
-        cardsEl &&
-        stageRef.current === CARDS_STAGE_INDEX &&
-        cardsEl.contains(e.target as Node)
-      ) {
-        const scrollH = cardsEl.scrollHeight;
-        const clientH = cardsEl.clientHeight;
-        const st = cardsEl.scrollTop;
+      const contentEl = contentPanelRef.current;
+      const dualEl = dualCardsScrollRef.current;
+
+      // Determine which scrollable area the target is in
+      const targetEl =
+        cardsEl?.contains(e.target as Node)
+          ? cardsEl
+          : contentEl?.contains(e.target as Node)
+            ? contentEl
+            : dualEl?.contains(e.target as Node)
+              ? dualEl
+              : null;
+
+      // Check if we're in the correct stage for this scrollable area
+      const isCorrectStage =
+        (targetEl === cardsEl && stageRef.current === CARDS_STAGE_INDEX) ||
+        (targetEl === contentEl && stageRef.current === 1) ||
+        (targetEl === dualEl && stageRef.current === 3);
+
+      if (targetEl && isCorrectStage) {
+        const scrollH = targetEl.scrollHeight;
+        const clientH = targetEl.clientHeight;
+        const st = targetEl.scrollTop;
         const dy = Math.max(
           -MAX_WHEEL_STEP,
           Math.min(MAX_WHEEL_STEP, e.deltaY)
@@ -501,18 +523,21 @@ export function ExpandedFirm({
         const atBottom = st + clientH >= scrollH - 2;
         const atTop = st <= 2;
         if (scrollH > clientH) {
+          // Mid-scroll: intercept and scroll the inner element
           if (dy > 0 && !atBottom) {
             e.preventDefault();
-            cardsEl.scrollTop = Math.min(scrollH - clientH, st + dy);
+            targetEl.scrollTop = Math.min(scrollH - clientH, st + dy);
             return;
           }
           if (dy < 0 && !atTop) {
             e.preventDefault();
-            cardsEl.scrollTop = Math.max(0, st + dy);
+            targetEl.scrollTop = Math.max(0, st + dy);
             return;
           }
+          // At boundary: fall through to the accumulator below to trigger stage change
         }
       }
+
       e.preventDefault();
       const delta = Math.max(
         -MAX_WHEEL_STEP,
@@ -532,77 +557,120 @@ export function ExpandedFirm({
     };
     el.addEventListener("wheel", onWheel, { passive: false });
 
-    // Mobile touch scroll to stage transitions
+    // Mobile touch scroll - simple unified approach
     let touchStartY = 0;
     let touchAccumulator = 0;
-    // Lower threshold for more responsive stage changes on touch devices
-    const TOUCH_THRESHOLD = 25;
+    let activeScrollEl: HTMLElement | null = null;
+    let boundaryHit = false;
+    let boundaryHitY = 0; // finger Y position at the moment the boundary was first hit
+    let boundaryDir: 1 | -1 = 1; // 1 = next (swipe up), -1 = prev (swipe down)
+    const OVERSCROLL_THRESHOLD = 50; // extra drag needed past boundary to trigger stage change
+    const BOUNDARY_THRESHOLD = 5;
+    const STAGE_THRESHOLD = 25;
+
+    const getScrollElement = (target: Node | null): HTMLElement | null => {
+      if (!target) return null;
+      const cards = cardsScrollRef.current;
+      const content = contentPanelRef.current;
+      const dual = dualCardsScrollRef.current;
+
+      if (cards && stageRef.current === CARDS_STAGE_INDEX && cards.contains(target) && cards.scrollHeight > cards.clientHeight) {
+        return cards;
+      }
+      if (content && stageRef.current === 1 && content.contains(target) && content.scrollHeight > content.clientHeight) {
+        return content;
+      }
+      if (dual && stageRef.current === 3 && dual.contains(target) && dual.scrollHeight > dual.clientHeight) {
+        return dual;
+      }
+      return null;
+    };
+
     const onTouchStart = (e: TouchEvent) => {
       touchStartY = e.touches[0].clientY;
       touchAccumulator = 0;
+      boundaryHit = false;
+      boundaryHitY = 0;
+      activeScrollEl = getScrollElement(e.target as Node);
     };
+
     const onTouchMove = (e: TouchEvent) => {
       if (animatingRef.current) return;
-      const cardsEl = cardsScrollRef.current;
-      // Check if scrolling inside the cards section at stage 5
-      if (
-        cardsEl &&
-        stageRef.current === CARDS_STAGE_INDEX &&
-        cardsEl.contains(e.target as Node)
-      ) {
-        const scrollH = cardsEl.scrollHeight;
-        const clientH = cardsEl.clientHeight;
-        const st = cardsEl.scrollTop;
-        // Need fresh delta from touch coordinates
-        const touchY = e.touches[0].clientY;
-        const delta = touchStartY - touchY;
-        touchStartY = touchY;
-        // Not at boundaries - let internal scroll handle it
-        if (st > 5 && st < scrollH - clientH - 5) {
-          return;
+
+      const currentY = e.touches[0].clientY;
+      // delta > 0 means finger moved up (swipe up = scroll down = next stage)
+      // delta < 0 means finger moved down (swipe down = scroll up = prev stage)
+      const delta = touchStartY - currentY;
+      activeScrollEl = getScrollElement(e.target as Node);
+
+      if (activeScrollEl) {
+        const st = activeScrollEl.scrollTop;
+        const sh = activeScrollEl.scrollHeight;
+        const ch = activeScrollEl.clientHeight;
+        const atTop = st <= BOUNDARY_THRESHOLD;
+        const atBottom = st + ch >= sh - BOUNDARY_THRESHOLD;
+
+        // Swiping up (delta > 0) and already at bottom → next stage
+        if (!boundaryHit && atBottom && delta > 0) {
+          boundaryHit = true;
+          boundaryHitY = currentY;
+          boundaryDir = 1;
         }
-        // At top and swiping up (prev stage), or at bottom and swiping down (next stage)
-        const atTop = st <= 5;
-        const atBottom = st + clientH >= scrollH - 5;
-        const goingUp = delta > 10;
-        const goingDown = delta < -10;
-        const canGoPrev = atTop && goingUp;
-        const canGoNext = atBottom && goingDown;
-        if (!canGoPrev && !canGoNext) {
-          // At boundary but trying to scroll into content - let internal scroll handle
-          return;
+        // Swiping down (delta < 0) and already at top → previous stage
+        else if (!boundaryHit && atTop && delta < 0) {
+          boundaryHit = true;
+          boundaryHitY = currentY;
+          boundaryDir = -1;
         }
-        // At boundary and trying to go beyond - allow stage transition
       } else {
-        // Prevent browser pull-to-refresh / overscroll on full-screen experience
-        if (
-          typeof window !== "undefined" &&
-          window.innerHeight >= window.innerWidth
-        ) {
-          e.preventDefault();
+        // Non-scrollable area - stage transition
+        touchAccumulator += delta;
+        if (Math.abs(touchAccumulator) >= STAGE_THRESHOLD) {
+          const next = Math.max(0, Math.min(FIRM_INTERNAL_STOPS.length - 1, stageRef.current + (touchAccumulator > 0 ? 1 : -1)));
+          if (next !== stageRef.current) animateToStage(next);
+          touchAccumulator = 0;
         }
-      }
-      const touchY = e.touches[0].clientY;
-      const delta = touchStartY - touchY;
-      touchStartY = touchY;
-      touchAccumulator += delta;
-      if (Math.abs(touchAccumulator) < TOUCH_THRESHOLD) return;
-      const direction = touchAccumulator > 0 ? 1 : -1;
-      touchAccumulator = 0;
-      const next = Math.max(
-        0,
-        Math.min(FIRM_INTERNAL_STOPS.length - 1, stageRef.current + direction)
-      );
-      if (next !== stageRef.current) {
-        animateToStage(next);
+        touchStartY = e.touches[0].clientY;
       }
     };
+
+    const onTouchEnd = (e: TouchEvent) => {
+      if (animatingRef.current) {
+        boundaryHit = false;
+        activeScrollEl = null;
+        return;
+      }
+
+      // Scrollable area - only count the drag distance *past* the boundary point
+      if (boundaryHit) {
+        const endY = e.changedTouches[0].clientY;
+        // For next (swipe up): boundaryHitY - endY > threshold (finger continued upward)
+        // For prev (swipe down): endY - boundaryHitY > threshold (finger continued downward)
+        const overscrollDist = boundaryDir === 1
+          ? boundaryHitY - endY
+          : endY - boundaryHitY;
+        if (overscrollDist > OVERSCROLL_THRESHOLD) {
+          const next = stageRef.current + boundaryDir;
+          if (next >= 0 && next < FIRM_INTERNAL_STOPS.length) {
+            animateToStage(next);
+          }
+        }
+      }
+
+      boundaryHit = false;
+      boundaryHitY = 0;
+      activeScrollEl = null;
+    };
+
     el.addEventListener("touchstart", onTouchStart, { passive: true });
-    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    el.addEventListener("touchmove", onTouchMove, { passive: true });
+    el.addEventListener("touchend", onTouchEnd, { passive: true });
+
     return () => {
       el.removeEventListener("wheel", onWheel);
       el.removeEventListener("touchstart", onTouchStart);
       el.removeEventListener("touchmove", onTouchMove);
+      el.removeEventListener("touchend", onTouchEnd);
     };
   }, [animateToStage]);
 
@@ -669,18 +737,20 @@ export function ExpandedFirm({
             className="absolute bottom-0 left-0 right-0 top-auto z-[5] flex h-[48%] w-full shrink-0 flex-col md:bottom-auto md:left-auto md:right-0 md:top-0 md:h-full md:w-[42%]"
             style={{ backgroundColor: "#581525" }}
           >
-            <div className="flex min-h-0 flex-1 items-center overflow-y-auto px-6 py-6 md:h-full md:py-0 md:px-10">
-              <p className="text-[16px] leading-[190%] text-foreground md:text-[20px] md:leading-[1.55]">
+            <div
+              ref={contentPanelRef}
+              className="flex min-h-0 flex-1 md:items-center overflow-y-auto px-6 md:px-10 p-6"
+            >
+              <p className="text-[16px] leading-[190%] text-foreground md:text-[20px] md:leading-[1.55] ">
                 The Firm supports companies in designing and implementing
                 compliance systems, including risk mapping, protocols,
                 whistleblowing channels, and internal training programmes.
                 Professionals also conduct internal investigations and integrate
                 compliance frameworks with privacy/GDPR, anti-corruption,
                 anti-money-laundering, workplace safety, environmental
-                responsibility, and ESG standards.
-                compliance frameworks with privacy/GDPR, anti-corruption,
-                anti-money-laundering, workplace safety, environmental
-                responsibility, and ESG standards.
+                responsibility, and ESG standards. compliance frameworks with
+                privacy/GDPR, anti-corruption, anti-money-laundering, workplace
+                safety, environmental responsibility, and ESG standards.
               </p>
             </div>
           </div>
@@ -697,13 +767,13 @@ export function ExpandedFirm({
               className="object-cover object-top opacity-35"
             />
           </div>
-          <div className="px-6 pt-[28px] md:px-10">
+          <div className="px-6 pt-[28px] md:px-10 ">
             <p className="text-[24px] md:text-[27px] text-[#f5f5f5]">
               Our practice is built on three core principles: clarity,
               integrity, and strategic thinking.
             </p>
           </div>
-          <div className="max-w-[1000px] space-y-6 px-6 pt-[24px] md:px-10">
+          <div className="max-w-[1000px] space-y-6 px-6 pt-[24px] md:px-10 ">
             <div className="flex items-start gap-4">
               <Image
                 src="/icons/quote-1.svg"
@@ -734,15 +804,23 @@ export function ExpandedFirm({
           </div>
         </div>
         <div
+          ref={dualCardsScrollRef}
           data-anim="stage-dual-cards"
-          className="absolute inset-0 z-30 px-6 pt-[104px] md:px-10"
+          className="absolute inset-0 z-30 md:pt-8 md:px-10 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
         >
-          <div className="grid h-[74%] max-md:h-[min(78vh,640px)] max-md:grid-cols-1 max-md:gap-3 max-md:pb-4 grid-cols-2">
+          <div className="grid h-full grid-1 md:grid-cols-2">
             <div
               data-anim="dual-left"
-              className="flex flex-col justify-between bg-[#152241] p-[32px]"
+              className="flex gap-4 flex-col md:flex-col-reverse justify-between bg-[#152241] p-[32px]"
             >
-              <div className="space-y-4 text-[18px] leading-[166%]">
+              <Image
+                src="/icons/quote-1.svg"
+                alt=""
+                width={200}
+                height={200}
+                className="md:w-20 md:h-20 w-16 h-16"
+              />
+              <div className="space-y-4 text-[16px] md:text-[18px] leading-[166%]">
                 <p>
                   CP | LEX combines deep knowledge of Italian law with a strong
                   international outlook.
@@ -753,27 +831,32 @@ export function ExpandedFirm({
                   providing seamless legal support in both Italian and English.
                 </p>
               </div>
-              <Image src="/icons/quote-1.svg" alt="" width={76} height={76} />
             </div>
             <div
               data-anim="dual-right"
-              className="flex flex-col justify-between bg-[#172547] p-[32px]"
+              className="flex gap-4 flex-col md:flex-col-reverse justify-between bg-[#172547] p-[32px]"
             >
-              <p className="text-[18px] leading-[166%]">
+              <Image
+                src="/icons/quote-2.svg"
+                alt=""
+                width={200}
+                height={200}
+                className="md:w-20 md:h-20 w-16 h-16"
+              />
+              <p className="text-[16px] md:text-[18px] leading-[166%]">
                 Our work often involves cross-border transactions, international
                 commercial relationships, and multi-jurisdictional legal
                 matters.
               </p>
-              <Image src="/icons/quote-2.svg" alt="" width={76} height={76} />
             </div>
           </div>
         </div>
         <div
           data-anim="stage-complex"
-          className="absolute inset-0 z-40 flex items-center justify-center px-6 pt-[104px] md:px-10"
+          className="absolute inset-0 z-40 flex items-center justify-center md:pt-6 md:px-10"
         >
           {/* min(52vh,cap): on tall screens the 400px cap was too small — scale cap + vh on lg+ so ~3 cards fit */}
-          <div className="relative w-full min-h-[min(70vh,800px)] md:min-h-[min(52vh,400px)] 2xl:min-h-[min(65vh,720px)]">
+          <div className="relative w-full h-full">
             <h2
               data-anim="complex-heading"
               className="absolute inset-0 z-10 flex items-center justify-center px-6 text-center font-montserrat text-[22px] md:text-[52px] font-bold uppercase tracking-[0.18em] md:px-10"
@@ -786,12 +869,13 @@ export function ExpandedFirm({
               className="absolute inset-0 z-[5] flex w-full flex-col overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
             >
               <div className="bg-[#152241] p-[24px]">
-                <div className="mb-3 flex flex-col gap-3">
+                <div className="mb-3 flex flex-col gap-4">
                   <Image
                     src="/icons/strategic-legal-insight.svg"
                     alt=""
-                    width={16}
-                    height={16}
+                    width={200}
+                    height={200}
+                    className="w-8 h-8 md:h-4 md:w-4"
                   />
                   <h3 className="text-[18px] font-semibold">
                     Strategic Legal Insight
@@ -808,12 +892,13 @@ export function ExpandedFirm({
                 </p>
               </div>
               <div className="bg-[#1E2B4A] p-[24px]">
-                <div className="mb-3 flex flex-col gap-3">
+                <div className="mb-3 flex flex-col gap-4">
                   <Image
                     src="/icons/triangle.svg"
                     alt=""
-                    width={16}
-                    height={16}
+                    width={200}
+                    height={200}
+                    className="w-8 h-8 md:h-4 md:w-4"
                   />
                   <h3 className="text-[18px] font-semibold">
                     Integrated Expertise
@@ -830,12 +915,13 @@ export function ExpandedFirm({
                 </p>
               </div>
               <div className="bg-[#283657] p-[24px]">
-                <div className="mb-3 flex flex-col gap-3">
+                <div className="mb-3 flex flex-col gap-4">
                   <Image
                     src="/icons/focused-on-results.svg"
                     alt=""
-                    width={16}
-                    height={16}
+                    width={200}
+                    height={200}
+                    className="w-8 h-8 md:h-4 md:w-4"
                   />
                   <h3 className="text-[18px] font-semibold">
                     Focused on Results
@@ -869,7 +955,7 @@ export function ExpandedFirm({
             </p>
             <button
               onClick={onBack}
-              className="cursor-pointer mx-auto flex w-full items-center justify-center group text-xs uppercase tracking-[2px] text-white pb-1 transition-all duration-300"
+              className="cursor-pointer mx-auto flex w-full items-center justify-center group text-[11px] md:text-xs uppercase tracking-[2px] text-white pb-1 transition-all duration-300"
             >
               <span className="group-hover:underline">
                 Back to exploring other sections
