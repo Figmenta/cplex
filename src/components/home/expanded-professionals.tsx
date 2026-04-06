@@ -337,7 +337,7 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                   Back to team
                 </span>
               </button>
-              <div className="flex min-h-0 flex-1 flex-col items-start gap-3 overflow-hidden pb-6 md:gap-6 md:pb-8">
+              <div className="flex min-h-0 flex-1 flex-col md:flex-row items-start gap-3 overflow-hidden pb-6 md:gap-6 md:pb-8">
                 <div className="relative h-[212px] w-[200px] shrink-0 overflow-hidden rounded-[8px]">
                   <Image
                     src={selectedDetail.image}
