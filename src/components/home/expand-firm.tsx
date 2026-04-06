@@ -762,7 +762,7 @@ export function ExpandedFirm({
           >
             <div
               ref={contentPanelRef}
-              className="flex min-h-0 flex-1 flex-col md:items-center overflow-y-auto overscroll-none px-6 pb-6 pt-6 md:px-10 md:pb-0"
+              className="flex min-h-0 flex-1 flex-col md:items-center h-full justify-center overflow-y-auto overscroll-none px-6 pb-6 pt-6 md:px-10 md:pb-0"
             >
               <p className="text-[16px] leading-[190%] text-foreground md:text-[20px] md:leading-[1.55] ">
                 The Firm supports companies in designing and implementing
