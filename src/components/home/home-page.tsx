@@ -274,7 +274,7 @@ export default function HomePage() {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-dvh max-h-dvh w-full flex-col overflow-hidden text-foreground"
+      className="relative flex h-dvh max-h-dvh w-full flex-col overflow-hidden text-foreground touch-none"
       style={{
         background: "linear-gradient(116deg, #000A21 3.93%, #0C1A39 34.71%)",
       }}

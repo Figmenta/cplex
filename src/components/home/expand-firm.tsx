@@ -681,7 +681,7 @@ export function ExpandedFirm({
     >
       <div
         ref={containerRef}
-        className="relative min-h-0 flex-1 overflow-hidden overscroll-none"
+        className="relative min-h-0 flex-1 overflow-hidden overscroll-none touch-none"
       >
         <button
           type="button"
