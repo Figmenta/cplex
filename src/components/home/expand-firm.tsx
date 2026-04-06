@@ -20,8 +20,10 @@ import { HOME_VT } from "./home-view-transition";
 
 /** Longer timeline segments = less rushed motion between firm stages (progress 0–1 unchanged). */
 const FIRM_TL_SCALE = 1.55;
-/** Time to scrub the timeline when changing tab / wheel step. */
-const FIRM_STAGE_SCRUB_DURATION = 1.35;
+/** Time to scrub the timeline when changing tab / wheel step (desktop). */
+const FIRM_STAGE_SCRUB_DURATION_DESKTOP = 1.35;
+/** Faster transition on mobile for snappier feel. */
+const FIRM_STAGE_SCRUB_DURATION_MOBILE = 0.55;
 /** Tailwind `md` — mobile firm timeline uses vertical / bottom-based motion. */
 const FIRM_MOBILE_MQ = "(max-width: 767px)";
 
@@ -74,9 +76,14 @@ export function ExpandedFirm({
       const mappedTab = STAGE_TO_TAB[target] ?? "overview";
       setActiveTab(mappedTab);
       onTabChange(mappedTab);
+      // Use faster duration on mobile for snappier feel
+      const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+      const duration = isMobile
+        ? FIRM_STAGE_SCRUB_DURATION_MOBILE
+        : FIRM_STAGE_SCRUB_DURATION_DESKTOP;
       gsap.to(tl, {
         progress: targetProgress,
-        duration: FIRM_STAGE_SCRUB_DURATION,
+        duration,
         ease: "sine.inOut",
         overwrite: true,
         onUpdate: () => syncProgressFromTimeline(tl.progress()),
@@ -433,7 +440,8 @@ export function ExpandedFirm({
           yPercent: 0,
           autoAlpha: 1,
           duration: closingEnterDur,
-          ease: "power2.out" },
+          ease: "power2.out",
+        },
         closingEnterT
       );
       return tl;
@@ -523,7 +531,79 @@ export function ExpandedFirm({
       }
     };
     el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
+
+    // Mobile touch scroll to stage transitions
+    let touchStartY = 0;
+    let touchAccumulator = 0;
+    // Lower threshold for more responsive stage changes on touch devices
+    const TOUCH_THRESHOLD = 25;
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      touchAccumulator = 0;
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (animatingRef.current) return;
+      const cardsEl = cardsScrollRef.current;
+      // Check if scrolling inside the cards section at stage 5
+      if (
+        cardsEl &&
+        stageRef.current === CARDS_STAGE_INDEX &&
+        cardsEl.contains(e.target as Node)
+      ) {
+        const scrollH = cardsEl.scrollHeight;
+        const clientH = cardsEl.clientHeight;
+        const st = cardsEl.scrollTop;
+        // Need fresh delta from touch coordinates
+        const touchY = e.touches[0].clientY;
+        const delta = touchStartY - touchY;
+        touchStartY = touchY;
+        // Not at boundaries - let internal scroll handle it
+        if (st > 5 && st < scrollH - clientH - 5) {
+          return;
+        }
+        // At top and swiping up (prev stage), or at bottom and swiping down (next stage)
+        const atTop = st <= 5;
+        const atBottom = st + clientH >= scrollH - 5;
+        const goingUp = delta > 10;
+        const goingDown = delta < -10;
+        const canGoPrev = atTop && goingUp;
+        const canGoNext = atBottom && goingDown;
+        if (!canGoPrev && !canGoNext) {
+          // At boundary but trying to scroll into content - let internal scroll handle
+          return;
+        }
+        // At boundary and trying to go beyond - allow stage transition
+      } else {
+        // Prevent browser pull-to-refresh / overscroll on full-screen experience
+        if (
+          typeof window !== "undefined" &&
+          window.innerHeight >= window.innerWidth
+        ) {
+          e.preventDefault();
+        }
+      }
+      const touchY = e.touches[0].clientY;
+      const delta = touchStartY - touchY;
+      touchStartY = touchY;
+      touchAccumulator += delta;
+      if (Math.abs(touchAccumulator) < TOUCH_THRESHOLD) return;
+      const direction = touchAccumulator > 0 ? 1 : -1;
+      touchAccumulator = 0;
+      const next = Math.max(
+        0,
+        Math.min(FIRM_INTERNAL_STOPS.length - 1, stageRef.current + direction)
+      );
+      if (next !== stageRef.current) {
+        animateToStage(next);
+      }
+    };
+    el.addEventListener("touchstart", onTouchStart, { passive: true });
+    el.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("touchstart", onTouchStart);
+      el.removeEventListener("touchmove", onTouchMove);
+    };
   }, [animateToStage]);
 
   return (
@@ -533,7 +613,7 @@ export function ExpandedFirm({
     >
       <div
         ref={containerRef}
-        className="relative min-h-0 flex-1 overflow-hidden"
+        className="relative min-h-0 flex-1 overflow-hidden overscroll-none"
       >
         <div
           data-anim="split-wrap"
@@ -563,16 +643,25 @@ export function ExpandedFirm({
               data-anim="firm-title"
               className="absolute left-6 top-5 z-[45] md:left-10 md:top-8"
             >
-              <h2 className={sectionTitle}>The Firm</h2>
+              <h2 className={`${sectionTitle} text-[28px]`}>The Firm</h2>
             </div>
             <div
               data-anim="image-desc"
-              className="pointer-events-none absolute bottom-6 left-6 z-[15] max-w-[min(100%,560px)] pr-4 md:bottom-[140px] md:left-10 md:pr-0"
+              className="pointer-events-none absolute bottom-6 left-6 z-[15] pb-10 max-w-[min(100%,560px)] pr-4 md:bottom-[140px] md:left-10 md:pr-0"
             >
-              <p className="text-foreground text-[18px] leading-[1.45] md:text-[27px]">
+              <p className="text-foreground text-[22px] leading-[1.45] md:text-[27px]">
                 CP | LEX is a boutique law firm delivering sophisticated legal
                 solutions.
               </p>
+              <div className="mt-4 flex items-center gap-1 text-xs md:hidden tex-[#FFFFFF] uppercase">
+                Scroll
+                <Image
+                  src="/icons/scroll.svg"
+                  alt="Scroll down"
+                  width={16}
+                  height={16}
+                />
+              </div>
             </div>
           </div>
           <div
@@ -581,11 +670,14 @@ export function ExpandedFirm({
             style={{ backgroundColor: "#581525" }}
           >
             <div className="flex min-h-0 flex-1 items-center overflow-y-auto px-6 py-6 md:h-full md:py-0 md:px-10">
-              <p className="text-sm leading-[190%] text-foreground md:text-[20px] md:leading-[1.55]">
+              <p className="text-[16px] leading-[190%] text-foreground md:text-[20px] md:leading-[1.55]">
                 The Firm supports companies in designing and implementing
                 compliance systems, including risk mapping, protocols,
                 whistleblowing channels, and internal training programmes.
                 Professionals also conduct internal investigations and integrate
+                compliance frameworks with privacy/GDPR, anti-corruption,
+                anti-money-laundering, workplace safety, environmental
+                responsibility, and ESG standards.
                 compliance frameworks with privacy/GDPR, anti-corruption,
                 anti-money-laundering, workplace safety, environmental
                 responsibility, and ESG standards.
@@ -606,7 +698,7 @@ export function ExpandedFirm({
             />
           </div>
           <div className="px-6 pt-[28px] md:px-10">
-            <p className="text-[27px] text-[#f5f5f5]">
+            <p className="text-[24px] md:text-[27px] text-[#f5f5f5]">
               Our practice is built on three core principles: clarity,
               integrity, and strategic thinking.
             </p>
@@ -620,7 +712,7 @@ export function ExpandedFirm({
                 height={16}
                 className="mt-1.5"
               />
-              <p className="text-[15px] leading-[166%] md:text-[18px]">
+              <p className="text-[14px] text-[#FFFFFFB2] md:text-white leading-[166%] md:text-[18px]">
                 We believe that effective legal counsel goes beyond technical
                 knowledge — it requires a deep understanding of our clients’
                 objectives, industries, and risk landscape.
@@ -634,7 +726,7 @@ export function ExpandedFirm({
                 height={16}
                 className="mt-1.5"
               />
-              <p className="text-[15px] leading-[166%] md:text-[18px]">
+              <p className="text-[14px] text-[#FFFFFFB2] md:text-white leading-[166%] md:text-[18px]">
                 Every matter is approached with careful analysis, structured
                 thinking, and a commitment to delivering practical outcomes.
               </p>

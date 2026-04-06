@@ -44,47 +44,95 @@ export function ExpandedExpertise({
           /> */}
         {/* <div className="absolute inset-0 bg-gradient-to-r from-background/92 via-background/65 to-transparent" /> */}
       </div>
+
+      {/* Main content: title, Overview, Services, Approach */}
       <div className="relative z-10 flex min-h-0 max-w-[900px] flex-1 flex-col overflow-y-auto overscroll-contain [scrollbar-width:none]">
-        <div className="flex w-full flex-col items-start px-6 pb-24 pt-10 md:px-10">
+        <div className="flex w-full flex-col items-start px-6 pb-8 pt-10 md:px-10 md:pb-24">
           <div className="mb-6 flex flex-col items-start gap-4">
             <div className="h-14 w-14 shrink-0 md:h-16 md:w-16">
               <HeroIcon isHovered={false} />
             </div>
-            <h2 className="font-montserrat text-2xl font-semibold leading-tight text-foreground md:text-[32px]">
+            <h2 className="font-montserrat font-semibold leading-tight text-foreground text-[32px]">
               {area.label}
             </h2>
           </div>
           <div className="w-full space-y-6 text-base leading-relaxed text-foreground/95 md:text-base">
             <section>
-              <h3 className="mb-2 font-semibold text-foreground">Overview</h3>
-              <p>{copy.overview}</p>
+              <h3 className="mb-2 text-[13px] font-semibold text-foreground">
+                Overview
+              </h3>
+              <p className="text-[16px]">{copy.overview}</p>
             </section>
             <section>
-              <h3 className="mb-2 font-semibold text-foreground">Services</h3>
-              <p>{copy.services}</p>
+              <h3 className="mb-2 text-[13px] font-semibold text-foreground">
+                Services
+              </h3>
+              <p className="text-[16px]">{copy.services}</p>
             </section>
             <section>
-              <h3 className="mb-2 font-semibold text-foreground">Approach</h3>
-              <p>{copy.approach}</p>
+              <h3 className="mb-2 text-[13px] font-semibold text-foreground">
+                Approach
+              </h3>
+              <p className="text-[16px]">{copy.approach}</p>
             </section>
           </div>
         </div>
+
+        {/* Mobile: expertise selector as a section below main content (matches home-grid mobile) */}
+        <div className="flex w-full flex-col gap-1 px-2 pt-6 pb-24 md:hidden">
+          <span className="shrink-0 px-2 pb-3 pt-2 font-montserrat text-[14px] text-center font-bold uppercase tracking-[0.35em] text-white">
+            Areas of expertise
+          </span>
+          <div className="grid grid-cols-4 grid-rows-1 gap-1">
+            {EXPERTISE_AREAS.map((a) => {
+              const NavIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[a.slug];
+              const isActive = a.slug === slug;
+              const labelMobile = a.labelShort ?? a.label;
+              return (
+                <button
+                  key={a.slug}
+                  type="button"
+                  onClick={() => onSelectSlug(a.slug)}
+                  className={cn(
+                    "cursor-pointer group flex min-h-0 min-w-0 flex-col items-center justify-center rounded-md px-0.5 py-1 text-center outline-none transition-colors gap-2"
+                    // isActive ? "bg-[#0B1931]" : ""
+                  )}
+                >
+                  <div
+                    className={cn(
+                      "flex h-10 w-10 p-1 shrink-0 items-center justify-center rounded-md  border border-[#FFFFFF0F]",
+                      isActive ? "bg-[#0c2247]" : "bg-[#FFFFFF0A]"
+                    )}
+                  >
+                    <NavIcon isHovered={isActive} />
+                  </div>
+                  <span className="line-clamp-2 w-full px-0.5 font-montserrat text-[9px] leading-[135%] text-white">
+                    {labelMobile}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
       </div>
+
+      {/* Bottom nav: back button + (desktop only) horizontal expertise tabs */}
       <nav
         data-expertise-footer-nav
         className="pointer-events-none absolute inset-x-0 bottom-0 z-20 flex flex-col bg-transparent"
         aria-label="Practice areas"
       >
         <div
-          className="pointer-events-auto flex w-full shrink-0 items-stretch overflow-hidden bg-[#121111]"
+          className="pointer-events-auto flex w-full shrink-0 items-stretch overflow-hidden bg-[#121111] px-6 md:px-10"
           style={SUBNAV_MIN_STYLE}
           onMouseLeave={() => setHoveredNavSlug(null)}
         >
           <BackButton
             onClick={onBack}
-            className="min-h-0 shrink-0 self-stretch rounded-none border-r border-white/10 px-3 py-0 text-white"
+            className="min-h-0 shrink-0 self-stretch rounded-none border-r border-white/10 px-3 py-0 text-white md:border-0 md:pr-8"
           />
-          <div className="min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] md:overflow-visible [&::-webkit-scrollbar]:hidden">
+          {/* Desktop only: horizontal scrollable expertise tabs */}
+          <div className="hidden md:flex min-h-0 min-w-0 flex-1 overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             <div className="flex h-full min-h-0 min-w-max flex-nowrap items-stretch gap-x-1 px-1 md:min-w-0 md:flex-1 md:flex-wrap md:gap-x-3 md:gap-y-0 md:px-4 md:pl-2">
               {EXPERTISE_AREAS.map((a) => {
                 const NavIcon = EXPERTISE_ANIMATED_ICON_BY_SLUG[a.slug];

@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   // routes that can return [] before enabling.
   // cacheComponents: true,
 
+  allowedDevOrigins: ['192.168.100.5'],
+
   experimental: {
     // Faster dev restarts on large projects
     turbopackFileSystemCacheForDev: true,

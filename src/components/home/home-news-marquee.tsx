@@ -594,10 +594,10 @@ function ExpandedNewsCarousel({
 
           const body = (
             <>
-              <p className="font-medium uppercase tracking-wider text-news-accent text-[10px] md:text-[16px]">
+              <p className="font-medium uppercase tracking-wider text-news-accent text-[12px] md:text-[16px]">
                 {item.date}
               </p>
-              <p className="mt-2 text-xs leading-snug text-foreground md:text-[18px]">
+              <p className="mt-2 text-[22px] leading-snug text-foreground md:text-[18px]">
                 {item.title}
               </p>
             </>

@@ -268,19 +268,19 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
             ref={cardsScrollRef}
             className="min-h-0 flex-1 overflow-y-auto overscroll-contain pt-12 md:pt-32 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            <div className="grid w-full grid-cols-1 px-6 md:grid-cols-3 md:px-10">
+            <div className="grid w-full grid-cols-2 px-6 md:grid-cols-3 gap-x-3 lg:gap-0 md:px-10">
               {PROFESSIONALS_ITEMS.map((item, index) => (
                 <article
                   key={item.slug}
                   onClick={() => handleSelectCard(item.slug)}
                   className={cn(
-                    "flex min-h-[180px] cursor-pointer items-center gap-5 border-[#22355E] p-6 transition-colors duration-300 hover:bg-[#14244A66]",
-                    index < PROFESSIONALS_ITEMS.length - 1 && "border-b-[0.5px]",
+                    "flex flex-col md:flex-row min-h-[180px] cursor-pointer items-center gap-5 border-[#22355E] py-6 md:p-6 transition-colors duration-300 hover:bg-[#14244A66]",
+                    index < PROFESSIONALS_ITEMS.length - 1 && "md:border-b-[0.5px]",
                     index % 3 !== 2 && "md:border-r-[0.5px]",
                     index < PROFESSIONALS_ITEMS.length - 3 && "md:border-b-[0.5px]"
                   )}
                 >
-                  <div className="relative h-[123px] w-[116px] shrink-0 overflow-hidden rounded-[5px]">
+                  <div className="relative h-[123px] w-full md:w-[116px] shrink-0 overflow-hidden rounded-[5px]">
                     <Image
                       src={item.image}
                       alt={item.name}
@@ -294,12 +294,12 @@ export function ExpandedProfessionals({ onBack }: { onBack: () => void }) {
                       style={{ backgroundColor: "rgba(20, 36, 74, 0.4)" }}
                     />
                   </div>
-                  <div className="flex min-h-0 min-w-0 flex-1 flex-row items-start gap-3 md:flex-col md:justify-center">
-                    <h3 className="text-[18px] font-medium leading-snug text-white [text-orientation:mixed] writing-vertical-rl md:leading-[35px] md:writing-horizontal-tb">
+                  <div className="w-full flex min-h-0 min-w-0 flex-1 gap-1 lg:gap-0 flex-col">
+                    <h3 className="leading-[100%] w-full text-[16px] md:text-[18px] font-medium text-white [text-orientation:mixed] writing-vertical-rl md:writing-horizontal-tb">
                       {item.name}
                     </h3>
                     {item.role ? (
-                      <p className="text-[16px] leading-snug text-muted-foreground [text-orientation:mixed] writing-vertical-rl md:text-[18px] md:leading-[35px] md:writing-horizontal-tb">
+                      <p className="text-[14px] md:text-[16px] leading-snug text-muted-foreground [text-orientation:mixed] writing-vertical-rl md:leading-[35px] md:writing-horizontal-tb">
                         {item.role}
                       </p>
                     ) : null}
