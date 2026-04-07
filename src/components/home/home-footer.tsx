@@ -1,14 +1,14 @@
 import Link from "next/link";
 
 const linkClass =
-  "text-[11px] text-[#62626E] transition-colors duration-300 hover:text-foreground md:text-[12px]";
+  "text-[11px] text-[#62626E] md:text-[#94A3B8] transition-colors duration-300 hover:text-foreground md:text-[12px]";
 
 export function HomeFooter() {
   return (
     <footer
-      className="w-full border-t border-[#FFFFFF0D] sm:border-t-0 px-4 py-4 md:min-h-[var(--home-footer-height)] md:px-10 md:py-2.5"
+      className="w-full border-t border-[#FFFFFF0D] sm:border-t-0 px-4 py-4 md:min-h-[var(--home-footer-height)] md:px-10 md:py-0 flex flex-col justify-center"
       style={{
-        backgroundColor: "#070d18",
+        background: "linear-gradient(116deg, #000A21 3.93%, #0C1A39 34.71%)",
       }}
     >
       {/* Mobile: compact, centered stack */}
@@ -30,9 +30,9 @@ export function HomeFooter() {
       </div>
 
       {/* Large screens: one row — legal group | centered italic tagline | contact */}
-      <div className="hidden min-h-[44px] items-center md:grid md:grid-cols-[1fr_minmax(0,auto)_1fr] md:gap-4 lg:gap-6">
+      <div className="hidden min-h-[36px] items-center md:grid md:grid-cols-[1fr_minmax(0,auto)_1fr] md:gap-4 lg:gap-6">
         <div className="flex min-w-0 flex-wrap items-center justify-start gap-x-4 gap-y-1 pr-2">
-          <p className="text-[11px] text-foreground/70 md:text-[12px]">
+          <p className="text-[11px] text-[#94A3B8] md:text-[12px]">
             © 2025 CP | LEX
           </p>
           <Link href="/" className={linkClass}>
@@ -42,7 +42,7 @@ export function HomeFooter() {
             Privacy Policy
           </Link>
         </div>
-        <p className="mx-auto max-w-[min(100%,28rem)] px-2 text-center font-montserrat text-[10px] italic leading-snug text-foreground/85 md:text-[11px] lg:text-[12px]">
+        <p className="mx-auto max-w-[min(100%,28rem)] px-2 text-center font-montserrat text-[10px] italic leading-snug text-[#94A3B8] md:text-[11px] lg:text-[12px]">
           Legal expertise, strategically delivered.
         </p>
         <div className="flex min-w-0 flex-col items-end justify-end gap-1 pl-2 text-right sm:flex-row sm:gap-4">

@@ -222,7 +222,7 @@ export function HomeGrid({
                 style={{
                   viewTransitionName: vtExpertiseTile(stackOrigin, area.slug),
                 }}
-                className={`cursor-pointer group flex min-h-0 min-w-0 flex-col items-center justify-center rounded-md px-0.5 py-1 text-center outline-none transition-colors gap-2 md:rounded-none md:bg-background md:px-1 md:py-3 ${tileStackClass(tileIndex, stackOrigin)}`}
+                className={`cursor-pointer group flex min-h-0 min-w-0 flex-col items-center justify-center rounded-md px-0.5 py-1 text-center outline-none transition-colors gap-2 md:rounded-none md:bg-background md:px-1 md:py-1 ${tileStackClass(tileIndex, stackOrigin)}`}
               >
                 <div className="flex h-10 w-10 p-1 md:p-0 shrink-0 items-center justify-center rounded-md bg-[#FFFFFF0A]  border border-[#FFFFFF0F] md:border-none transition-transform duration-200 group-hover:scale-110 md:h-14 md:w-14 md:rounded-none md:bg-transparent">
                   <ExpertiseIcon

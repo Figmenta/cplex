@@ -81,7 +81,7 @@
   /* Home layout — Figmenta24 frame 12679:4613 (1440×1064 reference) */
   --home-header-height: 96px;
   /* Desktop footer bar min-height (`md:`); mobile footer is content-sized in HomeFooter */
-  --home-footer-height: 56px;
+  --home-footer-height: 48px;
   --home-subnav-height: 52px;
   /* Brand accents (Figma) */
   --section-heading: #ff4b4b;
