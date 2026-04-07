@@ -1,23 +1,23 @@
 import Link from "next/link";
 
 const linkClass =
-  "text-[11px] text-foreground/70 transition-colors duration-300 hover:text-foreground md:text-[12px]";
+  "text-[11px] text-[#62626E] transition-colors duration-300 hover:text-foreground md:text-[12px]";
 
 export function HomeFooter() {
   return (
     <footer
-      className="w-full border-t border-[#62626E] sm:border-t-0 px-4 py-6 md:min-h-[var(--home-footer-height)] md:px-10 md:py-2.5"
+      className="w-full border-t border-[#FFFFFF0D] sm:border-t-0 px-4 py-4 md:min-h-[var(--home-footer-height)] md:px-10 md:py-2.5"
       style={{
         backgroundColor: "#070d18",
       }}
     >
       {/* Mobile: compact, centered stack */}
-      <div className="flex flex-col items-center gap-1.5 text-center md:hidden">
-        <p className="font-montserrat text-[9px] font-medium uppercase leading-tight tracking-[0.22em] text-foreground/95">
+      <div className="flex flex-col items-center gap-2 text-center md:hidden">
+        <p className="w-full font-montserrat text-[9px] font-medium uppercase leading-tight tracking-[0.22em] text-[#62626E]">
           Legal expertise, strategically delivered.
         </p>
-        <div className="flex justify-between items-center gap-1">
-          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-0.5">
+        <div className="w-full flex justify-between items-center gap-1">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-0.5 text-[#62626E]">
             <Link href="/" className={linkClass}>
               Terms & Conditions
             </Link>
@@ -25,7 +25,7 @@ export function HomeFooter() {
               Privacy Policy
             </Link>
           </div>
-          <p className="text-[11px] text-foreground/70">© 2025 CP | LEX</p>
+          <p className="text-[11px] text-[#62626E]">© 2025 CP | LEX</p>
         </div>
       </div>
 
