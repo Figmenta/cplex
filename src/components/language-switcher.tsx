@@ -30,12 +30,12 @@ const LanguageSwitcher: React.FC = () => {
   };
 
   return (
-    <div className="flex h-full items-center gap-0.5 md:gap-2">
+    <div className="flex h-full items-center gap-0.5 md:gap-1">
       {SWITCHERLOCALES.map((loc, index) => (
         <span key={loc} className="flex items-center gap-0.5 md:gap-2">
           {index > 0 ? (
             <span
-              className="select-none text-[10px] font-semibold text-foreground/40 md:text-[13px]"
+              className="select-none text-[10px] font-semibold text-foreground/40 md:text-[10px]"
               aria-hidden
             >
               |
@@ -47,7 +47,7 @@ const LanguageSwitcher: React.FC = () => {
               cursor-pointer uppercase
               rounded-[4px] px-1.5 py-1 text-[10px] font-bold leading-none
               transition-colors duration-200
-              md:px-2 md:py-1.5 md:text-[15px]
+              md:px-2 md:py-1.5 md:text-[10px]
               ${
                 locale === loc
                   ? "text-foreground lg:bg-[#232E48]"

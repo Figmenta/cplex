@@ -48,24 +48,37 @@ function playLogoBackAnimation(logoWrap: HTMLElement): Promise<void> {
   });
 }
 
-function HomeLogoMarkup({ imageDecorative = false }: { imageDecorative?: boolean }) {
+function HomeLogoMarkup({
+  imageDecorative = false,
+  showGlassBackground = true,
+}: {
+  imageDecorative?: boolean;
+  showGlassBackground?: boolean;
+}) {
   return (
-    <>
+    <div className="relative flex w-full flex-col items-center justify-center p-0 md:rounded-full md:p-2 md:px-6">
+      <div
+        className={cn(
+          "pointer-events-none absolute inset-0 hidden rounded-full transition-opacity duration-500 ease-out md:block md:backdrop-blur-sm md:supports-[backdrop-filter]:bg-background/50 md:[background-image:radial-gradient(circle,_color-mix(in_oklab,_var(--background)_14%,_transparent)_20%,_rgba(0,0,0,0)_100%)]",
+          showGlassBackground ? "opacity-100" : "opacity-0"
+        )}
+        aria-hidden
+      />
       <Image
         src="/logo.svg"
         alt={imageDecorative ? "" : "CP | LEX"}
         width={800}
         height={800}
-        className="h-7 w-auto max-w-full cursor-inherit select-none md:h-8"
+        className="relative z-[1] h-7 w-auto max-w-full cursor-inherit select-none md:h-10"
         aria-hidden={imageDecorative}
       />
-      <p className="cursor-inherit select-none font-montserrat text-[8px] font-medium leading-tight tracking-wide text-foreground md:leading-snug">
+      <p className="relative z-[1] cursor-inherit select-none font-montserrat text-[8px] font-medium leading-tight tracking-wide text-foreground md:leading-snug">
         Justice, Integrity, and Excellence in Practice
       </p>
-      <p className="cursor-inherit select-none text-[7px] font-light leading-tight tracking-[0.2em] uppercase">
+      <p className="relative z-[1] cursor-inherit select-none text-[7px] font-light leading-tight tracking-[0.2em] uppercase">
         EST. 1985
       </p>
-    </>
+    </div>
   );
 }
 
@@ -93,6 +106,7 @@ export default function HomePage() {
   const busyRef = useRef(false);
   const originRef = useRef<GridOrigin>({ kind: "cell", index: 0 });
   const [introDone, setIntroDone] = useState(false);
+  const [showDesktopLogoGlass, setShowDesktopLogoGlass] = useState(false);
   const [view, setView] = useState<HomeView>({ mode: "grid" });
   /** During collapse VT: lift the returning card in the same paint as grid (refs/DOM after commit are too late for VT snapshot). */
   const [gridStackOrigin, setGridStackOrigin] = useState<GridOrigin | null>(
@@ -174,18 +188,22 @@ export default function HomePage() {
         Boolean(cell)
       );
       if (!header) return;
+      const isMobile =
+        typeof window !== "undefined" &&
+        window.matchMedia("(max-width: 767px)").matches;
+      const headerStartTop = isMobile ? "50%" : "46%"; // 46% for desktop
+      setShowDesktopLogoGlass(false);
 
       gsap.set(header, {
         position: "fixed",
         left: 0,
         right: 0,
-        top: "50%",
+        top: headerStartTop,
         yPercent: -50,
         scale: 0.5,
         zIndex: 50,
         transformOrigin: "50% 50%",
       });
-
       if (langSwitcher) {
         gsap.set(langSwitcher, { autoAlpha: 0, pointerEvents: "none" });
       }
@@ -206,8 +224,8 @@ export default function HomePage() {
       });
 
       tl.to(header, {
-        // Scale up from 50% to 150% in the center
-        scale: 1.5,
+        // Scale up from 50% to 100% in the center
+        scale: 1,
         duration: 0.85,
         ease: "power3.out",
       });
@@ -215,16 +233,26 @@ export default function HomePage() {
       // Hold at 150% for ~2 seconds
       tl.add(pauseTween(2));
 
-      tl.to(header, {
-        // Move to top while easing back to 100%
-        top: 0,
-        yPercent: 0,
-        scale: 1,
-        duration: 1.15,
-        ease: "power3.inOut",
-      });
+      tl.to(
+        header,
+        isMobile
+          ? {
+              // Mobile matches previous behavior: dock header to top.
+              top: 0,
+              yPercent: 0,
+              scale: 1,
+              duration: 1.15,
+              ease: "power3.inOut",
+            }
+          : {
+              // Desktop keeps current behavior: stay centered.
+              scale: 1,
+              duration: 0.7,
+              ease: "power3.inOut",
+            }
+      );
 
-      if (langSwitcher) {
+      if (isMobile && langSwitcher) {
         tl.to(
           langSwitcher,
           {
@@ -236,6 +264,10 @@ export default function HomePage() {
           ">"
         );
       }
+
+      tl.add(() => {
+        if (!isMobile) setShowDesktopLogoGlass(true);
+      });
 
       // Fade in main content wrapper so grid/footer are visible for their animations
       tl.add(() => setIntroDone(true));
@@ -282,7 +314,7 @@ export default function HomePage() {
       <header
         ref={headerRef}
         className={cn(
-          "fixed left-0 right-0 top-1/2 z-50 grid -translate-y-1/2 scale-[0.5] transform grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2 md:gap-5 md:px-10",
+          "fixed left-0 right-0 top-1/2 z-50 grid -translate-y-1/2 scale-[0.5] transform grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 px-3 pt-[max(0.5rem,env(safe-area-inset-top))] pb-2 md:top-[45%] md:gap-5 md:px-10",
           view.mode !== "grid" &&
             "max-md:bg-gradient-to-b max-md:from-[#0a1225]/92 max-md:from-[28%] max-md:via-[#0a1225]/45 max-md:via-[55%] max-md:to-transparent"
         )}
@@ -291,33 +323,39 @@ export default function HomePage() {
         <div className="min-w-0" aria-hidden />
         <div
           ref={logoBlockRef}
-          className="relative z-[60] flex min-w-0 max-w-2xl shrink-0 flex-col items-center gap-0.5 px-1 text-center sm:px-4"
+          className={cn(
+            "relative z-[60] flex min-w-0 max-w-[88vw] shrink-0 flex-col items-center gap-0.5 px-0 text-center sm:px-4 md:max-w-2xl md:px-1",
+            view.mode !== "grid" && "md:invisible md:pointer-events-none md:opacity-0"
+          )}
         >
           {view.mode !== "grid" ? (
             <button
               type="button"
               onClick={() => void collapseToGrid()}
-              className="flex w-full cursor-pointer flex-col items-center gap-0.5 rounded-md border-0 bg-transparent p-0 text-inherit outline-none ring-offset-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring"
+              className="flex w-full cursor-pointer flex-col items-center gap-0.5 rounded-md border-0 bg-transparent p-0 text-inherit outline-none ring-offset-background transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-ring md:pointer-events-none"
               aria-label="Back to home"
             >
-              <HomeLogoMarkup imageDecorative />
+              <HomeLogoMarkup
+                imageDecorative
+                showGlassBackground={showDesktopLogoGlass}
+              />
             </button>
           ) : (
             <div className="flex w-full cursor-pointer flex-col items-center gap-0.5">
-              <HomeLogoMarkup />
+              <HomeLogoMarkup showGlassBackground={showDesktopLogoGlass} />
             </div>
           )}
         </div>
         <div
           ref={langSwitcherRef}
-          className="pointer-events-none invisible flex min-h-[36px] min-w-0 shrink-0 items-center justify-self-end justify-end self-center pr-0 opacity-0 md:min-w-[88px]"
+          className="pointer-events-none invisible flex min-h-[36px] min-w-0 shrink-0 items-center justify-self-end justify-end self-center pr-0 opacity-0 md:hidden"
         >
           <LanguageSwitcher />
         </div>
       </header>
 
       <div
-        className={`flex min-h-0 flex-1 flex-col pt-[var(--home-header-height)] transition-opacity duration-500 ease-out ${
+        className={`flex min-h-0 flex-1 flex-col pt-[var(--home-header-height)] transition-opacity duration-500 ease-out md:pt-0 ${
           introDone ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       >

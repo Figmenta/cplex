@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LanguageSwitcher from "@/components/language-switcher";
 
 const linkClass =
   "text-[11px] text-[#62626E] md:text-[#94A3B8] transition-colors duration-300 hover:text-foreground md:text-[12px]";
@@ -45,7 +46,7 @@ export function HomeFooter() {
         <p className="mx-auto max-w-[min(100%,28rem)] px-2 text-center font-montserrat text-[10px] italic leading-snug text-[#94A3B8] md:text-[11px] lg:text-[12px]">
           Legal expertise, strategically delivered.
         </p>
-        <div className="flex min-w-0 flex-col items-end justify-end gap-1 pl-2 text-right sm:flex-row sm:gap-4">
+        <div className="flex min-w-0 flex-col items-end justify-end gap-1 pl-2 text-right sm:flex-row sm:items-center sm:gap-4">
           <Link
             href="tel:+390612345678"
             className={`${linkClass} whitespace-nowrap`}
@@ -58,6 +59,7 @@ export function HomeFooter() {
           >
             Email: info@cplex.it
           </Link>
+          <LanguageSwitcher />
         </div>
       </div>
     </footer>

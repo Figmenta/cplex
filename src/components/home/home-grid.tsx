@@ -122,9 +122,7 @@ export function HomeGrid({
     useState<ExpertiseSlug | null>(null);
 
   return (
-    <div
-      className="relative grid h-full min-h-0 w-full grid-cols-2 gap-0 border border-border/15 max-md:[grid-template-areas:'firm_prof'_'expertise_expertise'_'news_news'] max-md:[grid-template-rows:minmax(0,1fr)_auto_auto] md:[grid-template-areas:'firm_news'_'expertise_professionals'] md:grid-rows-2"
-    >
+    <div className="relative grid h-full min-h-0 w-full grid-cols-2 gap-0 border border-border/15 max-md:[grid-template-areas:'firm_prof'_'expertise_expertise'_'news_news'] max-md:[grid-template-rows:minmax(0,1fr)_auto_auto] md:[grid-template-areas:'firm_news'_'expertise_professionals'] md:grid-rows-2">
       {/* The Firm — desktop top-left | mobile top-left */}
       <button
         type="button"
@@ -182,7 +180,7 @@ export function HomeGrid({
         style={{ viewTransitionName: vtNews(stackOrigin) }}
         className={`[grid-area:news] max-md:shrink-0 cursor-pointer group ${cellStackClass(1, stackOrigin)} flex min-h-0 flex-col overflow-hidden rounded-none border-border/15 bg-background text-left outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring md:border-b`}
       >
-        <span className="shrink-0 px-4 pb-4 pt-6 text-left font-montserrat text-[10px] font-bold uppercase tracking-[0.35em] text-section-heading md:px-5 md:pb-1 md:pt-5 md:text-[16px]">
+        <span className="shrink-0 md:text-end px-4 pb-4 pt-6 text-left font-montserrat text-[10px] font-bold uppercase tracking-[0.35em] text-section-heading md:px-5 md:pb-1 md:pt-5 md:text-[16px]">
           Our News
         </span>
         <div
@@ -267,7 +265,7 @@ export function HomeGrid({
             }}
           />
         </div>
-        <span className="relative z-10 mt-auto px-3 pb-3 pt-0 font-montserrat text-[13px] font-bold uppercase tracking-[0.35em] text-section-heading md:mt-0 md:px-5 md:pb-3 md:pt-5 md:text-[16px]">
+        <span className="relative md:text-end z-10 mt-auto px-3 pb-3 pt-0 font-montserrat text-[13px] font-bold uppercase tracking-[0.35em] text-section-heading md:mt-0 md:px-5 md:pb-3 md:pt-5 md:text-[16px]">
           The Professionals
         </span>
         <p className="relative z-10 mt-auto max-md:hidden max-w-full translate-y-2 px-5 pb-5 pt-4 text-[10px] leading-snug text-foreground opacity-0 transition-all duration-300 ease-out group-hover:translate-y-0 group-hover:opacity-100 md:block md:text-[11px]">
